@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم المتطورة</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #667eea;
+        }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .stat-icon {
+            font-size: 2.5em;
+            color: var(--primary-color);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+
+
+    <!-- نافذة منبثقة لعرض QR Code -->
+    <div class="modal fade" id="qrModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-qr-code-scan"></i> QR Code الموقع
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="qrLoading" class="py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">جاري التحميل...</span>
+                        </div>
+                        <p class="mt-2">جاري توليد QR Code...</p>
+                    </div>
+                    <div id="qrContent" style="display: none;">
+                        <img id="qrImage" src="" alt="QR Code" class="img-fluid mb-3" style="max-width: 250px;">
+                        <p class="text-muted" id="qrUrl"></p>
+                        <div class="btn-group gap-2">
+                            <button class="btn btn-primary" onclick="downloadQR()">
+                                <i class="bi bi-download"></i> تحميل
+                            </button>
+                            <button class="btn btn-success" onclick="shareQR()">
+                                <i class="bi bi-share"></i> مشاركة
+                            </button>
+                            <button class="btn btn-secondary" onclick="printQR()">
+                                <i class="bi bi-printer"></i> طباعة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<body>
+
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-4">
+                    <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+                    <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+                    <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+                    <a class="nav-link" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                   <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+                   <!-- في الشريط الجانبي - بعد إعدادات وقبل عرض الموقع -->
+ 
+                    <a class="nav-link" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+
+                    <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+                    <hr class="bg-white">
+                    <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+
+
+   
+
+            <div class="col-md-10 main-content">
+
+                
+<!-- أعلى الصفحة - بطاقة QR Code بسيطة -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 15px;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="text-white mb-1">
+                        <i class="bi bi-qr-code-scan"></i> QR Code الموقع
+                    </h5>
+                    <p class="text-white-50 mb-0 small">اضغط للعرض والطباعة</p>
+                </div>
+                <a href="{{ url_for('admin_generate_qr') }}" class="btn btn-light">
+                    <i class="bi bi-qr-code"></i> عرض QR Code
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+                
+
+
+                <h2 class="mb-4">مرحباً {{ current_user.username }}</h2>
+                
+                <!-- Stats Cards -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-number">{{ stats.total_images }}</div>
+                                    <div class="text-muted">إجمالي الصور</div>
+                                </div>
+                                <div class="stat-icon"><i class="bi bi-images"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-number">{{ stats.total_categories }}</div>
+                                    <div class="text-muted">التصنيفات</div>
+                                </div>
+                                <div class="stat-icon"><i class="bi bi-tags"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-number">{{ stats.total_views }}</div>
+                                    <div class="text-muted">مشاهدة</div>
+                                </div>
+                                <div class="stat-icon"><i class="bi bi-eye"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-number">{{ stats.images_today }}</div>
+                                    <div class="text-muted">صور اليوم</div>
+                                </div>
+                                <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart -->
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="stat-card">
+                            <h5>المشاهدات آخر 7 أيام</h5>
+                            <canvas id="viewsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <h5>أكثر الصور مشاهدة</h5>
+                            <ul class="list-group">
+                                {% for image in stats.popular_images %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ image.title }}
+                                    <span class="badge bg-primary rounded-pill">{{ image.views }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+
+        
+ 
+
+                <!-- Recent Activity -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="stat-card">
+                            <h5>آخر النشاطات</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>المستخدم</th>
+                                        <th>النشاط</th>
+                                        <th>التفاصيل</th>
+                                        <th>الوقت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for activity in stats.recent_activities %}
+                                    <tr>
+                                        <td>{{ activity.user_id }}</td>
+                                        <td>{{ activity.action }}</td>
+                                        <td>{{ activity.details }}</td>
+                                        <td>{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!-- أعلى الصفحة - بعد الـ main-content مباشرة -->
+<div class="main-content">
+    <!-- بطاقة QR Code في الأعلى -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 20px;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="text-white mb-2">
+                            <i class="bi bi-qr-code-scan"></i> QR Code الموقع
+                        </h4>
+                        <p class="text-white-50 mb-0">
+                            استخدم هذا الرمز للوصول السريع للموقع. اضغط على الزر للتوليد والمشاركة.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center text-md-end">
+                        <button class="btn btn-light btn-lg" onclick="generateQR()">
+                            <i class="bi bi-qr-code"></i> توليد QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Chart initialization
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        const chartData = {{ chart_data|safe }};
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'المشاهدات',
+                    data: chartData.views,
+                    borderColor: '#667eea',
+                    tension: 0.1
+                }]
+            }
+        });
+    </script>
+    <script>
+    function generateQR() {
+        // إظهار النافذة المنبثقة
+        const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+        modal.show();
+        
+        // إظهار التحميل
+        document.getElementById('qrLoading').style.display = 'block';
+        document.getElementById('qrContent').style.display = 'none';
+        
+        // استدعاء API لتوليد QR Code
+        fetch('/api/generate-qr')
+            .then(response => response.json())
+            .then(data => {
+                // إخفاء التحميل وإظهار المحتوى
+                document.getElementById('qrLoading').style.display = 'none';
+                document.getElementById('qrContent').style.display = 'block';
+                
+                // عرض الصورة والرابط
+                document.getElementById('qrImage').src = data.qr_code;
+                document.getElementById('qrUrl').textContent = data.site_url;
+                
+                // حفظ البيانات للاستخدام لاحقاً
+                window.currentQR = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ في توليد QR Code');
+                modal.hide();
+            });
+    }
+    
+    function downloadQR() {
+        if (window.currentQR) {
+            const link = document.createElement('a');
+            link.download = 'qr-code.png';
+            link.href = window.currentQR.qr_code;
+            link.click();
+        }
+    }
+    
+    function shareQR() {
+        if (window.currentQR && navigator.share) {
+            navigator.share({
+                title: 'QR Code',
+                text: 'رابط الموقع: ' + window.currentQR.site_url,
+                url: window.currentQR.site_url
+            }).catch(() => {
+                // إذا فشلت المشاركة، نسخ الرابط
+                copyToClipboard();
+            });
+        } else {
+            copyToClipboard();
+        }
+    }
+    
+    function printQR() {
+        if (window.currentQR) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>QR Code</title>
+                    <style>
+                        body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                        img { max-width: 100%; height: auto; }
+                    </style>
+                </head>
+                <body>
+                    <img src="${window.currentQR.qr_code}" alt="QR Code">
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+    }
+    
+    function copyToClipboard() {
+        if (window.currentQR) {
+            navigator.clipboard.writeText(window.currentQR.site_url).then(() => {
+                alert('تم نسخ الرابط!');
+            });
+        }
+    }
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ settings.site_title }}</title>
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <style>
+        :root {
+            --primary-color: {{ settings.theme_color or '#667eea' }};
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .qr-code-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 300px;
+            margin: 0 auto 40px;
+        }
+        
+        .qr-code-card img {
+            width: 200px;
+            height: 200px;
+            margin: 10px auto;
+        }
+        
+        .category-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .category-pill {
+            background: white;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .category-pill:hover,
+        .category-pill.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+        
+        .gallery-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .gallery-item:hover .image-wrapper img {
+    transform: scale(1.1);
+}
+/* الصورة - ملائمة تلقائية كاملة */
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* السر: تغطي الإطار بالكامل بدون تشويه */
+    transition: transform 0.5s;
+    display: block;
+}
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .gallery-stats i {
+            margin-left: 5px;
+        }
+        
+        .featured-section {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px 0;
+            margin: 40px 0;
+            border-radius: 20px;
+        }
+        
+        .featured-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 0 20px;
+        }
+        
+        .featured-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .featured-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: gold;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        
+        .search-box .input-group {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+        
+        .search-box input {
+            border: none;
+            padding: 15px 25px;
+        }
+        
+        .search-box button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin: 40px 0;
+        }
+        
+        .page-link {
+            color: var(--primary-color);
+        }
+        
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2em;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                {% if settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" height="30" alt="Logo">
+                {% else %}
+                    <i class="bi bi-camera-fill" style="color: var(--primary-color);"></i>
+                    {{ settings.site_title }}
+                {% endif %}
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery">المعرض</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#featured">مميزة</a>
+                    </li>
+                    {% if categories %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            التصنيفات
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for category, count in categories %}
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
+                                    {{ category.name }} ({{ count }})
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                    <input class="form-control me-2" type="search" name="q" placeholder="بحث..." value="{{ search_query }}">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                            {% if current_user.role in ['admin', 'editor'] %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">
+                            <i class="bi bi-box-arrow-in-right"></i> دخول
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">
+                            <i class="bi bi-person-plus"></i> تسجيل
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+<!-- قسم الترحيب -->
+<section class="hero-section" style="margin-top: 56px; position: relative; min-height: 280;">
+    <div class="container">
+        <h1 class="hero-title animate__animated animate__fadeInDown">
+            {{ settings.site_title }}
+        </h1>
+        <p class="lead animate__animated animate__fadeInUp">
+            {{ settings.site_description }}
+        </p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    
+ 
+    
+    <!-- مربع QR Code في الزاوية اليمنى -->
+    <div class="position-absolute" style="top: 20px; left: 20px; z-index: 10;">
+        <div class="card shadow-lg" style="width: 180px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 15px; border: 2px solid white;">
+            <div class="card-body p-3 text-center">
+                <!-- عنوان صغير -->
+                <h6 class="card-title text-muted mb-2">
+                    <i class="bi bi-qr-code-scan"></i> 
+                    مسح للزيارة
+                </h6>
+                
+                <!-- صورة QR Code -->
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" 
+                     class="img-fluid mb-2" style="width: 120px; height: 120px; border-radius: 10px;">
+                
+                <!-- رابط الموقع (مختصر) -->
+                <div class="small text-muted mb-2 text-truncate" dir="ltr">
+                    {{ request.host_url }}
+                </div>
+                
+                <!-- أزرار التفاعل -->
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyQRUrl()" title="نسخ الرابط">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="downloadQRImage()" title="تحميل QR">
+                        <i class="bi bi-download"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="shareQR()" title="مشاركة">
+                        <i class="bi bi-share"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    
+</section>
+
+<!-- JavaScript للتفاعل -->
+<script>
+function copyQRUrl() {
+    const url = "{{ request.host_url }}";
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ تم نسخ الرابط');
+    }).catch(() => {
+        alert('❌ فشل النسخ');
+    });
+}
+
+function downloadQRImage() {
+    const base64 = "{{ qr_code }}";
+    const link = document.createElement('a');
+    link.download = 'qr-code.png';
+    link.href = 'data:image/png;base64,' + base64;
+    link.click();
+}
+
+function shareQR() {
+    const url = "{{ request.host_url }}";
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ settings.site_title }}',
+            text: 'تعال شاهد معرض الأعمال',
+            url: url
+        }).catch(console.error);
+    } else {
+        copyQRUrl();
+    }
+}
+</script>
+    
+
+    <!-- البحث -->
+    <div class="container search-box">
+        <form action="{{ url_for('search') }}" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" placeholder="ابحث عن صور..." value="{{ search_query }}">
+                <button class="btn" type="submit">
+                    <i class="bi bi-search"></i> بحث
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- التصنيفات -->
+    {% if categories %}
+    <div class="container">
+        <div class="category-pills">
+            <a href="{{ url_for('index') }}" class="category-pill {% if not current_category %}active{% endif %}">
+                الكل
+            </a>
+            {% for category, count in categories %}
+            <a href="{{ url_for('index') }}?category={{ category.id }}" 
+               class="category-pill {% if current_category == category.id %}active{% endif %}">
+                {{ category.name }} ({{ count }})
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- الصور المميزة -->
+    {% if featured_images %}
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <h2 class="featured-title">
+                <i class="bi bi-star-fill"></i> صور مميزة
+            </h2>
+            <div class="featured-grid">
+                {% for image in featured_images %}
+                <div class="featured-item">
+                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
+                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                    </a>
+                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+
+
+
+
+
+
+    
+    <!-- المعرض الرئيسي -->
+    <section id="gallery" class="container">
+        <h2 class="text-white text-center mb-4">
+            <i class="bi bi-images"></i> جميع الصور
+        </h2>
+        
+        {% if images.items %}
+ <div class="gallery-grid">
+    {% for image in images.items %}
+    <!-- أرسل رابط الصورة فقط -->
+    <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}')">
+        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+        <div class="gallery-overlay">
+            <!-- الشارات موجودة -->
+            <div class="gallery-stats">
+                <span><i class="bi bi-eye"></i> {{ image.views }}</span>
+                <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
+                {% if image.category %}
+                <span><i class="bi bi-tag"></i> {{ image.category.name }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- التصفح -->
+        {% if images.pages > 1 %}
+        <nav>
+            <ul class="pagination">
+                {% if images.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}">
+                        <i class="bi bi-chevron-right"></i> السابق
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in images.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if images.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">
+                        التالي <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-images"></i>
+            <h3>لا توجد صور</h3>
+            <p>لم يتم إضافة أي صور بعد</p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('upload_images') }}" class="btn btn-light">
+                <i class="bi bi-cloud-upload"></i> أضف أول صورة
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+    
+    <!-- زر الصفحة الرئيسية -->
+    <a href="#" class="floating-btn" title="العودة للأعلى">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+    
+    <!-- Lightbox Container -->
+    <div id="lightbox-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center;">
+        <span onclick="closeLightbox()" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer;">&times;</span>
+        <img id="lightbox-img" style="max-width: 90%; max-height: 80%;">
+        <div id="lightbox-caption" style="text-align: center; color: white; margin-top: 20px;"></div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    <script>
+    function openLightbox(imgSrc) {
+        document.getElementById('lightbox-modal').style.display = 'flex';
+        document.getElementById('lightbox-img').src = imgSrc;
+    }
+    
+    function closeLightbox() {
+        document.getElementById('lightbox-modal').style.display = 'none';
+    }
+    
+    // Close lightbox with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        }
+    });
+    
+    // Close when clicking outside the image
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('lightbox-modal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+        }
+    });
+</script>
+    <script>
+        // Lightbox function
+        function openLightbox(imgSrc, title, description) {
+            document.getElementById('lightbox-modal').style.display = 'flex';
+            document.getElementById('lightbox-img').src = imgSrc;
+            document.getElementById('lightbox-caption').innerHTML = `<h3>${title}</h3><p>${description}</p>`;
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').style.display = 'none';
+        }
+        
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Track image views
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // يمكن إضافة tracking هنا
+            });
+        });
+    </script>
+</body>
+</html>

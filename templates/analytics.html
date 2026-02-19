@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحليلات والإحصائيات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .stat-icon {
+            font-size: 2.5em;
+            color: var(--primary-color);
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .period-selector {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+        .period-selector a {
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #666;
+            border-radius: 5px;
+        }
+        .period-selector a.active {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-4">
+                    <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+                    <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+                    <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+                    <a class="nav-link" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                    <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+                    <a class="nav-link active" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+                    <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+                    <hr class="bg-white">
+                    <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>التحليلات والإحصائيات</h2>
+                    
+                    <!-- Period Selector -->
+                    <div class="period-selector">
+                        <a href="{{ url_for('analytics', period='week') }}" class="{% if period == 'week' %}active{% endif %}">أسبوع</a>
+                        <a href="{{ url_for('analytics', period='month') }}" class="{% if period == 'month' %}active{% endif %}">شهر</a>
+                        <a href="{{ url_for('analytics', period='year') }}" class="{% if period == 'year' %}active{% endif %}">سنة</a>
+                    </div>
+                </div>
+                
+                <!-- Key Metrics -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon"><i class="bi bi-eye"></i></div>
+                            <div class="stat-number">{{ stats.total_views|default(0) }}</div>
+                            <div class="stat-label">إجمالي المشاهدات</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon"><i class="bi bi-download"></i></div>
+                            <div class="stat-number">{{ stats.total_downloads|default(0) }}</div>
+                            <div class="stat-label">إجمالي التحميلات</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon"><i class="bi bi-images"></i></div>
+                            <div class="stat-number">{{ stats.total_images|default(0) }}</div>
+                            <div class="stat-label">إجمالي الصور</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-icon"><i class="bi bi-people"></i></div>
+                            <div class="stat-number">{{ stats.total_users|default(0) }}</div>
+                            <div class="stat-label">المستخدمين</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Views Chart -->
+                <div class="chart-container">
+                    <h5 class="mb-4">المشاهدات خلال الفترة</h5>
+                    <canvas id="viewsChart" style="height: 300px;"></canvas>
+                </div>
+                
+                <!-- Popular Images & Active Users -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <h5 class="mb-3"><i class="bi bi-star"></i> أكثر الصور مشاهدة</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>الصورة</th>
+                                            <th>المشاهدات</th>
+                                            <th>التحميلات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for image in popular_images %}
+                                        <tr>
+                                            <td>{{ image.title }}</td>
+                                            <td>{{ image.views }}</td>
+                                            <td>{{ image.downloads }}</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">لا توجد بيانات</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="stat-card">
+                            <h5 class="mb-3"><i class="bi bi-activity"></i> أكثر المستخدمين نشاطاً</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>المستخدم</th>
+                                            <th>عدد النشاطات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for username, count in active_users %}
+                                        <tr>
+                                            <td>{{ username }}</td>
+                                            <td>{{ count }}</td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="2" class="text-center">لا توجد بيانات</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Views Chart
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        const viewsData = {{ views_over_time|tojson }};
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: viewsData.map(d => d.date),
+                datasets: [{
+                    label: 'المشاهدات',
+                    data: viewsData.map(d => d.count),
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

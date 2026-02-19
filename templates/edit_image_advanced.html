@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل الصورة: {{ image.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        .edit-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .edit-header i {
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .current-image {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .current-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .image-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            color: #666;
+        }
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-section h5 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #555;
+        }
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+        }
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            padding: 12px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background: #5a6268;
+            color: white;
+        }
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .stats-box {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="edit-card">
+            <div class="edit-header">
+                <i class="bi bi-pencil-square"></i>
+                <h2>تعديل الصورة</h2>
+                <p class="text-muted">قم بتحديث معلومات الصورة</p>
+            </div>
+            
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- الصورة الحالية -->
+            <div class="current-image">
+                <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}" id="currentImage">
+                <div class="image-info">
+                    <span><i class="bi bi-eye"></i> {{ image.views }} مشاهدة</span>
+                    <span><i class="bi bi-download"></i> {{ image.downloads }} تحميل</span>
+                    <span><i class="bi bi-calendar"></i> {{ image.created_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <!-- القسم 1: المعلومات الأساسية -->
+                <div class="form-section">
+                    <h5><i class="bi bi-info-circle"></i> المعلومات الأساسية</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">عنوان الصورة</label>
+                            <input type="text" name="title" class="form-control" value="{{ image.title }}" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">التصنيف</label>
+                            <select name="category_id" class="form-select">
+                                <option value="">بدون تصنيف</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if image.category_id == cat.id %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">وصف الصورة</label>
+                        <textarea name="description" class="form-control" rows="4">{{ image.description or '' }}</textarea>
+                    </div>
+                </div>
+                
+                <!-- القسم 2: خيارات العرض -->
+                <div class="form-section">
+                    <h5><i class="bi bi-eye"></i> خيارات العرض</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" {% if image.is_featured %}checked{% endif %}>
+                                <label class="form-check-label" for="is_featured">
+                                    <i class="bi bi-star-fill text-warning"></i> صورة مميزة
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_published" id="is_published" {% if image.is_published %}checked{% endif %}>
+                                <label class="form-check-label" for="is_published">
+                                    <i class="bi bi-globe"></i> منشورة
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">ترتيب العرض</label>
+                                <input type="number" name="sort_order" class="form-control" value="{{ image.sort_order or 0 }}" min="-999" max="999">
+                                <small class="text-muted">الأرقام الأصغر تظهر أولاً</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- القسم 3: تغيير الصورة -->
+                <div class="form-section">
+                    <h5><i class="bi bi-image"></i> تغيير الصورة</h5>
+                    <div class="mb-3">
+                        <label class="form-label">اختر صورة جديدة (اختياري)</label>
+                        <input type="file" name="new_image" class="form-control" accept="image/*" id="newImage" onchange="previewNewImage(this)">
+                        <small class="text-muted">اتركه فارغاً للاحتفاظ بالصورة الحالية</small>
+                    </div>
+                    <div class="text-center">
+                        <img id="newImagePreview" class="preview-image" src="#" alt="معاينة الصورة الجديدة">
+                    </div>
+                </div>
+                
+                <!-- القسم 4: معلومات إضافية -->
+                <div class="form-section">
+                    <h5><i class="bi bi-info-lg"></i> معلومات إضافية</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="stats-box">
+                                <small class="text-muted d-block">اسم الملف الأصلي</small>
+                                <strong>{{ image.image_metadata.original_filename if image.image_metadata else 'غير معروف' }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="stats-box">
+                                <small class="text-muted d-block">حجم الملف</small>
+                                <strong>{% if image.file_size %}{{ (image.file_size / 1024)|round }} KB{% else %}غير معروف{% endif %}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- أزرار التحكم -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-save">
+                        <i class="bi bi-check-circle"></i> حفظ التغييرات
+                    </button>
+                    
+                    <a href="{{ url_for('manage_images') }}" class="btn btn-cancel me-2">
+                        <i class="bi bi-x-circle"></i> إلغاء
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function previewNewImage(input) {
+            const preview = document.getElementById('newImagePreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

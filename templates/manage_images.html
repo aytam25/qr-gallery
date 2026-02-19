@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الصور</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .action-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .image-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .image-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .image-card .card-body {
+            padding: 15px;
+        }
+        .image-card .card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .image-card .card-text {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .image-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .image-card .actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .image-card .actions a {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .checkbox-column {
+            width: 40px;
+            text-align: center;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-4">
+                    <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+                    <a class="nav-link active" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+                    <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+                    <a class="nav-link" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                    <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+                    <a class="nav-link" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+                    <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+                    <hr class="bg-white">
+                    <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <h2 class="mb-4">إدارة الصور</h2>
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Action Bar -->
+                <div class="action-bar">
+                    <form method="POST" action="{{ url_for('bulk_action') }}" id="bulkActionForm">
+                        <div class="d-flex gap-3">
+                            <select name="action" class="form-select" style="width: auto;">
+                                <option value="">اختر إجراء</option>
+                                <option value="delete">حذف المحدد</option>
+                                <option value="publish">نشر المحدد</option>
+                                <option value="unpublish">إلغاء نشر المحدد</option>
+                                <option value="feature">تمييز كمميزة</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary" onclick="return confirm('تأكيد الإجراء؟')">
+                                تطبيق
+                            </button>
+                            <a href="{{ url_for('upload_images') }}" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> إضافة صور جديدة
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Images Grid -->
+                <div class="image-grid">
+                    {% for image in images.items %}
+                    <div class="image-card">
+                        <input type="checkbox" name="image_ids[]" value="{{ image.id }}" form="bulkActionForm" class="position-absolute top-0 start-0 m-2">
+                        {% if image.is_featured %}
+                        <span class="badge bg-warning"><i class="bi bi-star-fill"></i> مميزة</span>
+                        {% endif %}
+                        {% if not image.is_published %}
+                        <span class="badge bg-secondary">مسودة</span>
+                        {% endif %}
+                        
+                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                        
+                        <div class="card-body">
+                            <div class="card-title">{{ image.title }}</div>
+                            <div class="card-text">{{ image.description|truncate(50) }}</div>
+                            
+                            <div class="small text-muted mb-2">
+                                <i class="bi bi-eye"></i> {{ image.views }} |
+                                <i class="bi bi-download"></i> {{ image.downloads }} |
+                                <i class="bi bi-calendar"></i> {{ image.created_at.strftime('%Y-%m-%d') }}
+                            </div>
+                            
+                            <div class="actions">
+                                <a href="{{ url_for('edit_image', image_id=image.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> تعديل
+                                </a>
+                                <a href="{{ url_for('delete_image', image_id=image.id) }}" 
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('هل أنت متأكد من حذف هذه الصورة؟')">
+                                    <i class="bi bi-trash"></i> حذف
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-images" style="font-size: 4em; color: #ccc;"></i>
+                        <h4 class="mt-3">لا توجد صور</h4>
+                        <p class="text-muted">لم تقم بإضافة أي صور بعد</p>
+                        <a href="{{ url_for('upload_images') }}" class="btn btn-primary">
+                            <i class="bi bi-cloud-upload"></i> ارفع صورك الآن
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if images.pages > 1 %}
+                <nav class="mt-4">
+                    <ul class="pagination">
+                        {% if images.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('manage_images', page=images.prev_num) }}">السابق</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in images.iter_pages() %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('manage_images', page=page_num) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if images.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('manage_images', page=images.next_num) }}">التالي</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

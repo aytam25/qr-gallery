@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - {{ user.username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            margin: -80px auto 20px;
+            border: 5px solid white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .profile-name {
+            font-size: 2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .profile-role {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn-edit {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-edit:hover {
+            background: #5a67d8;
+            color: white;
+        }
+        .profile-tabs {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .nav-tabs {
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .nav-tabs .nav-link {
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background: none;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .image-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+        .image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="bi bi-camera-fill" style="color: var(--primary-color);"></i>
+                معرض الأعمال
+            </a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" href="{{ url_for('index') }}">الرئيسية</a>
+                {% if user.role in ['admin', 'editor'] %}
+                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a>
+                {% endif %}
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{{ url_for('logout') }}">تسجيل خروج</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ user.username[0]|upper }}
+            </div>
+            <h1 class="profile-name">{{ user.username }}</h1>
+            <div class="profile-role">
+                <i class="bi bi-shield"></i> 
+                {% if user.role == 'admin' %}مدير
+                {% elif user.role == 'editor' %}محرر
+                {% else %}مشاهد{% endif %}
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat">
+                    <div class="stat-number">{{ images|length }}</div>
+                    <div class="stat-label">الصور</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">{{ activities|length }}</div>
+                    <div class="stat-label">النشاطات</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">{{ user.last_login.strftime('%Y-%m-%d') if user.last_login else '-' }}</div>
+                    <div class="stat-label">آخر ظهور</div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="{{ url_for('edit_profile') }}" class="btn-edit">
+                    <i class="bi bi-pencil"></i> تعديل الملف الشخصي
+                </a>
+            </div>
+        </div>
+        
+        <!-- Profile Tabs -->
+        <div class="profile-tabs">
+            <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button">
+                        <i class="bi bi-activity"></i> النشاطات
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button">
+                        <i class="bi bi-images"></i> الصور
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button">
+                        <i class="bi bi-info-circle"></i> المعلومات
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="tab-content">
+                <!-- Activity Tab -->
+                <div class="tab-pane fade show active" id="activity">
+                    {% if activities %}
+                        {% for activity in activities %}
+                        <div class="activity-item d-flex align-items-center">
+                            <div class="activity-icon ms-3">
+                                {% if 'upload' in activity.action %}
+                                <i class="bi bi-cloud-upload"></i>
+                                {% elif 'login' in activity.action %}
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                {% elif 'view' in activity.action %}
+                                <i class="bi bi-eye"></i>
+                                {% else %}
+                                <i class="bi bi-gear"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>{{ activity.action }}</strong>
+                                        <p class="mb-0 text-muted small">{{ activity.details }}</p>
+                                    </div>
+                                    <small class="text-muted">{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-activity" style="font-size: 3em; color: #ccc;"></i>
+                            <p class="mt-3">لا توجد نشاطات حتى الآن</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Images Tab -->
+                <div class="tab-pane fade" id="images">
+                    {% if images %}
+                    <div class="images-grid">
+                        {% for image in images %}
+                        <div class="image-item">
+                            <a href="{{ url_for('view_image', image_id=image.id) }}">
+                                <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-images" style="font-size: 3em; color: #ccc;"></i>
+                        <p class="mt-3">لم تقم بإضافة أي صور بعد</p>
+                        {% if user.role in ['admin', 'editor'] %}
+                        <a href="{{ url_for('upload_images') }}" class="btn btn-primary">
+                            أضف صورك الآن
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Info Tab -->
+                <div class="tab-pane fade" id="info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-3">معلومات الحساب</h6>
+                            <table class="table">
+                                <tr>
+                                    <th>اسم المستخدم:</th>
+                                    <td>{{ user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>البريد الإلكتروني:</th>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>تاريخ التسجيل:</th>
+                                    <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>آخر دخول:</th>
+                                    <td>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else '-' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

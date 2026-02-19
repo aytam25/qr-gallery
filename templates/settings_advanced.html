@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات المتقدمة</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .settings-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .section-title {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-left: 10px;
+            border: 2px solid #ddd;
+        }
+        .backup-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px dashed var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-4">
+                    <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+                    <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+                    <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+                    <a class="nav-link" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                    <a class="nav-link active" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+                    <a class="nav-link" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+                    <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+                    <hr class="bg-white">
+                    <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <h2 class="mb-4">الإعدادات المتقدمة</h2>
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST">
+                    <!-- General Settings -->
+                    <div class="settings-card">
+                        <h4 class="section-title"><i class="bi bi-gear"></i> الإعدادات العامة</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">عنوان الموقع</label>
+                                    <input type="text" name="site_title" class="form-control" value="{{ settings.site_title }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">اللون الأساسي</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="color" name="theme_color" class="form-control form-control-color" value="{{ settings.theme_color }}" style="width: 60px;">
+                                        <span class="ms-2">{{ settings.theme_color }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">وصف الموقع</label>
+                            <textarea name="site_description" class="form-control" rows="3">{{ settings.site_description }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact & Social -->
+                    <div class="settings-card">
+                        <h4 class="section-title"><i class="bi bi-envelope"></i> التواصل</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">البريد الإلكتروني للتواصل</label>
+                                    <input type="email" name="contact_email" class="form-control" value="{{ settings.contact_email }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h5 class="mt-4 mb-3">روابط التواصل الاجتماعي</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-facebook text-primary"></i> Facebook</label>
+                                    <input type="url" name="facebook" class="form-control" value="{{ settings.social_links.facebook if settings.social_links }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-twitter text-info"></i> Twitter</label>
+                                    <input type="url" name="twitter" class="form-control" value="{{ settings.social_links.twitter if settings.social_links }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label"><i class="bi bi-instagram text-danger"></i> Instagram</label>
+                                    <input type="url" name="instagram" class="form-control" value="{{ settings.social_links.instagram if settings.social_links }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced -->
+                    <div class="settings-card">
+                        <h4 class="section-title"><i class="bi bi-code-square"></i> إعدادات متقدمة</h4>
+                        <div class="mb-3">
+                            <label class="form-label">Google Analytics ID</label>
+                            <input type="text" name="google_analytics_id" class="form-control" value="{{ settings.google_analytics_id }}" placeholder="G-XXXXXXXXXX">
+                            <small class="text-muted">أدخل معرف Google Analytics لتتبع الزوار</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Backup -->
+                    <div class="settings-card">
+                        <h4 class="section-title"><i class="bi bi-database"></i> النسخ الاحتياطي</h4>
+                        <div class="backup-card">
+                            <p class="mb-3">أنشئ نسخة احتياطية كاملة من قاعدة البيانات والإعدادات</p>
+                            <a href="{{ url_for('backup_system') }}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> تحميل نسخة احتياطية
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Save Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="bi bi-check-circle"></i> حفظ جميع الإعدادات
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

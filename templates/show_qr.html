@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code - الموقع</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .qr-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .qr-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .qr-title i {
+            color: #667eea;
+            margin-left: 10px;
+        }
+        .qr-image-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px dashed #667eea;
+        }
+        .qr-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .site-url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+            border: 1px solid #e0e0e0;
+            direction: ltr;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+            border: none;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+            border: none;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 9999;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @media print {
+            body { background: white; }
+            .qr-card { box-shadow: none; }
+            .btn-group, .back-link, .btn-close { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="alert" id="copyAlert">
+        <i class="bi bi-check-circle"></i> تم نسخ الرابط!
+    </div>
+
+    <div class="qr-card">
+        <h1 class="qr-title">
+            <i class="bi bi-qr-code-scan"></i>
+            QR Code الموقع
+        </h1>
+        
+        <div class="qr-image-container">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="qr-image">
+        </div>
+        
+        <div class="site-url" id="siteUrl">
+            {{ site_url }}
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="downloadQR()">
+                <i class="bi bi-download"></i> تحميل
+            </button>
+            
+            <button class="btn btn-success" onclick="copyUrl()">
+                <i class="bi bi-clipboard"></i> نسخ
+            </button>
+            
+            <button class="btn btn-info" onclick="shareQR()">
+                <i class="bi bi-share"></i> مشاركة
+            </button>
+            
+            <button class="btn btn-secondary" onclick="window.print()">
+                <i class="bi bi-printer"></i> طباعة
+            </button>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+                <i class="bi bi-arrow-right"></i> العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function downloadQR() {
+            // تحويل base64 إلى blob وتحملها
+            const base64 = "{{ qr_code }}";
+            const link = document.createElement('a');
+            link.download = 'qr-code.png';
+            link.href = 'data:image/png;base64,' + base64;
+            link.click();
+        }
+        
+        function copyUrl() {
+            const url = "{{ site_url }}";
+            navigator.clipboard.writeText(url).then(function() {
+                showAlert();
+            }).catch(function(err) {
+                // طريقة بديلة
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showAlert();
+            });
+        }
+        
+        function showAlert() {
+            const alert = document.getElementById('copyAlert');
+            alert.style.display = 'block';
+            setTimeout(function() {
+                alert.style.display = 'none';
+            }, 2000);
+        }
+        
+        function shareQR() {
+            const url = "{{ site_url }}";
+            if (navigator.share) {
+                navigator.share({
+                    title: 'QR Code',
+                    text: 'رابط الموقع',
+                    url: url
+                }).catch(console.error);
+            } else {
+                copyUrl();
+            }
+        }
+        
+        // طباعة عند تحميل الصفحة إذا كان هناك معامل print
+        if (window.location.search.includes('print=true')) {
+            window.print();
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

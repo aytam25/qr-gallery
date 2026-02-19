@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة التصنيفات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 250px;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin: 5px 10px;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(-5px);
+        }
+        .main-content {
+            margin-right: 270px;
+            padding: 30px;
+        }
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-header h2 {
+            color: #333;
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .add-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .add-form h5 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .category-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102,126,234,0.3);
+            background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+        }
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+        .category-card:hover::before {
+            width: 10px;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8em;
+            margin-left: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+        }
+        .category-card:hover .category-icon {
+            transform: rotate(5deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+        }
+        .category-info {
+            flex: 1;
+        }
+        .category-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .category-card:hover .category-name {
+            color: var(--primary-color);
+        }
+        .category-slug {
+            color: #999;
+            font-size: 0.85em;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .category-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-right: 3px solid var(--primary-color);
+        }
+        .category-stats {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            color: #666;
+            font-size: 0.95em;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .category-stats span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-stats i {
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+        .preview-images {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+            height: 60px;
+        }
+        .preview-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .preview-image:hover {
+            transform: scale(1.5);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .preview-more {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .category-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+            position: relative;
+            z-index: 10;
+        }
+        .btn-edit, .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        .btn-edit:hover, .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+        }
+        .btn-view:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+        }
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+        .edit-mode {
+            display: none;
+        }
+        .edit-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .edit-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            min-height: 80px;
+            resize: vertical;
+        }
+        .view-all-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .view-all-link:hover {
+            text-decoration: underline;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            color: #999;
+        }
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-4">
+            <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+            <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+            <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+            <a class="nav-link active" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+            <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+            <a class="nav-link" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+            <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+            <hr class="bg-white">
+            <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+            <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2><i class="bi bi-tags"></i> إدارة التصنيفات</h2>
+            <div>
+                <span class="badge bg-primary">{{ categories|length }} تصنيف</span>
+            </div>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        <i class="bi bi-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Add Category Form -->
+        <div class="add-form">
+            <h5><i class="bi bi-plus-circle"></i> إضافة تصنيف جديد</h5>
+            <form method="POST" action="{{ url_for('add_category') }}">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="mb-3">
+                            <label class="form-label">اسم التصنيف</label>
+                            <input type="text" name="name" class="form-control" placeholder="أدخل اسم التصنيف" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="mb-3">
+                            <label class="form-label">الوصف</label>
+                            <input type="text" name="description" class="form-control" placeholder="وصف مختصر للتصنيف">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-save"></i> إضافة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Categories Grid -->
+        {% if categories %}
+        <div class="categories-grid">
+            {% for category in categories %}
+            <div class="category-card" id="category-{{ category.id }}">
+                <!-- رابط عرض التصنيف (يتم فتحه عند الضغط على البطاقة) -->
+                <a href="{{ url_for('view_category', category_id=category.id) }}" class="stretched-link" target="_blank"></a>
+                
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="bi bi-folder"></i>
+                    </div>
+                    <div class="category-info">
+                        <!-- وضع العرض -->
+                        <div class="view-mode" id="view-{{ category.id }}">
+                            <div class="category-name">{{ category.name }}</div>
+                            <div class="category-slug">{{ category.slug }}</div>
+                        </div>
+                        
+                        <!-- وضع التعديل (مخفي افتراضياً) -->
+                        <div class="edit-mode" id="edit-{{ category.id }}" style="display: none;">
+                            <form method="POST" action="{{ url_for('edit_category', category_id=category.id) }}" id="edit-form-{{ category.id }}">
+                                <input type="text" name="name" class="edit-input" value="{{ category.name }}" placeholder="اسم التصنيف" required>
+                                <textarea name="description" class="edit-textarea" placeholder="وصف التصنيف">{{ category.description or '' }}</textarea>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- وصف التصنيف (وضع العرض) -->
+                <div class="category-description view-mode" id="desc-{{ category.id }}">
+                    <i class="bi bi-quote"></i> {{ category.description or 'لا يوجد وصف' }}
+                </div>
+                
+                <!-- معاينة الصور -->
+                {% if category.images %}
+                <div class="preview-images">
+                    {% for image in category.images[:4] %}
+                    <img src="{{ image.thumbnail_url or image.image_url }}" class="preview-image" alt="{{ image.title }}" onclick="event.preventDefault(); window.open('{{ url_for('view_image', image_id=image.id) }}', '_blank')">
+                    {% endfor %}
+                    {% if category.images|length > 4 %}
+                    <div class="preview-more">
+                        +{{ category.images|length - 4 }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <!-- إحصائيات -->
+                <div class="category-stats">
+                    <span><i class="bi bi-images"></i> {{ category.images|length }} صورة</span>
+                    <span><i class="bi bi-calendar"></i> {{ category.created_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+                
+                <!-- أزرار التحكم (تظهر فوق الرابط) -->
+                <div class="category-actions" onclick="event.preventDefault(); event.stopPropagation();">
+                    <!-- أزرار وضع العرض -->
+                    <div class="view-mode" id="view-actions-{{ category.id }}">
+                        <button class="btn-view" onclick="event.preventDefault(); window.open('{{ url_for('view_category', category_id=category.id) }}', '_blank')">
+                            <i class="bi bi-eye"></i> عرض
+                        </button>
+                        <button class="btn-edit" onclick="event.preventDefault(); editCategory({{ category.id }})">
+                            <i class="bi bi-pencil"></i> تعديل
+                        </button>
+                        <a href="{{ url_for('delete_category', category_id=category.id) }}" 
+                           class="btn-delete"
+                           onclick="event.preventDefault(); if(confirm('هل أنت متأكد من حذف التصنيف؟ سيتم نقل جميع الصور إلى التصنيف العام')) window.location.href=this.href">
+                            <i class="bi bi-trash"></i> حذف
+                        </a>
+                    </div>
+                    
+                    <!-- أزرار وضع التعديل (مخفية افتراضياً) -->
+                    <div class="edit-mode" id="edit-actions-{{ category.id }}" style="display: none;">
+                        <button class="btn-save" onclick="event.preventDefault(); saveCategory({{ category.id }})">
+                            <i class="bi bi-check-circle"></i> حفظ
+                        </button>
+                        <button class="btn-cancel" onclick="event.preventDefault(); cancelEdit({{ category.id }})">
+                            <i class="bi bi-x-circle"></i> إلغاء
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-tags"></i>
+            <h4>لا توجد تصنيفات</h4>
+            <p class="text-muted">أضف تصنيفاً جديداً للبدء في تنظيم الصور</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function editCategory(id) {
+            // إخفاء عناصر العرض
+            document.getElementById('view-' + id).style.display = 'none';
+            document.getElementById('desc-' + id).style.display = 'none';
+            document.getElementById('view-actions-' + id).style.display = 'none';
+            
+            // إظهار عناصر التعديل
+            document.getElementById('edit-' + id).style.display = 'block';
+            document.getElementById('edit-actions-' + id).style.display = 'flex';
+        }
+        
+        function saveCategory(id) {
+            // إرسال النموذج
+            document.getElementById('edit-form-' + id).submit();
+        }
+        
+        function cancelEdit(id) {
+            // إخفاء عناصر التعديل
+            document.getElementById('edit-' + id).style.display = 'none';
+            document.getElementById('edit-actions-' + id).style.display = 'none';
+            
+            // إظهار عناصر العرض
+            document.getElementById('view-' + id).style.display = 'block';
+            document.getElementById('desc-' + id).style.display = 'block';
+            document.getElementById('view-actions-' + id).style.display = 'flex';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

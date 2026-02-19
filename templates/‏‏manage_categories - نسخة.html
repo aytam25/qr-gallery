@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة التصنيفات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #667eea; }
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .category-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+        .add-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-4">
+                    <h4 class="text-center mb-4"><i class="bi bi-camera-fill"></i> لوحة التحكم</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2"></i> الرئيسية</a>
+                    <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
+                    <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
+                    <a class="nav-link active" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                    <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
+                    <a class="nav-link" href="{{ url_for('analytics') }}"><i class="bi bi-graph-up"></i> التحليلات</a>
+                    <a class="nav-link" href="{{ url_for('manage_users') }}"><i class="bi bi-people"></i> المستخدمين</a>
+                    <hr class="bg-white">
+                    <a class="nav-link" href="{{ url_for('index') }}" target="_blank"><i class="bi bi-eye"></i> عرض الموقع</a>
+                    <a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> خروج</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <h2 class="mb-4">إدارة التصنيفات</h2>
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Add Category Form -->
+                <div class="add-form">
+                    <h5 class="mb-4"><i class="bi bi-plus-circle"></i> إضافة تصنيف جديد</h5>
+                    <form method="POST" action="{{ url_for('add_category') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">اسم التصنيف</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">الوصف</label>
+                                    <textarea name="description" class="form-control" rows="1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> إضافة
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Categories List -->
+                <div class="row">
+                    {% for category in categories %}
+                    <div class="col-md-6">
+                        <div class="category-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="category-icon ms-3">
+                                    <i class="bi bi-folder"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ category.name }}</h5>
+                                    <small class="text-muted">{{ category.slug }}</small>
+                                </div>
+                            </div>
+                            
+                            <p class="text-muted mb-3">{{ category.description or 'لا يوجد وصف' }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">{{ category.images|length }} صورة</span>
+                                
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editCategory({{ category.id }}, '{{ category.name }}', '{{ category.description }}')">
+                                        <i class="bi bi-pencil"></i> تعديل
+                                    </button>
+                                    <a href="{{ url_for('delete_category', category_id=category.id) }}" 
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('سيتم نقل جميع الصور إلى التصنيف العام. هل أنت متأكد؟')">
+                                        <i class="bi bi-trash"></i> حذف
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Edit Form (Hidden) -->
+                            <form id="editForm{{ category.id }}" method="POST" action="{{ url_for('edit_category', category_id=category.id) }}" style="display: none;">
+                                <input type="text" name="name" value="{{ category.name }}">
+                                <textarea name="description">{{ category.description }}</textarea>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-tags" style="font-size: 4em; color: #ccc;"></i>
+                        <h4 class="mt-3">لا توجد تصنيفات</h4>
+                        <p class="text-muted">أضف تصنيفاً جديداً للبدء</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function editCategory(id, name, description) {
+            document.getElementById('editForm' + id).style.display = 'block';
+            // يمكنك إضافة منطق تعديل هنا
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
