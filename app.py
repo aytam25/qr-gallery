@@ -231,7 +231,16 @@ def index():
  
 
 
-
+@app.route('/check-images')
+@login_required
+def check_images():
+    """فحص الصور في قاعدة البيانات"""
+    images = Image.query.all()
+    output = "<h1>الصور في قاعدة البيانات</h1><ul>"
+    for img in images:
+        output += f"<li>{img.id}: {img.title} - المشاهدات: {img.views} - الرابط: {img.image_url}</li>"
+    output += "</ul>"
+    return output
 
 
 
@@ -244,7 +253,13 @@ def view_image(image_id):
     
     image.views += 1
     db.session.commit()
-    
+     # تسجيل النشاط
+    log_activity(
+        user_id=current_user.id if current_user.is_authenticated else None,
+        action='view_image',
+        details={'image_id': image_id, 'title': image.title},
+        ip=request.remote_addr
+    )
     similar_images = Image.query.filter(
         Image.category_id == image.category_id,
         Image.id != image.id,

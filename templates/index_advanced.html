@@ -560,7 +560,16 @@ function shareQR() {
 
 
 
-
+@app.route('/check-images')
+@login_required
+def check_images():
+    """فحص الصور في قاعدة البيانات"""
+    images = Image.query.all()
+    output = "<h1>الصور في قاعدة البيانات</h1><ul>"
+    for img in images:
+        output += f"<li>{img.id}: {img.title} - المشاهدات: {img.views} - الرابط: {img.image_url}</li>"
+    output += "</ul>"
+    return output
 
 
 
