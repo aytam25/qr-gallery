@@ -541,25 +541,37 @@ def add_image():
 
 
 
-
 @app.route('/admin/upload', methods=['GET', 'POST'])
 @login_required
 def upload_images():
-    """رفع صور متعدد إلى Azure Blob Storage"""
+    """رفع صور متعدد مع تفاصيل لكل صورة"""
     if request.method == 'POST':
         files = request.files.getlist('images[]')
-        category_id = request.form.get('category_id', type=int)
+        category_id = request.form.get('category_id', type=int)  # للتوافق مع القديم
         
         uploaded = []
         failed = []
         
-        for file in files:
+        for index, file in enumerate(files):
             if file and allowed_file(file.filename):
                 try:
+                    # جلب التفاصيل الخاصة بهذه الصورة
+                    title = request.form.get(f'title_{index}', '')
+                    description = request.form.get(f'description_{index}', '')
+                    img_category = request.form.get(f'category_{index}', type=int) or category_id
+                    is_featured = request.form.get(f'featured_{index}') == 'on'
+                    is_published = request.form.get(f'published_{index}') != 'off'
+                    sort_order = request.form.get(f'sort_{index}', 0, type=int)
+                    
+                    # إذا لم يتم إرسال عنوان، استخدم اسم الملف
+                    if not title:
+                        title = file.filename.split('.')[0]
+                    
                     # اسم آمن للملف
                     filename = secure_filename(file.filename)
                     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                    new_filename = f"{timestamp}_{filename}"
+                    unique_id = uuid.uuid4().hex[:16]
+                    new_filename = f"{unique_id}_{timestamp}_{filename}"
                     
                     # حفظ مؤقتاً في المجلد المحلي (لإنشاء الصورة المصغرة)
                     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
@@ -581,23 +593,26 @@ def upload_images():
                         if os.path.exists(thumb_path):
                             os.remove(thumb_path)
                         
-                        # 5. حفظ في قاعدة البيانات باستخدام روابط Azure
+                        # 5. حفظ في قاعدة البيانات مع جميع التفاصيل
                         new_image = Image(
-                            title=request.form.get('title', filename),
-                            description=request.form.get('description', ''),
+                            title=title,
+                            description=description,
                             filename=new_filename,
                             file_size=os.path.getsize(temp_path) if os.path.exists(temp_path) else 0,
                             mime_type=file.mimetype,
-                            image_url=azure_url,  # رابط Azure للصورة الأصلية
-                            thumbnail_url=thumb_azure_url or azure_url,  # رابط Azure للصورة المصغرة
-                            category_id=category_id,
+                            image_url=azure_url,
+                            thumbnail_url=thumb_azure_url or azure_url,
+                            category_id=img_category,
+                            is_featured=is_featured,
+                            is_published=is_published,
+                            sort_order=sort_order,
                             uploaded_by=current_user.id,
                             image_metadata={'original_filename': filename}
                         )
                         
                         db.session.add(new_image)
                         uploaded.append(filename)
-                        print(f"✅ تم رفع {filename} إلى Azure")
+                        print(f"✅ تم رفع {filename} إلى Azure مع التفاصيل")
                     else:
                         failed.append({'file': filename, 'error': 'فشل رفع الملف إلى Azure'})
                         # تنظيف الملفات المؤقتة
@@ -618,17 +633,23 @@ def upload_images():
         
         log_activity(current_user.id, 'bulk_upload', {'count': len(uploaded)})
         
-        flash(f'✅ تم رفع {len(uploaded)} صورة إلى Azure بنجاح', 'success')
-        if failed:
-            flash(f'❌ فشل رفع {len(failed)} صورة', 'warning')
-        
-        return redirect(url_for('manage_images'))
+        # للتوافق مع الطلب AJAX من الصفحة الجديدة
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({
+                'success': len(uploaded) > 0,
+                'uploaded': len(uploaded),
+                'failed': len(failed)
+            })
+        else:
+            flash(f'✅ تم رفع {len(uploaded)} صورة إلى Azure بنجاح', 'success')
+            if failed:
+                flash(f'❌ فشل رفع {len(failed)} صورة', 'warning')
+            
+            return redirect(url_for('manage_images'))
     
+    # GET request - عرض صفحة الرفع
     categories = Category.query.all()
     return render_template('upload_images.html', categories=categories)
-
-
-
  
 
 
