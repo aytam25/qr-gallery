@@ -287,6 +287,29 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        /* تأثيرات حركية */
+.carousel-item {
+    transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease !important;
+}
+
+/* ظل للنص */
+.carousel-caption {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* تحسين الموبايل */
+@media (max-width: 768px) {
+    .carousel-inner {
+        height: 300px !important;
+    }
+    .display-3 {
+        font-size: 2rem !important;
+    }
+}
+
+
+
     </style>
 </head>
 <body>
@@ -471,6 +494,189 @@ function shareQR() {
 }
 </script>
     
+
+
+
+
+<!-- قسم الكاروسيل الاحترافي -->
+<section class="container-fluid px-0 mb-5" style="margin-top: -20px;">
+    <div id="professionalCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+        <!-- الصور -->
+        <div class="carousel-inner" style="height: 600px;">
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative">
+                <!-- الصورة مع تأثير -->
+                <img src="{{ image.image_url }}" 
+                     class="d-block w-100 h-100" 
+                     alt="{{ image.title }}"
+                     style="object-fit: cover; filter: brightness(0.7);">
+                
+                <!-- محتوى متحرك فوق الصورة -->
+                <div class="position-absolute top-50 start-50 translate-middle text-center text-white" 
+                     style="z-index: 10; max-width: 800px; width: 90%;">
+                    <h2 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">{{ image.title }}</h2>
+                    <p class="lead mb-5 animate__animated animate__fadeInUp">{{ image.description|truncate(100) }}</p>
+                    
+                    <!-- أزرار -->
+                    <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-1s">
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-primary btn-lg px-5 py-3">
+                            <i class="bi bi-eye"></i> عرض التفاصيل
+                        </a>
+                        <a href="{{ url_for('index') }}#gallery" class="btn btn-outline-light btn-lg px-5 py-3">
+                            <i class="bi bi-grid"></i> جميع الصور
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- أزرار التحكم الجميلة -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev" 
+                style="width: 5%; background: linear-gradient(to left, transparent, rgba(0,0,0,0.3));">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+            <span class="visually-hidden">السابق</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#professionalCarousel" data-bs-slide="next"
+                style="width: 5%; background: linear-gradient(to right, transparent, rgba(0,0,0,0.3));">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+            <span class="visually-hidden">التالي</span>
+        </button>
+        
+        <!-- المؤشرات المتحركة -->
+        <div class="carousel-indicators position-absolute bottom-0 start-0 end-0 mb-4">
+            {% for image in featured_images[:6] %}
+            <button type="button" data-bs-target="#professionalCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                    class="{% if loop.first %}active{% endif %} mx-2" 
+                    style="width: 50px; height: 4px; border: none; background: rgba(255,255,255,0.5); transition: all 0.3s;"
+                    aria-label="Slide {{ loop.index }}"></button>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- أضف هذا CSS -->
+<style>
+    /* تأثيرات إضافية */
+    .carousel-item {
+        transition: transform 2s ease, opacity 1.5s ease !important;
+    }
+    
+    .carousel-item.active .display-3 {
+        animation: slideDown 1s ease;
+    }
+    
+    .carousel-item.active .lead {
+        animation: slideUp 1s ease 0.3s both;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* تنسيق المؤشرات عند التحويم */
+    .carousel-indicators button:hover {
+        background: white !important;
+        width: 70px !important;
+    }
+    
+    .carousel-indicators button.active {
+        background: white !important;
+        width: 70px !important;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل مع معرض مصغر -->
+<section class="container mb-5">
+    <h2 class="text-white text-center mb-4">
+        <i class="bi bi-star-fill text-warning"></i> أبرز الأعمال
+    </h2>
+    
+    <div class="row g-4">
+        <!-- الكاروسيل الرئيسي -->
+        <div class="col-lg-8">
+            <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner rounded-4 shadow" style="height: 400px;">
+                    {% for image in featured_images[:5] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %} h-100">
+                        <img src="{{ image.image_url }}" 
+                             class="d-block w-100 h-100" 
+                             alt="{{ image.title }}"
+                             style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
+                            <h5>{{ image.title }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- الصور المصغرة -->
+        <div class="col-lg-4">
+            <div class="row g-3">
+                {% for image in featured_images[:4] %}
+                <div class="col-6">
+                    <img src="{{ image.thumbnail_url or image.image_url }}" 
+                         class="img-fluid rounded-3 shadow-sm" 
+                         alt="{{ image.title }}"
+                         style="height: 120px; width: 100%; object-fit: cover; cursor: pointer; transition: 0.3s;"
+                         onmouseover="this.style.transform='scale(1.05)'"
+                         onmouseout="this.style.transform='scale(1)'"
+                         onclick="goToSlide({{ loop.index0 }})">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function goToSlide(index) {
+    const carousel = new bootstrap.Carousel('#mainCarousel');
+    carousel.to(index);
+}
+</script>
+
+
+
+
+
 
     <!-- البحث -->
     <div class="container search-box">
