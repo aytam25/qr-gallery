@@ -497,6 +497,62 @@ function shareQR() {
 
 
 
+////////////////////////////////////////////
+<!-- قسم الكاروسيل الاحترافي - بحجم مناسب -->
+<section class="container-fluid px-0 mb-4" style="margin-top: -10px;">
+    <div id="professionalCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" data-bs-interval="4000">
+        <!-- الصور -->
+        <div class="carousel-inner" style="height: 400px;">  <!-- تغيير من 600px إلى 400px -->
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative">
+                <!-- الصورة مع تأثير -->
+                <img src="{{ image.image_url }}" 
+                     class="d-block w-100 h-100" 
+                     alt="{{ image.title }}"
+                     style="object-fit: cover; filter: brightness(0.7);">  <!-- object-fit: cover هو السر -->
+                
+                <!-- محتوى فوق الصورة (مصغر) -->
+                <div class="position-absolute top-50 start-50 translate-middle text-center text-white px-3" 
+                     style="z-index: 10; max-width: 700px; width: 90%;">
+                    <h2 class="fw-bold mb-3" style="font-size: 2rem;">{{ image.title }}</h2>  <!-- تصغير الخط -->
+                    <p class="mb-4" style="font-size: 1.1rem;">{{ image.description|truncate(80) }}</p>  <!-- تصغير الخط -->
+                    
+                    <!-- أزرار مصغرة -->
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-primary px-4 py-2">
+                            <i class="bi bi-eye"></i> عرض
+                        </a>
+                        <a href="{{ url_for('index') }}#gallery" class="btn btn-outline-light px-4 py-2">
+                            <i class="bi bi-grid"></i> المعرض
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- أزرار التحكم -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">السابق</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#professionalCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">التالي</span>
+        </button>
+        
+        <!-- المؤشرات (النقاط) -->
+        <div class="carousel-indicators">
+            {% for image in featured_images[:6] %}
+            <button type="button" data-bs-target="#professionalCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                    class="{% if loop.first %}active{% endif %}" 
+                    aria-label="Slide {{ loop.index }}"></button>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+/////////////////////////////////////////////////////
+
 
 <!-- قسم الكاروسيل الاحترافي -->
 <section class="container-fluid px-0 mb-5" style="margin-top: -20px;">
@@ -557,51 +613,44 @@ function shareQR() {
 
 <!-- أضف هذا CSS -->
 <style>
-    /* تأثيرات إضافية */
-    .carousel-item {
-        transition: transform 2s ease, opacity 1.5s ease !important;
+   /* تحسين عرض الكاروسيل */
+.carousel-inner {
+    background-color: #000;  /* خلفية سوداء أثناء التحميل */
+}
+
+.carousel-item img {
+    object-fit: cover;  /* يجعل الصورة تغطي المساحة بدون تشويه */
+    width: 100%;
+    height: 100%;
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .carousel-inner {
+        height: 250px !important;  /* أصغر للجوال */
     }
     
-    .carousel-item.active .display-3 {
-        animation: slideDown 1s ease;
+    .carousel-item .position-absolute h2 {
+        font-size: 1.5rem !important;  /* تصغير العنوان */
     }
     
-    .carousel-item.active .lead {
-        animation: slideUp 1s ease 0.3s both;
+    .carousel-item .position-absolute p {
+        font-size: 0.9rem !important;  /* تصغير الوصف */
+        margin-bottom: 10px !important;
     }
     
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .carousel-item .position-absolute .btn {
+        padding: 5px 10px !important;  /* تصغير الأزرار */
+        font-size: 0.9rem !important;
     }
-    
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+}
+
+/* للموبايل الصغير جداً */
+@media (max-width: 480px) {
+    .carousel-inner {
+        height: 200px !important;
     }
-    
-    /* تنسيق المؤشرات عند التحويم */
-    .carousel-indicators button:hover {
-        background: white !important;
-        width: 70px !important;
-    }
-    
-    .carousel-indicators button.active {
-        background: white !important;
-        width: 70px !important;
-    }
+}
 </style>
 
 
