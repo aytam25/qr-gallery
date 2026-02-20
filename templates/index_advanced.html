@@ -497,6 +497,64 @@ function shareQR() {
  
  
  
+
+
+
+
+
+
+ 
+<!-- أضف هذا CSS -->
+<style>
+    /* تأثيرات إضافية */
+    .carousel-item {
+        transition: transform 2s ease, opacity 1.5s ease !important;
+    }
+    
+    .carousel-item.active .display-3 {
+        animation: slideDown 1s ease;
+    }
+    
+    .carousel-item.active .lead {
+        animation: slideUp 1s ease 0.3s both;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* تنسيق المؤشرات عند التحويم */
+    .carousel-indicators button:hover {
+        background: white !important;
+        width: 70px !important;
+    }
+    
+    .carousel-indicators button.active {
+        background: white !important;
+        width: 70px !important;
+    }
+</style>
+
+ 
+
  
 
 
