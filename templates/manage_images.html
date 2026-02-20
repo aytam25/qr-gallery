@@ -69,6 +69,11 @@
             display: none;
             justify-content: space-between;
             align-items: center;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         .selection-bar.active {
             display: flex;
@@ -88,7 +93,7 @@
         }
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
         .image-card {
@@ -105,7 +110,7 @@
         }
         .image-card img {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
         }
         .image-card .checkbox-container {
@@ -115,15 +120,20 @@
             z-index: 10;
         }
         .image-card .checkbox-container input {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             cursor: pointer;
             accent-color: var(--primary-color);
+            border-radius: 5px;
         }
         .image-card .badge {
             position: absolute;
             top: 10px;
             left: 10px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
         }
         .image-card .card-body {
             padding: 15px;
@@ -132,39 +142,99 @@
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 5px;
+            color: #333;
         }
         .image-card .card-text {
             color: #666;
             font-size: 0.9em;
             margin-bottom: 10px;
         }
+        .image-card .meta-info {
+            display: flex;
+            gap: 15px;
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
         .image-card .actions {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             margin-top: 10px;
         }
-        .image-card .actions a {
+        .image-card .actions a, .image-card .actions button {
             flex: 1;
             text-align: center;
             padding: 8px;
             border-radius: 8px;
             text-decoration: none;
             font-size: 0.9em;
+            border: none;
+            cursor: pointer;
             transition: all 0.3s;
         }
-        .btn-delete-selected {
+        .btn-edit {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        .btn-delete {
             background: #dc3545;
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
         }
-        .btn-clear {
-            background: #6c757d;
-            color: white;
+        .btn-delete:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        .btn-bulk {
+            padding: 10px 20px;
             border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .btn-bulk-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-bulk-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-bulk-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-bulk-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-bulk-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-bulk:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .selected-count-badge {
+            background: var(--primary-color);
+            color: white;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            grid-column: 1/-1;
         }
     </style>
 </head>
@@ -193,9 +263,7 @@
         <div class="page-header">
             <h2><i class="bi bi-images"></i> إدارة الصور</h2>
             <div>
-                <button class="btn-select-all" onclick="toggleSelectAll()">
-                    <i class="bi bi-check-all"></i> تحديد الكل
-                </button>
+                <span class="selected-count-badge" id="selectedCountDisplay">0</span>
             </div>
         </div>
         
@@ -204,6 +272,7 @@
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        <i class="bi bi-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -211,37 +280,49 @@
             {% endif %}
         {% endwith %}
         
-        <!-- Action Bar with Bulk Actions -->
+        <!-- Action Bar with Buttons (الخيار 2) -->
         <div class="action-bar">
-            <form method="POST" action="{{ url_for('bulk_action') }}" id="bulkActionForm">
-                <div class="d-flex gap-3">
-                    <select name="action" class="form-select" style="width: auto;" required>
-                        <option value="" disabled selected>اختر إجراء</option>
-                        <option value="delete">🗑️ حذف المحدد</option>
-                        <option value="publish">📢 نشر المحدد</option>
-                        <option value="unpublish">🚫 إلغاء نشر المحدد</option>
-                        <option value="feature">⭐ تمييز كمميزة</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary" onclick="return confirmBulkAction()">
-                        تطبيق
-                    </button>
-                    <a href="{{ url_for('upload_images') }}" class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> إضافة صور جديدة
-                    </a>
-                </div>
-            </form>
+            <div class="d-flex gap-2 align-items-center flex-wrap w-100">
+                <!-- زر تحديد الكل -->
+                <button class="btn-select-all" onclick="toggleSelectAll()">
+                    <i class="bi bi-check-all"></i> تحديد الكل
+                </button>
+                
+                <!-- أزرار الإجراءات الجماعية -->
+                <button class="btn-bulk btn-bulk-danger" onclick="bulkAction('delete')">
+                    <i class="bi bi-trash"></i> حذف المحدد
+                </button>
+                
+                <button class="btn-bulk btn-bulk-success" onclick="bulkAction('publish')">
+                    <i class="bi bi-megaphone"></i> نشر المحدد
+                </button>
+                
+                <button class="btn-bulk btn-bulk-warning" onclick="bulkAction('unpublish')">
+                    <i class="bi bi-eye-slash"></i> إلغاء نشر المحدد
+                </button>
+                
+                <button class="btn-bulk btn-bulk-info" onclick="bulkAction('feature')">
+                    <i class="bi bi-star"></i> تمييز كمميزة
+                </button>
+                
+                <!-- زر إضافة صور -->
+                <a href="{{ url_for('upload_images') }}" class="btn-bulk btn-bulk-primary">
+                    <i class="bi bi-plus-circle"></i> إضافة صور جديدة
+                </a>
+            </div>
         </div>
         
         <!-- Selection Bar -->
         <div class="selection-bar" id="selectionBar">
             <div>
+                <i class="bi bi-check-circle"></i>
                 <span id="selectedCount">0</span> صورة محددة
             </div>
             <div class="d-flex gap-2">
-                <button class="btn-delete-selected" onclick="deleteSelected()">
-                    <i class="bi bi-trash"></i> حذف المحدد
+                <button class="btn btn-sm btn-danger" onclick="bulkAction('delete')">
+                    <i class="bi bi-trash"></i> حذف
                 </button>
-                <button class="btn-clear" onclick="clearSelection()">
+                <button class="btn btn-sm btn-light" onclick="clearSelection()">
                     <i class="bi bi-x-circle"></i> إلغاء التحديد
                 </button>
             </div>
@@ -250,9 +331,9 @@
         <!-- Images Grid -->
         <div class="image-grid">
             {% for image in images.items %}
-            <div class="image-card">
+            <div class="image-card" data-id="{{ image.id }}">
                 <div class="checkbox-container">
-                    <input type="checkbox" class="image-checkbox" value="{{ image.id }}" onchange="updateSelection()">
+                    <input type="checkbox" class="image-checkbox" value="{{ image.id }}" onchange="updateSelection(this)">
                 </div>
                 
                 {% if image.is_featured %}
@@ -268,26 +349,24 @@
                     <div class="card-title">{{ image.title }}</div>
                     <div class="card-text">{{ image.description|truncate(50) }}</div>
                     
-                    <div class="small text-muted mb-2">
-                        <i class="bi bi-eye"></i> {{ image.views }} |
-                        <i class="bi bi-download"></i> {{ image.downloads }} |
-                        <i class="bi bi-calendar"></i> {{ image.created_at.strftime('%Y-%m-%d') }}
+                    <div class="meta-info">
+                        <span><i class="bi bi-eye"></i> {{ image.views }}</span>
+                        <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
+                        <span><i class="bi bi-calendar"></i> {{ image.created_at.strftime('%Y-%m-%d') }}</span>
                     </div>
                     
                     <div class="actions">
-                        <a href="{{ url_for('edit_image', image_id=image.id) }}" class="btn btn-primary">
+                        <a href="{{ url_for('edit_image', image_id=image.id) }}" class="btn-edit">
                             <i class="bi bi-pencil"></i> تعديل
                         </a>
-                        <a href="{{ url_for('delete_image', image_id=image.id) }}" 
-                           class="btn btn-danger"
-                           onclick="return confirm('هل أنت متأكد من حذف هذه الصورة؟')">
+                        <button class="btn-delete" onclick="deleteSingle({{ image.id }}, '{{ image.title }}')">
                             <i class="bi bi-trash"></i> حذف
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
             {% else %}
-            <div class="text-center py-5" style="grid-column: 1/-1;">
+            <div class="empty-state">
                 <i class="bi bi-images" style="font-size: 4em; color: #ccc;"></i>
                 <h4 class="mt-3">لا توجد صور</h4>
                 <p class="text-muted">لم تقم بإضافة أي صور بعد</p>
@@ -301,10 +380,12 @@
         <!-- Pagination -->
         {% if images.pages > 1 %}
         <nav class="mt-4">
-            <ul class="pagination">
+            <ul class="pagination justify-content-center">
                 {% if images.has_prev %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('manage_images', page=images.prev_num) }}">السابق</a>
+                    <a class="page-link" href="{{ url_for('manage_images', page=images.prev_num) }}">
+                        <i class="bi bi-chevron-right"></i> السابق
+                    </a>
                 </li>
                 {% endif %}
                 
@@ -320,7 +401,9 @@
                 
                 {% if images.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('manage_images', page=images.next_num) }}">التالي</a>
+                    <a class="page-link" href="{{ url_for('manage_images', page=images.next_num) }}">
+                        التالي <i class="bi bi-chevron-left"></i>
+                    </a>
                 </li>
                 {% endif %}
             </ul>
@@ -331,6 +414,30 @@
     <script>
         let selectedIds = new Set();
         
+        // تحديث عند تغيير أي checkbox
+        function updateSelection(checkbox) {
+            if (checkbox.checked) {
+                selectedIds.add(checkbox.value);
+            } else {
+                selectedIds.delete(checkbox.value);
+            }
+            updateSelectionUI();
+        }
+        
+        // تحديث واجهة المستخدم
+        function updateSelectionUI() {
+            const count = selectedIds.size;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('selectedCountDisplay').textContent = count;
+            
+            if (count > 0) {
+                document.getElementById('selectionBar').classList.add('active');
+            } else {
+                document.getElementById('selectionBar').classList.remove('active');
+            }
+        }
+        
+        // تحديد الكل / إلغاء التحديد
         function toggleSelectAll() {
             const checkboxes = document.querySelectorAll('.image-checkbox');
             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
@@ -344,50 +451,50 @@
                 }
             });
             
-            updateSelection();
+            updateSelectionUI();
         }
         
-        function updateSelection() {
-            // تحديث المجموعة
-            document.querySelectorAll('.image-checkbox:checked').forEach(cb => {
-                selectedIds.add(cb.value);
-            });
-            
-            document.querySelectorAll('.image-checkbox:not(:checked)').forEach(cb => {
-                selectedIds.delete(cb.value);
-            });
-            
-            // تحديث الواجهة
-            const count = selectedIds.size;
-            document.getElementById('selectedCount').textContent = count;
-            
-            if (count > 0) {
-                document.getElementById('selectionBar').classList.add('active');
-            } else {
-                document.getElementById('selectionBar').classList.remove('active');
-            }
-        }
-        
+        // إلغاء التحديد
         function clearSelection() {
             document.querySelectorAll('.image-checkbox').forEach(cb => {
                 cb.checked = false;
             });
             selectedIds.clear();
-            updateSelection();
+            updateSelectionUI();
         }
         
-        function deleteSelected() {
+        // الإجراءات الجماعية
+        function bulkAction(action) {
             if (selectedIds.size === 0) {
-                alert('لم تختر أي صور');
+                alert('❌ الرجاء تحديد صور أولاً');
                 return;
             }
             
-            if (confirm(`هل أنت متأكد من حذف ${selectedIds.size} صورة؟`)) {
-                const form = document.getElementById('bulkActionForm');
+            let message = '';
+            switch(action) {
+                case 'delete':
+                    message = `🗑️ هل أنت متأكد من حذف ${selectedIds.size} صورة؟`;
+                    break;
+                case 'publish':
+                    message = `📢 هل أنت متأكد من نشر ${selectedIds.size} صورة؟`;
+                    break;
+                case 'unpublish':
+                    message = `🚫 هل أنت متأكد من إلغاء نشر ${selectedIds.size} صورة؟`;
+                    break;
+                case 'feature':
+                    message = `⭐ هل أنت متأكد من تمييز ${selectedIds.size} صورة كمميزة؟`;
+                    break;
+            }
+            
+            if (confirm(message)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ url_for('bulk_action') }}";
+                
                 const actionInput = document.createElement('input');
                 actionInput.type = 'hidden';
                 actionInput.name = 'action';
-                actionInput.value = 'delete';
+                actionInput.value = action;
                 form.appendChild(actionInput);
                 
                 selectedIds.forEach(id => {
@@ -398,42 +505,26 @@
                     form.appendChild(input);
                 });
                 
+                document.body.appendChild(form);
                 form.submit();
             }
         }
         
-        function confirmBulkAction() {
-            const action = document.querySelector('select[name="action"]').value;
-            const count = selectedIds.size;
-            
-            if (!action) {
-                alert('الرجاء اختيار إجراء');
-                return false;
+        // حذف صورة واحدة
+        function deleteSingle(imageId, title) {
+            if (confirm(`🗑️ هل أنت متأكد من حذف "${title}"؟`)) {
+                window.location.href = "{{ url_for('delete_image', image_id=0) }}".replace('0', imageId);
             }
-            
-            if (count === 0) {
-                alert('الرجاء تحديد صور أولاً');
-                return false;
-            }
-            
-            let message = '';
-            switch(action) {
-                case 'delete':
-                    message = `حذف ${count} صورة؟`;
-                    break;
-                case 'publish':
-                    message = `نشر ${count} صورة؟`;
-                    break;
-                case 'unpublish':
-                    message = `إلغاء نشر ${count} صورة؟`;
-                    break;
-                case 'feature':
-                    message = `تمييز ${count} صورة كمميزة؟`;
-                    break;
-            }
-            
-            return confirm(message);
         }
+        
+        // تفعيل الـ checkboxes عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.image-checkbox').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    updateSelection(this);
+                });
+            });
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
