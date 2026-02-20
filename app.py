@@ -544,114 +544,64 @@ def add_image():
 @app.route('/admin/upload', methods=['GET', 'POST'])
 @login_required
 def upload_images():
-    """رفع صور متعدد مع تفاصيل لكل صورة"""
+    """رفع صور متعدد"""
     if request.method == 'POST':
-        files = request.files.getlist('images[]')
-        category_id = request.form.get('category_id', type=int)  # للتوافق مع القديم
+        files = request.files.getlist('images')
+        category_id = request.form.get('category_id', type=int)
+        is_featured = 'is_featured' in request.form
+        is_published = 'is_published' in request.form
         
-        uploaded = []
-        failed = []
+        uploaded = 0
+        failed = 0
         
-        for index, file in enumerate(files):
+        for file in files:
             if file and allowed_file(file.filename):
                 try:
-                    # جلب التفاصيل الخاصة بهذه الصورة
-                    title = request.form.get(f'title_{index}', '')
-                    description = request.form.get(f'description_{index}', '')
-                    img_category = request.form.get(f'category_{index}', type=int) or category_id
-                    is_featured = request.form.get(f'featured_{index}') == 'on'
-                    is_published = request.form.get(f'published_{index}') != 'off'
-                    sort_order = request.form.get(f'sort_{index}', 0, type=int)
-                    
-                    # إذا لم يتم إرسال عنوان، استخدم اسم الملف
-                    if not title:
-                        title = file.filename.split('.')[0]
-                    
-                    # اسم آمن للملف
                     filename = secure_filename(file.filename)
                     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                    unique_id = uuid.uuid4().hex[:16]
+                    unique_id = uuid.uuid4().hex[:8]
                     new_filename = f"{unique_id}_{timestamp}_{filename}"
                     
-                    # حفظ مؤقتاً في المجلد المحلي (لإنشاء الصورة المصغرة)
+                    # حفظ مؤقتاً
                     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                     file.save(temp_path)
                     
-                    # 1. إنشاء صورة مصغرة محلياً
-                    thumb_path = create_thumbnail(temp_path)
-                    thumb_filename = os.path.basename(thumb_path)
-                    
-                    # 2. رفع الصورة الأصلية إلى Azure
+                    # رفع إلى Azure
                     azure_url = upload_to_azure(temp_path, new_filename)
                     
                     if azure_url:
-                        # 3. رفع الصورة المصغرة إلى Azure
-                        thumb_azure_url = upload_to_azure(thumb_path, thumb_filename)
-                        
-                        # 4. حذف الملفات المؤقتة
+                        # حذف الملف المؤقت
                         os.remove(temp_path)
-                        if os.path.exists(thumb_path):
-                            os.remove(thumb_path)
                         
-                        # 5. حفظ في قاعدة البيانات مع جميع التفاصيل
+                        # حفظ في قاعدة البيانات
                         new_image = Image(
-                            title=title,
-                            description=description,
+                            title=request.form.get('title', filename),
+                            description=request.form.get('description', ''),
                             filename=new_filename,
-                            file_size=os.path.getsize(temp_path) if os.path.exists(temp_path) else 0,
-                            mime_type=file.mimetype,
                             image_url=azure_url,
-                            thumbnail_url=thumb_azure_url or azure_url,
-                            category_id=img_category,
+                            category_id=category_id,
                             is_featured=is_featured,
                             is_published=is_published,
-                            sort_order=sort_order,
-                            uploaded_by=current_user.id,
-                            image_metadata={'original_filename': filename}
+                            uploaded_by=current_user.id
                         )
-                        
                         db.session.add(new_image)
-                        uploaded.append(filename)
-                        print(f"✅ تم رفع {filename} إلى Azure مع التفاصيل")
+                        uploaded += 1
                     else:
-                        failed.append({'file': filename, 'error': 'فشل رفع الملف إلى Azure'})
-                        # تنظيف الملفات المؤقتة
-                        if os.path.exists(temp_path):
-                            os.remove(temp_path)
-                        if os.path.exists(thumb_path):
-                            os.remove(thumb_path)
-                    
+                        failed += 1
+                        
                 except Exception as e:
-                    failed.append({'file': filename, 'error': str(e)})
-                    # تنظيف في حالة الخطأ
-                    if os.path.exists(temp_path):
-                        os.remove(temp_path)
-                    if os.path.exists(thumb_path):
-                        os.remove(thumb_path)
+                    failed += 1
+                    print(f"خطأ: {e}")
         
         db.session.commit()
+        flash(f'✅ تم رفع {uploaded} صورة بنجاح', 'success')
+        if failed:
+            flash(f'❌ فشل رفع {failed} صورة', 'warning')
         
-        log_activity(current_user.id, 'bulk_upload', {'count': len(uploaded)})
-        
-        # للتوافق مع الطلب AJAX من الصفحة الجديدة
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({
-                'success': len(uploaded) > 0,
-                'uploaded': len(uploaded),
-                'failed': len(failed)
-            })
-        else:
-            flash(f'✅ تم رفع {len(uploaded)} صورة إلى Azure بنجاح', 'success')
-            if failed:
-                flash(f'❌ فشل رفع {len(failed)} صورة', 'warning')
-            
-            return redirect(url_for('manage_images'))
+        return redirect(url_for('manage_images'))
     
-    # GET request - عرض صفحة الرفع
     categories = Category.query.all()
     return render_template('upload_images.html', categories=categories)
- 
-
 
 @app.route('/admin/edit/<int:image_id>', methods=['GET', 'POST'])
 @login_required
