@@ -39,11 +39,21 @@
             margin-right: 270px;
             padding: 30px;
         }
-        .action-bar {
+        .page-header {
             background: white;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .action-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             display: flex;
             flex-wrap: wrap;
@@ -51,7 +61,7 @@
             align-items: center;
         }
         .selection-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 20px;
@@ -59,14 +69,22 @@
             display: none;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
         }
         .selection-bar.active {
             display: flex;
         }
-        .selection-bar .selected-count {
-            font-weight: bold;
-            font-size: 1.1em;
+        .btn-select-all {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-select-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
         }
         .image-grid {
             display: grid;
@@ -102,6 +120,11 @@
             cursor: pointer;
             accent-color: var(--primary-color);
         }
+        .image-card .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
         .image-card .card-body {
             padding: 15px;
         }
@@ -109,16 +132,11 @@
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 5px;
-            color: #333;
         }
         .image-card .card-text {
             color: #666;
             font-size: 0.9em;
-        }
-        .image-card .badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            margin-bottom: 10px;
         }
         .image-card .actions {
             display: flex;
@@ -134,53 +152,19 @@
             font-size: 0.9em;
             transition: all 0.3s;
         }
-        .btn-select-all {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn-select-all:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
-        }
         .btn-delete-selected {
             background: #dc3545;
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn-delete-selected:hover {
-            background: #c82333;
-            transform: translateY(-2px);
+            border-radius: 5px;
         }
         .btn-clear {
             background: #6c757d;
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .btn-clear:hover {
-            background: #5a6268;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 15px;
-            color: #999;
-        }
-        .empty-state i {
-            font-size: 4em;
-            margin-bottom: 15px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -206,7 +190,14 @@
     
     <!-- Main Content -->
     <div class="main-content">
-        <h2 class="mb-4"><i class="bi bi-images"></i> إدارة الصور</h2>
+        <div class="page-header">
+            <h2><i class="bi bi-images"></i> إدارة الصور</h2>
+            <div>
+                <button class="btn-select-all" onclick="toggleSelectAll()">
+                    <i class="bi bi-check-all"></i> تحديد الكل
+                </button>
+            </div>
+        </div>
         
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -220,22 +211,31 @@
             {% endif %}
         {% endwith %}
         
-        <!-- Action Bar -->
+        <!-- Action Bar with Bulk Actions -->
         <div class="action-bar">
-            <a href="{{ url_for('upload_images') }}" class="btn btn-primary">
-                <i class="bi bi-cloud-upload"></i> رفع صور جديدة
-            </a>
-            
-            <!-- زر تحديد الكل الجديد -->
-            <button class="btn-select-all" onclick="toggleSelectAll()">
-                <i class="bi bi-check-all"></i> تحديد الكل
-            </button>
+            <form method="POST" action="{{ url_for('bulk_action') }}" id="bulkActionForm">
+                <div class="d-flex gap-3">
+                    <select name="action" class="form-select" style="width: auto;" required>
+                        <option value="" disabled selected>اختر إجراء</option>
+                        <option value="delete">🗑️ حذف المحدد</option>
+                        <option value="publish">📢 نشر المحدد</option>
+                        <option value="unpublish">🚫 إلغاء نشر المحدد</option>
+                        <option value="feature">⭐ تمييز كمميزة</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" onclick="return confirmBulkAction()">
+                        تطبيق
+                    </button>
+                    <a href="{{ url_for('upload_images') }}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> إضافة صور جديدة
+                    </a>
+                </div>
+            </form>
         </div>
         
-        <!-- Selection Bar (يظهر فقط عند تحديد صور) -->
+        <!-- Selection Bar -->
         <div class="selection-bar" id="selectionBar">
             <div>
-                <span class="selected-count" id="selectedCount">0</span> صورة محددة
+                <span id="selectedCount">0</span> صورة محددة
             </div>
             <div class="d-flex gap-2">
                 <button class="btn-delete-selected" onclick="deleteSelected()">
@@ -287,9 +287,9 @@
                 </div>
             </div>
             {% else %}
-            <div class="empty-state">
-                <i class="bi bi-images"></i>
-                <h4>لا توجد صور</h4>
+            <div class="text-center py-5" style="grid-column: 1/-1;">
+                <i class="bi bi-images" style="font-size: 4em; color: #ccc;"></i>
+                <h4 class="mt-3">لا توجد صور</h4>
                 <p class="text-muted">لم تقم بإضافة أي صور بعد</p>
                 <a href="{{ url_for('upload_images') }}" class="btn btn-primary">
                     <i class="bi bi-cloud-upload"></i> ارفع صورك الآن
@@ -297,36 +297,36 @@
             </div>
             {% endfor %}
         </div>
-    </div>
-    
-    <!-- Pagination (اختياري) -->
-    {% if images.pages > 1 %}
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if images.has_prev %}
-            <li class="page-item">
-                <a class="page-link" href="{{ url_for('manage_images', page=images.prev_num) }}">السابق</a>
-            </li>
-            {% endif %}
-            
-            {% for page_num in images.iter_pages() %}
-                {% if page_num %}
-                    <li class="page-item {% if page_num == images.page %}active{% endif %}">
-                        <a class="page-link" href="{{ url_for('manage_images', page=page_num) }}">{{ page_num }}</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
+        
+        <!-- Pagination -->
+        {% if images.pages > 1 %}
+        <nav class="mt-4">
+            <ul class="pagination">
+                {% if images.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('manage_images', page=images.prev_num) }}">السابق</a>
+                </li>
                 {% endif %}
-            {% endfor %}
-            
-            {% if images.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="{{ url_for('manage_images', page=images.next_num) }}">التالي</a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
+                
+                {% for page_num in images.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('manage_images', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if images.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('manage_images', page=images.next_num) }}">التالي</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
     
     <script>
         let selectedIds = new Set();
@@ -348,17 +348,16 @@
         }
         
         function updateSelection() {
-            // تحديث مجموعة الأرقام المحددة
+            // تحديث المجموعة
             document.querySelectorAll('.image-checkbox:checked').forEach(cb => {
                 selectedIds.add(cb.value);
             });
             
-            // إزالة الغير محدد
             document.querySelectorAll('.image-checkbox:not(:checked)').forEach(cb => {
                 selectedIds.delete(cb.value);
             });
             
-            // تحديث واجهة المستخدم
+            // تحديث الواجهة
             const count = selectedIds.size;
             document.getElementById('selectedCount').textContent = count;
             
@@ -379,24 +378,18 @@
         
         function deleteSelected() {
             if (selectedIds.size === 0) {
-                alert('لم تختر أي صور للحذف');
+                alert('لم تختر أي صور');
                 return;
             }
             
             if (confirm(`هل أنت متأكد من حذف ${selectedIds.size} صورة؟`)) {
-                // إنشاء form ديناميكي
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{{ url_for('bulk_action') }}";
-                
-                // إضافة action
+                const form = document.getElementById('bulkActionForm');
                 const actionInput = document.createElement('input');
                 actionInput.type = 'hidden';
                 actionInput.name = 'action';
                 actionInput.value = 'delete';
                 form.appendChild(actionInput);
                 
-                // إضافة IDs
                 selectedIds.forEach(id => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -405,15 +398,42 @@
                     form.appendChild(input);
                 });
                 
-                document.body.appendChild(form);
                 form.submit();
             }
         }
         
-        // تحديث عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            updateSelection();
-        });
+        function confirmBulkAction() {
+            const action = document.querySelector('select[name="action"]').value;
+            const count = selectedIds.size;
+            
+            if (!action) {
+                alert('الرجاء اختيار إجراء');
+                return false;
+            }
+            
+            if (count === 0) {
+                alert('الرجاء تحديد صور أولاً');
+                return false;
+            }
+            
+            let message = '';
+            switch(action) {
+                case 'delete':
+                    message = `حذف ${count} صورة؟`;
+                    break;
+                case 'publish':
+                    message = `نشر ${count} صورة؟`;
+                    break;
+                case 'unpublish':
+                    message = `إلغاء نشر ${count} صورة؟`;
+                    break;
+                case 'feature':
+                    message = `تمييز ${count} صورة كمميزة؟`;
+                    break;
+            }
+            
+            return confirm(message);
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
