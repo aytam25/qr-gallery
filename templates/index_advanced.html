@@ -535,7 +535,7 @@ function shareQR() {
                 <img src="{{ image.image_url }}" 
                      class="d-block w-100 h-100" 
                      alt="{{ image.title }}"
-                     style="object-fit: cover; filter: brightness(0.7);">
+                     style="object-fit: contain; filter: brightness(0.7);">
                 
                 <!-- محتوى متحرك فوق الصورة -->
                 <div class="position-absolute top-50 start-50 translate-middle text-center text-white" 
@@ -580,6 +580,183 @@ function shareQR() {
         </div>
     </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل الاحترافي - عرض الصور كاملة -->
+<section class="container-fluid px-0 mb-4" style="margin-top: -10px;">
+    <div id="professionalCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner" style="height: 450px; background-color: #1a1a1a;">  <!-- خلفية داكنة -->
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative h-100">
+                <!-- الصورة كاملة مع خلفية -->
+                <img src="{{ image.image_url }}" 
+                     class="d-block mx-auto" 
+                     alt="{{ image.title }}"
+                     style="height: 100%; width: auto; max-width: 100%; object-fit: contain;">  <!-- contain بدلاً من cover -->
+                
+                <!-- نص فوق الصورة -->
+                <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                     style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                    <h3 class="mb-2">{{ image.title }}</h3>
+                    <p class="mb-0">{{ image.description|truncate(100) }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- أزرار التحكم -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#professionalCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل - صورة كاملة بدون قص -->
+<section class="container-fluid px-0 mb-4">
+    <div id="carouselFull" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" style="height: 500px; background: #f5f5f5;">
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} h-100">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <img src="{{ image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: scale-down;">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!-- قسم الكاروسيل - خلفية كاملة مع صورة -->
+<section class="container-fluid px-0 mb-4">
+    <div id="carouselBackground" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}" 
+                 style="height: 500px; background-color: #1a1a1a;">
+                <!-- صورة كخلفية -->
+                <div class="h-100 w-100" 
+                     style="background-image: url('{{ image.image_url }}'); 
+                            background-size: contain; 
+                            background-position: center; 
+                            background-repeat: no-repeat;">
+                </div>
+                
+                <!-- نص أسفل الصورة -->
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 mb-4">
+                    <h5>{{ image.title }}</h5>
+                    <p>{{ image.description|truncate(80) }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselBackground" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselBackground" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل المتجاوب مع الصور -->
+<section class="container-fluid px-0 mb-4">
+    <div id="responsiveCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <!-- حاوية الصورة بنسبة عرض إلى ارتفاع متغيرة -->
+                <div class="position-relative" style="padding-bottom: 45%; background: #1a1a1a;">  <!-- 45% من العرض -->
+                    <img src="{{ image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a;">
+                    
+                    <!-- نص الصورة -->
+                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                         style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                        <h3>{{ image.title }}</h3>
+                        <p class="d-none d-md-block">{{ image.description|truncate(100) }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- أزرار التحكم -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#responsiveCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#responsiveCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- CSS إضافي للكاروسيل المتجاوب -->
+<style>
+    /* تحسين الكاروسيل للموبايل */
+    @media (max-width: 768px) {
+        .carousel-item div[style*="padding-bottom"] {
+            padding-bottom: 75% !important;  /* نسبة أعرض للموبايل */
+        }
+        
+        .carousel-item h3 {
+            font-size: 1.2rem !important;
+            margin-bottom: 5px !important;
+        }
+    }
+    
+    /* تأثيرات حركية */
+    .carousel-item {
+        transition: transform 1.5s ease !important;
+    }
+    
+    /* تنسيق النص */
+    .carousel-item .position-absolute {
+        pointer-events: none;  /* يسمح بالنقر من خلال النص */
+    }
+</style>
 
 <!-- أضف هذا CSS -->
 <style>
