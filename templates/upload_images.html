@@ -549,7 +549,52 @@
             }
         }
         
-        function uploadAll() {
+function uploadAll() {
+    // حفظ تفاصيل الصورة الحالية
+    if (selectedFiles.length > 0) {
+        selectedFiles[currentFileIndex].title = document.getElementById('imageTitle').value;
+        selectedFiles[currentFileIndex].description = document.getElementById('imageDescription').value;
+        selectedFiles[currentFileIndex].category = document.getElementById('imageCategory').value;
+        selectedFiles[currentFileIndex].featured = document.getElementById('isFeatured').checked;
+        selectedFiles[currentFileIndex].published = document.getElementById('isPublished').checked;
+        selectedFiles[currentFileIndex].sortOrder = document.getElementById('sortOrder').value;
+    }
+    
+    // إنشاء FormData وإضافة الملفات
+    const formData = new FormData();
+    selectedFiles.forEach((item, index) => {
+        formData.append('images[]', item.file);
+        formData.append(`title_${index}`, item.title);
+        formData.append(`description_${index}`, item.description);
+        formData.append(`category_${index}`, item.category);
+        formData.append(`featured_${index}`, item.featured ? 'on' : 'off');
+        formData.append(`published_${index}`, item.published ? 'on' : 'off');
+        formData.append(`sort_${index}`, item.sortOrder);
+    });
+    
+    // إظهار التحميل
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    
+    // إرسال الطلب
+    fetch('/admin/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        if (data.success) {
+            // التوجيه إلى صفحة إدارة الصور بعد النجاح
+            window.location.href = data.redirect || '/admin/images';
+        } else {
+            alert('حدث خطأ في رفع الصور');
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        alert('حدث خطأ في الاتصال');
+    });
+}
             // حفظ تفاصيل الصورة الحالية
             if (selectedFiles.length > 0) {
                 selectedFiles[currentFileIndex].title = document.getElementById('imageTitle').value;
