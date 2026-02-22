@@ -386,6 +386,33 @@
     <!-- شريط التنقل -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
+
+
+
+
+
+ <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+            {% if settings and settings.site_logo %}
+                <!-- لوجو من قاعدة البيانات -->
+                <img src="{{ settings.site_logo }}" 
+                     alt="شعار الموقع" 
+                     height="40" 
+                     style="border-radius: 5px; max-height: 40px; width: auto;">
+            {% else %}
+                <!-- النص البديل إذا لم يوجد لوجو -->
+                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
+                    <i class="bi bi-camera-fill fs-4"></i>
+                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
+                </div>
+            {% endif %}
+        </a>
+
+
+
+
+
+
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 {% if settings.site_logo %}
                     <img src="{{ settings.site_logo }}" height="30" alt="Logo">
@@ -609,41 +636,7 @@ function copyQRUrl() {
 
  
     
-    <!-- الشعار واللوجو على اليمين -->
-        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
-            <!-- اللوجو (ضع صورتك في static/logo.png) -->
-            <img src="{{ url_for('static', filename='logo.png') }}" 
-                 alt="شعار الموقع" 
-                 height="35" 
-                 style="border-radius: 5px;"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            
-            <!-- النص البديل إذا لم توجد صورة لوجو -->
-            <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600; display: none;">
-                <i class="bi bi-camera-fill fs-4"></i>
-                <span style="font-size: 1.2rem;">{{ settings.site_title }}</span>
-            </div>
-        </a>
-         
-
-
-        <!-- الشعار واللوجو على اليمين -->
-<a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
-    {% if settings and settings.site_logo %}
-        <!-- لوجو من قاعدة البيانات -->
-        <img src="{{ settings.site_logo }}" 
-             alt="شعار الموقع" 
-             height="40" 
-             style="border-radius: 5px; max-height: 40px; width: auto;">
-    {% else %}
-        <!-- النص البديل إذا لم يوجد لوجو -->
-        <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
-            <i class="bi bi-camera-fill fs-4"></i>
-            <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
-        </div>
-    {% endif %}
-</a>
-
+ 
     
     <!-- مربع QR Code في الزاوية اليمنى 
     <div class="position-absolute" style="top: 20px; left: 20px; z-index: 10;">
