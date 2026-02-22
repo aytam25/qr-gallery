@@ -120,6 +120,36 @@
                             <textarea name="site_description" class="form-control" rows="3">{{ settings.site_description }}</textarea>
                         </div>
                     </div>
+
+
+
+                    <!-- قسم اللوجو -->
+<div class="settings-card">
+    <h4 class="section-title"><i class="bi bi-image"></i> شعار الموقع (Logo)</h4>
+    
+    <!-- عرض اللوجو الحالي إن وجد -->
+    {% if settings.site_logo %}
+    <div class="current-logo mb-3 text-center">
+        <p class="text-muted">اللوجو الحالي:</p>
+        <img src="{{ settings.site_logo }}" alt="شعار الموقع" style="max-height: 80px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    </div>
+    {% endif %}
+    
+    <!-- نموذج رفع اللوجو -->
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_logo') }}">
+        <div class="mb-3">
+            <label class="form-label">اختر صورة جديدة للشعار</label>
+            <input type="file" name="logo" class="form-control" accept="image/*" required>
+            <small class="text-muted">أقصى حجم 2MB. يفضل صورة مربعة (PNG, JPG)</small>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-cloud-upload"></i> رفع الشعار
+        </button>
+    </form>
+</div>
+
+
+
                     
                     <!-- Contact & Social -->
                     <div class="settings-card">

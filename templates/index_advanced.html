@@ -483,7 +483,28 @@
                 <span style="font-size: 1.2rem;">{{ settings.site_title }}</span>
             </div>
         </a>
-        
+         
+
+
+        <!-- الشعار واللوجو على اليمين -->
+<a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+    {% if settings and settings.site_logo %}
+        <!-- لوجو من قاعدة البيانات -->
+        <img src="{{ settings.site_logo }}" 
+             alt="شعار الموقع" 
+             height="40" 
+             style="border-radius: 5px; max-height: 40px; width: auto;">
+    {% else %}
+        <!-- النص البديل إذا لم يوجد لوجو -->
+        <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
+            <i class="bi bi-camera-fill fs-4"></i>
+            <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
+        </div>
+    {% endif %}
+</a>
+
+
+
         <!-- زر القائمة للموبايل -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -582,6 +603,9 @@
                     <button class="btn btn-sm btn-success" onclick="copyQRUrl()">
                         <i class="bi bi-clipboard"></i>
                     </button>
+                      <button class="btn btn-sm btn-outline-info" onclick="shareQR()" title="مشاركة">
+                        <i class="bi bi-share"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -628,27 +652,27 @@ function copyQRUrl() {
     
  
     
-    <!-- مربع QR Code في الزاوية اليمنى -->
+   /* <!-- مربع QR Code في الزاوية اليمنى 
     <div class="position-absolute" style="top: 20px; left: 20px; z-index: 10;">
         <div class="card shadow-lg" style="width: 180px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 15px; border: 2px solid white;">
             <div class="card-body p-3 text-center">
-                <!-- عنوان صغير -->
-                <h6 class="card-title text-muted mb-2">
+              -->  <!-- عنوان صغير --> 
+              <!--    <h6 class="card-title text-muted mb-2">
                     <i class="bi bi-qr-code-scan"></i> 
                     مسح للزيارة
                 </h6>
-                
+                -->
                 <!-- صورة QR Code -->
-                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" 
+              <!--    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" 
                      class="img-fluid mb-2" style="width: 120px; height: 120px; border-radius: 10px;">
                 
-                <!-- رابط الموقع (مختصر) -->
-                <div class="small text-muted mb-2 text-truncate" dir="ltr">
+                 رابط الموقع (مختصر) -->
+             <!--     <div class="small text-muted mb-2 text-truncate" dir="ltr">
                     {{ request.host_url }}
                 </div>
                 
-                <!-- أزرار التفاعل -->
-                <div class="d-flex justify-content-center gap-2">
+                 أزرار التفاعل -->
+             <!--     <div class="d-flex justify-content-center gap-2">
                     <button class="btn btn-sm btn-outline-primary" onclick="copyQRUrl()" title="نسخ الرابط">
                         <i class="bi bi-clipboard"></i>
                     </button>
@@ -663,8 +687,7 @@ function copyQRUrl() {
         </div>
     </div>
 
-
-
+  -->
 
 
 

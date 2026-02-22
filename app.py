@@ -97,6 +97,8 @@ class SiteSettings(db.Model):
     google_analytics_id = db.Column(db.String(50))
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
+
+
 class ActivityLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -106,6 +108,51 @@ class ActivityLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # ==================== الدوال المساعدة ====================
+@app.route('/admin/upload-logo', methods=['POST'])
+@login_required
+def upload_logo():
+    """رفع شعار الموقع"""
+    if 'logo' not in request.files:
+        flash('❌ لم يتم اختيار ملف', 'danger')
+        return redirect(url_for('site_settings'))
+    
+    file = request.files['logo']
+    if file.filename == '':
+        flash('❌ لم يتم اختيار ملف', 'danger')
+        return redirect(url_for('site_settings'))
+    
+    if file and allowed_file(file.filename):
+        # حفظ مؤقتاً
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        new_filename = f"logo_{timestamp}_{filename}"
+        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        file.save(temp_path)
+        
+        # رفع إلى Azure
+        logo_url = upload_to_azure(temp_path, new_filename)
+        
+        if logo_url:
+            # حذف الملف المؤقت
+            os.remove(temp_path)
+            
+            # تحديث الإعدادات
+            settings = SiteSettings.query.first()
+            if not settings:
+                settings = SiteSettings()
+                db.session.add(settings)
+            
+            settings.site_logo = logo_url
+            db.session.commit()
+            
+            flash('✅ تم رفع الشعار بنجاح', 'success')
+        else:
+            flash('❌ فشل رفع الشعار', 'danger')
+    else:
+        flash('❌ نوع الملف غير مسموح به', 'danger')
+    
+    return redirect(url_for('site_settings'))
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -167,6 +214,15 @@ def log_activity(user_id, action, details=None, ip=None):
     db.session.commit()
 
 # ==================== الصفحات العامة ====================
+
+@app.route('/api/view/<int:image_id>', methods=['POST'])
+def api_increment_view(image_id):
+    """زيادة عدد المشاهدات"""
+    image = Image.query.get_or_404(image_id)
+    image.views += 1
+    db.session.commit()
+    return jsonify({'success': True, 'views': image.views})
+
 
 @app.route('/')
 def index():
