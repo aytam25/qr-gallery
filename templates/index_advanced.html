@@ -28,6 +28,76 @@
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
         
+
+
+
+
+
+
+
+
+/* تحسين الشريط العلوي */
+.navbar {
+    transition: all 0.3s ease;
+    z-index: 1030;
+    min-height: 50px;
+}
+
+.navbar-brand {
+    transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.02);
+}
+
+.nav-link {
+    font-size: 0.95rem;
+    padding: 5px 10px !important;
+}
+
+/* تنسيق زر QR */
+.btn-sm.p-1 {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* تحسين الموبايل */
+@media (max-width: 768px) {
+    .navbar .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .navbar-brand img {
+        height: 30px;
+    }
+    
+    .form-control-sm {
+        width: 100px !important;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         .hero-section {
             background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
             color: white;
