@@ -404,6 +404,57 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
+
+
+
+
+
+
+
+
+
+
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                {% if settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" height="30" alt="Logo">
+                {% else %}
+                    <i class="bi bi-camera-fill" style="color: var(--primary-color);"></i>
+                    {{ settings.site_title }}
+                {% endif %}
+            </a>
+            
+
+
+
+
+                <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+            {% if settings and settings.site_logo %}
+                <!-- لوجو من قاعدة البيانات -->
+                <img src="{{ settings.site_logo }}" 
+                     alt="شعار الموقع" 
+                     height="40" 
+                     style="border-radius: 5px; max-height: 40px; width: auto;">
+            {% else %}
+                <!-- النص البديل إذا لم يوجد لوجو -->
+                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
+                    <i class="bi bi-camera-fill fs-4"></i>
+                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
+                </div>
+            {% endif %}
+        </a>
+
+
+
+
+
+
+
+
+
+
+
+
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#gallery">المعرض</a>
@@ -481,25 +532,6 @@
 
 
 
-
-
-
-                <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
-        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
-            {% if settings and settings.site_logo %}
-                <!-- لوجو من قاعدة البيانات -->
-                <img src="{{ settings.site_logo }}" 
-                     alt="شعار الموقع" 
-                     height="40" 
-                     style="border-radius: 5px; max-height: 40px; width: auto;">
-            {% else %}
-                <!-- النص البديل إذا لم يوجد لوجو -->
-                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
-                    <i class="bi bi-camera-fill fs-4"></i>
-                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
-                </div>
-            {% endif %}
-        </a>
 
 
 
