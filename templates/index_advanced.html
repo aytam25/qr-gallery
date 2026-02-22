@@ -394,6 +394,147 @@
         </div>
     </nav>
     
+
+<!-- شريط التنقل العلوي (Navbar) -->
+<nav class="navbar navbar-expand-lg fixed-top" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px 0;">
+    <div class="container">
+        <!-- الشعار واللوجو على اليمين -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+            <!-- اللوجو (ضع صورتك في static/logo.png) -->
+            <img src="{{ url_for('static', filename='logo.png') }}" 
+                 alt="شعار الموقع" 
+                 height="35" 
+                 style="border-radius: 5px;"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            
+            <!-- النص البديل إذا لم توجد صورة لوجو -->
+            <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600; display: none;">
+                <i class="bi bi-camera-fill fs-4"></i>
+                <span style="font-size: 1.2rem;">{{ settings.site_title }}</span>
+            </div>
+        </a>
+        
+        <!-- زر القائمة للموبايل -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- محتويات القائمة -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- روابط القائمة في المنتصف -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#gallery">المعرض</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#featured">مميزة</a>
+                </li>
+                {% if categories %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        التصنيفات
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for category, count in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
+                                {{ category.name }} ({{ count }})
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            
+            <!-- الأزرار على اليسار (مربع QR صغير) -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- زر QR Code مصغر جداً -->
+                <button class="btn btn-sm p-1" type="button" data-bs-toggle="modal" data-bs-target="#qrSmallModal" 
+                        style="background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                    <i class="bi bi-qr-code-scan fs-6"></i>
+                </button>
+                
+                <!-- البحث -->
+                <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                    <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." 
+                           style="width: 130px; border-radius: 20px; height: 32px;">
+                    <button class="btn btn-sm btn-outline-primary ms-1" type="submit" style="height: 32px;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                
+                <!-- قائمة المستخدم -->
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="height: 32px;">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                        {% if current_user.role in ['admin', 'editor'] %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}" style="height: 32px;">دخول</a>
+                <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}" style="height: 32px;">تسجيل</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- تعويض المساحة -->
+<div style="height: 60px;"></div>
+
+<!-- نافذة QR Code صغيرة (Modal) -->
+<div class="modal fade" id="qrSmallModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title"><i class="bi bi-qr-code-scan" style="color: var(--primary-color);"></i> QR Code</h6>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-3">
+                <!-- صورة QR Code صغيرة -->
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid" style="max-width: 150px;">
+                <div class="mt-2">
+                    <small class="text-muted">امسح الكود لزيارة الموقع</small>
+                </div>
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                    <a href="data:image/png;base64,{{ qr_code }}" download="qr-code.png" class="btn btn-sm btn-primary">
+                        <i class="bi bi-download"></i>
+                    </a>
+                    <button class="btn btn-sm btn-success" onclick="copyQRUrl()">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyQRUrl() {
+    const url = "{{ request.host_url }}";
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ تم نسخ الرابط');
+    });
+}
+</script>
+
+
+
+
+
+
+
+
+
 <!-- قسم الترحيب -->
 <section class="hero-section" style="margin-top: 56px; position: relative; min-height: 280;">
     <div class="container">
