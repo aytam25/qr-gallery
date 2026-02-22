@@ -384,161 +384,97 @@
 </head>
 <body>
     <!-- شريط التنقل -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-
-
- 
-
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                {% if settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" height="30" alt="Logo">
-                {% else %}
-                    <i class="bi bi-camera-fill" style="color: var(--primary-color);"></i>
-                    {{ settings.site_title }}
-                {% endif %}
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-
-
-
-
-
-
-
-
-
-
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                {% if settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" height="30" alt="Logo">
-                {% else %}
-                    <i class="bi bi-camera-fill" style="color: var(--primary-color);"></i>
-                    {{ settings.site_title }}
-                               <img src="{{ settings.site_logo }}" height="50" alt="Logo">
-                {% endif %}
-            </a>
-            
-
-
-
-
-                <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
+<!-- شريط التنقل العلوي (نسخة واحدة نظيفة) -->
+<nav class="navbar navbar-expand-lg fixed-top" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px 0;">
+    <div class="container">
+        <!-- الشعار واللوجو - نسخة واحدة فقط -->
         <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
             {% if settings and settings.site_logo %}
-                <!-- لوجو من قاعدة البيانات -->
-                <img src="{{ settings.site_logo }}" 
-                     alt="شعار الموقع" 
-                     height="40" 
-                     style="border-radius: 5px; max-height: 40px; width: auto;">
+                <img src="{{ settings.site_logo }}" alt="شعار الموقع" height="40" style="border-radius: 5px; max-height: 40px; width: auto;">
             {% else %}
-                <!-- النص البديل إذا لم يوجد لوجو -->
                 <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
                     <i class="bi bi-camera-fill fs-4"></i>
                     <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
-               <img src="{{ settings.site_logo }}" height="50" alt="Logo">  </div>
+                </div>
             {% endif %}
         </a>
 
-
-
-
-
-
-
-
-
-
-
-
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#gallery">المعرض</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#featured">مميزة</a>
-                    </li>
-                    {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            التصنيفات
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for category, count in categories %}
-                            <li>
-                                <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
-                                    {{ category.name }} ({{ count }})
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
+        <!-- زر القائمة للموبايل -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- محتويات القائمة -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- روابط القائمة في المنتصف -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#gallery">المعرض</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#featured">مميزة</a>
+                </li>
+                {% if categories %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        التصنيفات
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for category, count in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
+                                {{ category.name }} ({{ count }})
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            
+            <!-- الأزرار على اليسار -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- زر QR Code -->
+                <button class="btn btn-sm p-1" type="button" data-bs-toggle="modal" data-bs-target="#qrSmallModal" 
+                        style="background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                    <i class="bi bi-qr-code-scan fs-6"></i>
+                </button>
                 
+                <!-- البحث -->
                 <form class="d-flex" action="{{ url_for('search') }}" method="GET">
-                    <input class="form-control me-2" type="search" name="q" placeholder="بحث..." value="{{ search_query }}">
-                    <button class="btn btn-outline-primary" type="submit">
+                    <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." 
+                           style="width: 130px; border-radius: 20px; height: 32px;">
+                    <button class="btn btn-sm btn-outline-primary ms-1" type="submit" style="height: 32px;">
                         <i class="bi bi-search"></i>
                     </button>
                 </form>
                 
-                <ul class="navbar-nav">
-
-
-                <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
-        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
-            {% if settings and settings.site_logo %}
-                <!-- لوجو من قاعدة البيانات -->
-                <img src="{{ settings.site_logo }}"  200
-                     alt="شعار الموقع" 
-                     height="40" 
-                     style="border-radius: 5px; max-height: 40px; width: auto;">
-            {% else %}
-                <!-- النص البديل إذا لم يوجد لوجو -->
-                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
-                    <i class="bi bi-camera-fill fs-4"></i>
-                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
-               <img src="{{ settings.site_logo }}" height="50" alt="Logo">  </div> 100
-            {% endif %}
-        </a>
-
-
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
-                            {% if current_user.role in ['admin', 'editor'] %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
-                            {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}">
-                            <i class="bi bi-box-arrow-in-right"></i> دخول
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('register') }}">
-                            <i class="bi bi-person-plus"></i> تسجيل
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
+                <!-- قائمة المستخدم -->
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="height: 32px;">
+                        <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                        {% if current_user.role in ['admin', 'editor'] %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}" style="height: 32px;">دخول</a>
+                <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}" style="height: 32px;">تسجيل</a>
+                {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
+<!-- تعويض المساحة -->
+<div style="height: 60px;"></div>
                     <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
         <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
             {% if settings and settings.site_logo %}
