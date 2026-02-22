@@ -1,17 +1,21 @@
-﻿# تجاهل مجلد uploads
+﻿# تجاهل مجلد uploads بجميع أشكاله
 static/uploads/
 static/uploads/*
+static/uploads/**/*
 uploads/
+**/static/uploads/
 
 # تجاهل ملفات قاعدة البيانات
 *.db
 *.sqlite
 *.sqlite3
 
-# تجاهل ملفات البيئة
-.env
-*.env
-
 # تجاهل ملفات Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# تجاهل ملفات البيئة
+.env
+*.env
