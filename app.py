@@ -925,20 +925,25 @@ def site_settings():
         db.session.commit()
     
     if request.method == 'POST':
-        settings.site_title = request.form['site_title']
-        settings.site_description = request.form['site_description']
-        settings.contact_email = request.form.get('contact_email')
-        settings.theme_color = request.form.get('theme_color', '#667eea')
-        settings.google_analytics_id = request.form.get('google_analytics_id')
+        # تأكد من استقبال البيانات
+        print("📝 تم استقبال طلب POST")  # للتأكد
         
+        settings.site_title = request.form.get('site_title', 'معرض الأعمال')
+        settings.site_description = request.form.get('site_description', '')
+        settings.contact_email = request.form.get('contact_email', '')
+        settings.theme_color = request.form.get('theme_color', '#667eea')
+        settings.google_analytics_id = request.form.get('google_analytics_id', '')
+        
+        # روابط التواصل
         settings.social_links = {
-            'facebook': request.form.get('facebook'),
-            'twitter': request.form.get('twitter'),
-            'instagram': request.form.get('instagram')
+            'facebook': request.form.get('facebook', ''),
+            'twitter': request.form.get('twitter', ''),
+            'instagram': request.form.get('instagram', '')
         }
         
         db.session.commit()
-        flash('تم حفظ الإعدادات', 'success')
+        flash('✅ تم حفظ الإعدادات بنجاح', 'success')
+        print("✅ تم الحفظ")  # للتأكد
         return redirect(url_for('site_settings'))
     
     return render_template('settings_advanced.html', settings=settings)
