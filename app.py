@@ -4,6 +4,7 @@ import os
 import qrcode
 import json
 import io
+
 from dotenv import load_dotenv
 load_dotenv()
 from datetime import datetime, timedelta
@@ -22,24 +23,31 @@ app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db' الاصلي
 
 # استخدام PostgreSQL في الإنتاج، SQLite في التطوير المحلي
+import os
+from urllib.parse import urlparse
+
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
-    # تأكد من أن الرابط يبدأ بالصيغة الصحيحة
+    # تأكد من الصيغة
     if database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    
     # أضف SSL إذا لم يكن موجوداً
     if 'sslmode' not in database_url:
-        database_url += '?sslmode=require'
+        if '?' in database_url:
+            database_url += '&sslmode=require'
+        else:
+            database_url += '?sslmode=require'
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    print(f"✅ استخدام PostgreSQL مع SSL")
 else:
-    # التطوير المحلي
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db'
+    print("✅ استخدام SQLite محلياً")
+    # التطوير المحلي
+   
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
- 
-
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['QR_FOLDER'] = 'static/qrcodes'
