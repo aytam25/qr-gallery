@@ -606,63 +606,70 @@ function copyQRUrl() {
 
 
 <!-- قسم الترحيب -->
-<section class="hero-section" style="margin-top: 56px; position: relative; min-height: 280;">
-    <div class="container">
-        <h1 class="hero-title animate__animated animate__fadeInDown">
-            {{ settings.site_title }}
-        </h1>
-        <p class="lead animate__animated animate__fadeInUp">
-            {{ settings.site_description }}
-        </p>
+ 
+<section class="hero-section" style="margin-top: 56px; padding: 25px 0; position: relative; overflow: hidden;">
+    <!-- خلفية الشعار الكبير -->
+    {% if settings and settings.site_logo %}
+    <div class="position-absolute" style="top: 50%; right: 20px; transform: translateY(-50%); opacity: 0.1; z-index: 0;">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 200px; width: auto;">
     </div>
+    {% endif %}
     
+    <div class="container position-relative" style="z-index: 1;">
+        <div class="row align-items-center">
+            <!-- الشعار المصغر على اليمين -->
+            <div class="col-auto">
+                {% if settings and settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" alt="شعار" height="70" style="border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                {% endif %}
+            </div>
+            
+            <!-- العنوان والوصف -->
+            <div class="col">
+                <h1 class="hero-title animate__animated animate__fadeInDown" style="font-size: 2.2rem; margin-bottom: 5px;">
+                    {{ settings.site_title if settings else 'معرض الأعمال' }}
+                </h1>
+                <p class="lead animate__animated animate__fadeInUp" style="font-size: 1.1rem; margin-bottom: 0;">
+                    {{ settings.site_description if settings else 'مرحباً بكم في معرض أعمالنا' }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
- 
-    
- 
-    
-    <!-- مربع QR Code في الزاوية اليمنى 
-    <div class="position-absolute" style="top: 20px; left: 20px; z-index: 10;">
-        <div class="card shadow-lg" style="width: 180px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 15px; border: 2px solid white;">
-            <div class="card-body p-3 text-center">
-              -->  <!-- عنوان صغير --> 
-              <!--    <h6 class="card-title text-muted mb-2">
-                    <i class="bi bi-qr-code-scan"></i> 
-                    مسح للزيارة
-                </h6>
-                -->
-                <!-- صورة QR Code -->
-              <!--    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" 
-                     class="img-fluid mb-2" style="width: 120px; height: 120px; border-radius: 10px;">
-                
-                 رابط الموقع (مختصر) -->
-             <!--     <div class="small text-muted mb-2 text-truncate" dir="ltr">
-                    {{ request.host_url }}
-                </div>
-                
-                 أزرار التفاعل -->
-             <!--     <div class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-sm btn-outline-primary" onclick="copyQRUrl()" title="نسخ الرابط">
-                        <i class="bi bi-clipboard"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-success" onclick="downloadQRImage()" title="تحميل QR">
-                        <i class="bi bi-download"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-info" onclick="shareQR()" title="مشاركة">
-                        <i class="bi bi-share"></i>
-                    </button>
+
+ <section class="hero1-section" style="margin-top: 56px; padding: 20px 0;">
+    <div class="container">
+        <div class="card bg-white bg-opacity-10 border-0 rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <!-- الشعار على اليمين -->
+                    <div class="col-md-2 text-center text-md-start mb-3 mb-md-0">
+                        {% if settings and settings.site_logo %}
+                            <img src="{{ settings.site_logo }}" alt="شعار" style="max-height: 80px; border-radius: 10px;">
+                        {% else %}
+                            <i class="bi bi-camera-fill" style="font-size: 4rem; color: white;"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- العنوان والوصف -->
+                    <div class="col-md-10 text-center text-md-start">
+                        <h1 class="text-white fw-bold" style="font-size: 2.2rem;">
+                            {{ settings.site_title if settings else 'معرض الأعمال' }}
+                        </h1>
+                        <p class="text-white-50 lead" style="font-size: 1.1rem;">
+                            {{ settings.site_description if settings else 'مرحباً بكم في معرض أعمالنا' }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-  -->
-
-
-
-
-    
 </section>
+
+
+
+
 
 <!-- JavaScript للتفاعل -->
 <script>
