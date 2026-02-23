@@ -919,6 +919,9 @@ def toggle_user(user_id):
 def site_settings():
     """إعدادات الموقع"""
     settings = SiteSettings.query.first()
+    print(f"🔍 طريقة الطلب: {request.method}")
+if request.method == 'POST':
+    print("📦 البيانات المستلمة:", request.form)
     if not settings:
         settings = SiteSettings()
         db.session.add(settings)
