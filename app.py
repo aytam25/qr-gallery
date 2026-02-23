@@ -108,51 +108,7 @@ class ActivityLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # ==================== الدوال المساعدة ====================
-@app.route('/admin/upload-logo', methods=['POST'])
-@login_required
-def upload_logo():
-    """رفع شعار الموقع"""
-    if 'logo' not in request.files:
-        flash('❌ لم يتم اختيار ملف', 'danger')
-        return redirect(url_for('site_settings'))
-    
-    file = request.files['logo']
-    if file.filename == '':
-        flash('❌ لم يتم اختيار ملف', 'danger')
-        return redirect(url_for('site_settings'))
-    
-    if file and allowed_file(file.filename):
-        # حفظ مؤقتاً
-        filename = secure_filename(file.filename)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        new_filename = f"logo_{timestamp}_{filename}"
-        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-        file.save(temp_path)
-        
-        # رفع إلى Azure
-        logo_url = upload_to_azure(temp_path, new_filename)
-        
-        if logo_url:
-            # حذف الملف المؤقت
-            os.remove(temp_path)
-            
-            # تحديث الإعدادات
-            settings = SiteSettings.query.first()
-            if not settings:
-                settings = SiteSettings()
-                db.session.add(settings)
-            
-            settings.site_logo = logo_url
-            db.session.commit()
-            
-            flash('✅ تم رفع الشعار بنجاح', 'success')
-        else:
-            flash('❌ فشل رفع الشعار', 'danger')
-    else:
-        flash('❌ نوع الملف غير مسموح به', 'danger')
-    
-    return redirect(url_for('site_settings'))
-
+ 
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -914,22 +870,29 @@ def toggle_user(user_id):
     flash(f'تم {status} المستخدم', 'success')
     return redirect(url_for('manage_users'))
 
+ 
+
+
+
+
+
+
+
+# ==================== دالة الإعدادات النصية ====================
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @login_required
 def site_settings():
-    """إعدادات الموقع"""
+    """إعدادات الموقع (النصية)"""
     settings = SiteSettings.query.first()
-    print(f"🔍 طريقة الطلب: {request.method}")
-if request.method == 'POST':
-    print("📦 البيانات المستلمة:", request.form)
+    
     if not settings:
         settings = SiteSettings()
         db.session.add(settings)
         db.session.commit()
     
     if request.method == 'POST':
-        # تأكد من استقبال البيانات
-        print("📝 تم استقبال طلب POST")  # للتأكد
+        print("📝 تم استقبال طلب POST للإعدادات")
+        print("📦 البيانات:", request.form)
         
         settings.site_title = request.form.get('site_title', 'معرض الأعمال')
         settings.site_description = request.form.get('site_description', '')
@@ -937,7 +900,6 @@ if request.method == 'POST':
         settings.theme_color = request.form.get('theme_color', '#667eea')
         settings.google_analytics_id = request.form.get('google_analytics_id', '')
         
-        # روابط التواصل
         settings.social_links = {
             'facebook': request.form.get('facebook', ''),
             'twitter': request.form.get('twitter', ''),
@@ -946,10 +908,71 @@ if request.method == 'POST':
         
         db.session.commit()
         flash('✅ تم حفظ الإعدادات بنجاح', 'success')
-        print("✅ تم الحفظ")  # للتأكد
         return redirect(url_for('site_settings'))
     
     return render_template('settings_advanced.html', settings=settings)
+
+
+# ==================== دالة رفع الشعار (منفصلة) ====================
+@app.route('/admin/upload-logo', methods=['POST'])
+@login_required
+def upload_logo():
+    """رفع شعار الموقع"""
+    if 'logo' not in request.files:
+        flash('❌ لم يتم اختيار ملف', 'danger')
+        return redirect(url_for('site_settings'))
+    
+    file = request.files['logo']
+    if file.filename == '':
+        flash('❌ لم يتم اختيار ملف', 'danger')
+        return redirect(url_for('site_settings'))
+    
+    if file and allowed_file(file.filename):
+        # حفظ مؤقتاً
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        new_filename = f"logo_{timestamp}_{filename}"
+        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        file.save(temp_path)
+        
+        # رفع إلى Azure
+        logo_url = upload_to_azure(temp_path, new_filename)
+        
+        if logo_url:
+            # حذف الملف المؤقت
+            os.remove(temp_path)
+            
+            # تحديث الإعدادات
+            settings = SiteSettings.query.first()
+            if not settings:
+                settings = SiteSettings()
+                db.session.add(settings)
+            
+            settings.site_logo = logo_url
+            db.session.commit()
+            
+            flash('✅ تم رفع الشعار بنجاح', 'success')
+        else:
+            flash('❌ فشل رفع الشعار', 'danger')
+    else:
+        flash('❌ نوع الملف غير مسموح به', 'danger')
+    
+    return redirect(url_for('site_settings'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/admin/analytics')
 @login_required
