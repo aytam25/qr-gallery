@@ -12,32 +12,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
     <style>
-        :root {
-            --primary-color: {{ settings.theme_color or '#667eea' }};
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-        
+ :root {
+    --primary-color: {{ settings.theme_color or '#667eea' }};
+}
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+    min-height: 100vh;
+}
 
-
-
-
-
-
-
-/* تحسين الشريط العلوي */
+/* ===== الشريط العلوي الموحد ===== */
 .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     z-index: 1030;
     min-height: 50px;
@@ -81,304 +70,290 @@
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        .hero-section {
-            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
-            color: white;
-            padding: 80px 0;
-            margin-bottom: 50px;
-            text-align: center;
-        }
-        
-        .hero-title {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .qr-code-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 300px;
-            margin: 0 auto 40px;
-        }
-        
-        .qr-code-card img {
-            width: 200px;
-            height: 200px;
-            margin: 10px auto;
-        }
-        
-        .category-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-        
-        .category-pill {
-            background: white;
-            color: #333;
-            padding: 8px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .category-pill:hover,
-        .category-pill.active {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-        
-        .gallery-item {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-        .gallery-item:hover .image-wrapper img {
-    transform: scale(1.1);
+/* ===== الأقسام الأخرى ===== */
+.hero-section {
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+    color: white;
+    padding: 80px 0;
+    margin-bottom: 50px;
+    text-align: center;
 }
-/* الصورة - ملائمة تلقائية كاملة */
-.image-wrapper img {
+
+.hero-title {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2em;
+    }
+}
+
+/* ===== QR Code ===== */
+.qr-code-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 300px;
+    margin: 0 auto 40px;
+}
+
+.qr-code-card img {
+    width: 200px;
+    height: 200px;
+    margin: 10px auto;
+}
+
+/* ===== التصنيفات ===== */
+.category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.category-pill {
+    background: white;
+    color: #333;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.category-pill:hover,
+.category-pill.active {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===== المعرض ===== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.gallery-item {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 1 / 1; /* مربع */
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.gallery-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;  /* السر: تغطي الإطار بالكامل بدون تشويه */
+    object-fit: cover;
     transition: transform 0.5s;
-    display: block;
 }
 
-        .gallery-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 250;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-        
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            padding: 20px;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-        
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-        
-        .gallery-stats {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-        
-        .gallery-stats i {
-            margin-left: 5px;
-        }
-        
-        .featured-section {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px 0;
-            margin: 40px 0;
-            border-radius: 20px;
-        }
-        
-        .featured-title {
-            color: white;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-        
-        .featured-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 0 20px;
-        }
-        
-        .featured-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        
-        .featured-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-        
-        .featured-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: gold;
-            color: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        .search-box {
-            max-width: 500px;
-            margin: 20px auto;
-        }
-        
-        .search-box .input-group {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border-radius: 50px;
-            overflow: hidden;
-        }
-        
-        .search-box input {
-            border: none;
-            padding: 15px 25px;
-        }
-        
-        .search-box button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-        }
-        
-        .floating-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        
-        .floating-btn:hover {
-            transform: scale(1.1);
-            color: white;
-        }
-        
-        .pagination {
-            justify-content: center;
-            margin: 40px 0;
-        }
-        
-        .page-link {
-            color: var(--primary-color);
-        }
-        
-        .page-item.active .page-link {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .empty-state {
-            text-align: center;
-            color: white;
-            padding: 60px 20px;
-        }
-        
-        .empty-state i {
-            font-size: 5em;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-        
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2em;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .featured-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
 
-        /* تأثيرات حركية */
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+
+.gallery-stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.gallery-stats i {
+    margin-left: 5px;
+}
+
+/* ===== الصور المميزة ===== */
+.featured-section {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 40px 0;
+    margin: 40px 0;
+    border-radius: 20px;
+}
+
+.featured-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.featured-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.featured-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: gold;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ===== البحث ===== */
+.search-box {
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.search-box .input-group {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-box input {
+    border: none;
+    padding: 15px 25px;
+}
+
+.search-box button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+}
+
+/* ===== أزرار ===== */
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+/* ===== التصفح ===== */
+.pagination {
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.page-link {
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ===== الحالات الفارغة ===== */
+.empty-state {
+    text-align: center;
+    color: white;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 5em;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+/* ===== كاروسيل ===== */
 .carousel-item {
     transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease !important;
 }
 
-/* ظل للنص */
 .carousel-caption {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-/* تحسين الموبايل */
+/* ===== تحسينات الموبايل ===== */
 @media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
     .carousel-inner {
         height: 300px !important;
     }
+    
     .display-3 {
         font-size: 2rem !important;
     }
 }
 
-
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
     </style>
 </head>
