@@ -20,20 +20,24 @@ from PIL import Image as PILImage
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db' الاصلي
-import os
 
 # استخدام PostgreSQL في الإنتاج، SQLite في التطوير المحلي
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
-    # Render يستخدم postgres:// ولكن SQLAlchemy يحتاج postgresql://
+    # تأكد من أن الرابط يبدأ بالصيغة الصحيحة
     if database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    # أضف SSL إذا لم يكن موجوداً
+    if 'sslmode' not in database_url:
+        database_url += '?sslmode=require'
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    # التطوير المحلي - استمر باستخدام SQLite
+    # التطوير المحلي
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+ 
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
