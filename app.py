@@ -1,9 +1,10 @@
 import base64
-from flask import jsonify  # تأكد من وجود jsonify
 import os
 import qrcode
 import json
 import io
+import uuid
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,70 +18,26 @@ from functools import wraps
 from sqlalchemy import func
 from PIL import Image as PILImage
 
-# تهيئة التطبيق
+# ==================== تهيئة التطبيق الأساسية ====================
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db' الاصلي
-# استخدام SQLite فقط
- 
-@app.route('/debug-db')
-def debug_db():
-    """اختبار الاتصال بقاعدة البيانات"""
-    try:
-        from sqlalchemy import text
-        with app.app_context():
-            # محاولة الاتصال بقاعدة البيانات
-            db.session.execute(text('SELECT 1'))
-            db_url = app.config['SQLALCHEMY_DATABASE_URI']
-            return f"""
-            <h1>✅ الاتصال بقاعدة البيانات ناجح</h1>
-            <p>نوع قاعدة البيانات: {'PostgreSQL' if 'postgresql' in db_url else 'SQLite'}</p>
-            <p>الرابط: {db_url}</p>
-            """
-    except Exception as e:
-        return f"""
-        <h1>❌ فشل الاتصال بقاعدة البيانات</h1>
-        <p>الخطأ: {str(e)}</p>
-        <p>نوع الخطأ: {type(e).__name__}</p>
-        """
 
-#app.config['UPLOAD_FOLDER'] = 'static/uploads'
-# استخدام القيمة من الإعدادات أو قيمة افتراضية
-# التأكد من وجود المجلدات
-
- 
-# التأكد من وجود المجلدات
- 
-# إعدادات المجلدات (تأكد من أنها غير مُعلّقة)
+# ==================== إعدادات المجلدات (يجب أن تكون قبل استخدامها) ====================
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['QR_FOLDER'] = 'static/qrcodes'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-upload_folder = app.config.get('UPLOAD_FOLDER', 'static/uploads')
+
 # التأكد من وجود المجلدات
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['QR_FOLDER'], exist_ok=True)
-# تهيئة قاعدة البيانات
-# بعد تهيئة db وقبل أي استخدام للقاعدة البيانات
-db = SQLAlchemy(app)
 
-# تهيئة Flask-Login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-# ==================== إعدادات قاعدة البيانات ====================
-import os
-from urllib.parse import urlparse
-
-# استخدام PostgreSQL في الإنتاج إذا كان متغير البيئة موجوداً، وإلا SQLite محلياً
+# ==================== إعدادات قاعدة البيانات (PostgreSQL أو SQLite) ====================
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
     print("✅ استخدام PostgreSQL مع SSL")
-    # تأكد من الصيغة
     if database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    # أضف SSL إذا لم يكن موجوداً
     if 'sslmode' not in database_url:
         if '?' in database_url:
             database_url += '&sslmode=require'
@@ -93,9 +50,13 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# ==================== تهيئة Flask extensions ====================
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # ==================== نماذج قاعدة البيانات ====================
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -153,8 +114,6 @@ class SiteSettings(db.Model):
     google_analytics_id = db.Column(db.String(50))
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
-
-
 class ActivityLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -164,8 +123,6 @@ class ActivityLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # ==================== الدوال المساعدة ====================
- 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -191,14 +148,11 @@ def generate_qr_code(url, size=10):
     )
     qr.add_data(url)
     qr.make(fit=True)
-    
     img = qr.make_image(fill_color="black", back_color="white")
-    
     img_io = io.BytesIO()
     img.save(img_io, 'PNG')
     img_io.seek(0)
     img_base64 = base64.b64encode(img_io.getvalue()).decode()
-    
     return img_base64
 
 def create_thumbnail(image_path, size=(300, 300)):
@@ -206,7 +160,6 @@ def create_thumbnail(image_path, size=(300, 300)):
     try:
         img = PILImage.open(image_path)
         img.thumbnail(size, PILImage.Resampling.LANCZOS)
-        
         thumb_path = image_path.replace('.', '_thumb.')
         img.save(thumb_path)
         return thumb_path
@@ -225,8 +178,127 @@ def log_activity(user_id, action, details=None, ip=None):
     db.session.add(log)
     db.session.commit()
 
-# ==================== الصفحات العامة ====================
+# ==================== Google Drive Integration ====================
+import json
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
+def get_drive_service():
+    """الاتصال بخدمة Google Drive"""
+    try:
+        credentials_path = 'google-credentials.json'
+        if not os.path.exists(credentials_path):
+            print("⚠️ ملف google-credentials.json غير موجود")
+            return None
+        credentials = service_account.Credentials.from_service_account_file(
+            credentials_path,
+            scopes=['https://www.googleapis.com/auth/drive.file']
+        )
+        service = build('drive', 'v3', credentials=credentials)
+        print("✅ تم الاتصال بـ Google Drive")
+        return service
+    except Exception as e:
+        print(f"❌ خطأ في الاتصال: {e}")
+        return None
+
+def upload_to_drive(file_path, filename, folder_id=None):
+    """رفع ملف إلى Google Drive"""
+    try:
+        drive_service = get_drive_service()
+        if not drive_service:
+            return None
+        if not folder_id:
+            folder_id = '1AxV1rFoS2KaeyQzFRhlf1rvn1m1_6UEb'  # ⬅️ ضع معرف مجلدك هنا
+        file_metadata = {
+            'name': filename,
+            'parents': [folder_id]
+        }
+        media = MediaFileUpload(file_path, mimetype='image/jpeg', resumable=True)
+        file = drive_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+        file_id = file.get('id')
+        drive_service.permissions().create(
+            fileId=file_id,
+            body={'type': 'anyone', 'role': 'reader'}
+        ).execute()
+        direct_link = f"https://drive.google.com/uc?id={file_id}"
+        print(f"✅ تم رفع {filename}, ID: {file_id}")
+        return direct_link
+    except Exception as e:
+        print(f"❌ خطأ في رفع {filename}: {e}")
+        return None
+
+# ==================== Azure Blob Storage Integration ====================
+from azure.storage.blob import BlobServiceClient
+
+AZURE_CONNECTION_STRING = os.environ.get('AZURE_CONNECTION_STRING', '')
+AZURE_CONTAINER_NAME = 'gallery-images'
+
+def upload_to_azure(file_path, filename):
+    """رفع ملف إلى Azure Blob Storage"""
+    try:
+        if not AZURE_CONNECTION_STRING:
+            print("⚠️ AZURE_CONNECTION_STRING غير موجود")
+            return None
+        blob_service = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
+        container_client = blob_service.get_container_client(AZURE_CONTAINER_NAME)
+        try:
+            container_client.get_container_properties()
+        except Exception:
+            print(f"⚠️ الحاوية {AZURE_CONTAINER_NAME} غير موجودة")
+            return None
+        blob_name = f"{uuid.uuid4().hex}_{filename}"
+        with open(file_path, "rb") as data:
+            blob_client = container_client.upload_blob(
+                name=blob_name, 
+                data=data,
+                overwrite=True
+            )
+        blob_url = f"https://{blob_service.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{blob_name}"
+        print(f"✅ تم رفع {filename} إلى Azure Blob Storage")
+        print(f"🔗 الرابط: {blob_url}")
+        return blob_url
+    except Exception as e:
+        print(f"❌ خطأ في رفع الملف إلى Azure: {e}")
+        return None
+
+# ==================== صفحات الاختبار والتشخيص ====================
+@app.route('/debug-db')
+def debug_db():
+    """اختبار الاتصال بقاعدة البيانات"""
+    try:
+        from sqlalchemy import text
+        with app.app_context():
+            db.session.execute(text('SELECT 1'))
+            db_url = app.config['SQLALCHEMY_DATABASE_URI']
+            return f"""
+            <h1>✅ الاتصال بقاعدة البيانات ناجح</h1>
+            <p>نوع قاعدة البيانات: {'PostgreSQL' if 'postgresql' in db_url else 'SQLite'}</p>
+            <p>الرابط: {db_url}</p>
+            """
+    except Exception as e:
+        return f"""
+        <h1>❌ فشل الاتصال بقاعدة البيانات</h1>
+        <p>الخطأ: {str(e)}</p>
+        <p>نوع الخطأ: {type(e).__name__}</p>
+        """
+
+@app.route('/check-images')
+@login_required
+def check_images():
+    """فحص الصور في قاعدة البيانات"""
+    images = Image.query.all()
+    output = "<h1>الصور في قاعدة البيانات</h1><ul>"
+    for img in images:
+        output += f"<li>{img.id}: {img.title} - المشاهدات: {img.views} - الرابط: {img.image_url}</li>"
+    output += "</ul>"
+    return output
+
+# ==================== API للمشاهدات ====================
 @app.route('/api/view/<int:image_id>', methods=['POST'])
 def api_increment_view(image_id):
     """زيادة عدد المشاهدات"""
@@ -235,7 +307,7 @@ def api_increment_view(image_id):
     db.session.commit()
     return jsonify({'success': True, 'views': image.views})
 
-
+# ==================== الصفحات العامة ====================
 @app.route('/')
 def index():
     """الصفحة الرئيسية"""
@@ -290,44 +362,20 @@ def index():
                          search_query=search_query,
                          current_category=category_id)
 
-
-
-
-
-
-# ==================== Google Drive Integration ====================
- 
-
-
-@app.route('/check-images')
-@login_required
-def check_images():
-    """فحص الصور في قاعدة البيانات"""
-    images = Image.query.all()
-    output = "<h1>الصور في قاعدة البيانات</h1><ul>"
-    for img in images:
-        output += f"<li>{img.id}: {img.title} - المشاهدات: {img.views} - الرابط: {img.image_url}</li>"
-    output += "</ul>"
-    return output
-
-
-
-
-
 @app.route('/image/<int:image_id>')
 def view_image(image_id):
     """عرض صورة واحدة"""
     image = Image.query.get_or_404(image_id)
-    
     image.views += 1
     db.session.commit()
-     # تسجيل النشاط
+    
     log_activity(
         user_id=current_user.id if current_user.is_authenticated else None,
         action='view_image',
         details={'image_id': image_id, 'title': image.title},
         ip=request.remote_addr
     )
+    
     similar_images = Image.query.filter(
         Image.category_id == image.category_id,
         Image.id != image.id,
@@ -342,14 +390,12 @@ def view_image(image_id):
 def view_category(category_id):
     """عرض صور التصنيف"""
     category = Category.query.get_or_404(category_id)
-    
-    # جلب الصور المنشورة فقط في هذا التصنيف
     images = Image.query.filter_by(
         category_id=category_id, 
         is_published=True
     ).order_by(Image.created_at.desc()).all()
     
-    print(f"Category: {category.name}, Images found: {len(images)}")  # للتأكد
+    print(f"Category: {category.name}, Images found: {len(images)}")
     
     return render_template('category.html',
                          category=category,
@@ -401,7 +447,6 @@ def download_image(image_id):
     return redirect(image.image_url)
 
 # ==================== نظام المصادقة ====================
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """تسجيل مستخدم جديد"""
@@ -502,7 +547,6 @@ def edit_profile():
     return render_template('edit_profile.html', user=current_user)
 
 # ==================== لوحة التحكم ====================
-
 @app.route('/admin')
 @login_required
 def admin_dashboard():
@@ -537,19 +581,14 @@ def admin_dashboard():
         'views': views_data
     }
     
-
-     # أضف هذا السطر قبل return
-   
-
-    # توليد QR Code - ✅ هذا هو المهم
     site_url = request.host_url
     qr_base64 = generate_qr_code(site_url)
     
     return render_template('admin_dashboard_advanced.html',
                          stats=stats,
                          chart_data=json.dumps(chart_data),
-                         qr_code=qr_base64,  # ✅ نمرر QR code للقالب
-                         site_url=site_url)  # ✅ نمرر رابط الموقع
+                         qr_code=qr_base64,
+                         site_url=site_url)
 
 @app.route('/admin/images')
 @login_required
@@ -557,10 +596,8 @@ def manage_images():
     """إدارة الصور"""
     page = request.args.get('page', 1, type=int)
     per_page = 12
-    
     images = Image.query.order_by(Image.created_at.desc())\
                         .paginate(page=page, per_page=per_page, error_out=False)
-    
     return render_template('manage_images.html', images=images)
 
 @app.route('/admin/add', methods=['GET', 'POST'])
@@ -581,30 +618,24 @@ def add_image():
             return redirect(request.url)
         
         if file and allowed_file(file.filename):
-            # اسم آمن للملف
             filename = secure_filename(file.filename)
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             new_filename = f"{timestamp}_{filename}"
-            
-            # حفظ مؤقتاً في المجلد المحلي
             temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
             file.save(temp_path)
             print(f"✅ تم حفظ الملف مؤقتاً: {temp_path}")
             
-            # رفع إلى Google Drive
             drive_url = upload_to_drive(temp_path, new_filename)
             
             if drive_url:
-                # حذف الملف المؤقت
                 os.remove(temp_path)
                 print(f"✅ تم حذف الملف المؤقت")
                 
-                # حفظ في قاعدة البيانات
                 new_image = Image(
                     title=title,
                     description=description,
                     filename=new_filename,
-                    image_url=drive_url,  # رابط Google Drive
+                    image_url=drive_url,
                     uploaded_by=current_user.id
                 )
                 db.session.add(new_image)
@@ -613,7 +644,6 @@ def add_image():
                 flash('✅ تم رفع الصورة إلى Google Drive بنجاح', 'success')
             else:
                 flash('❌ فشل رفع الصورة إلى Google Drive', 'danger')
-                # تنظيف الملف المؤقت
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
             
@@ -622,12 +652,10 @@ def add_image():
     categories = Category.query.all()
     return render_template('upload_images.html', categories=categories)
 
-
-
 @app.route('/admin/upload', methods=['GET', 'POST'])
 @login_required
 def upload_images():
-    """رفع صور متعدد"""
+    """رفع صور متعدد إلى Azure"""
     if request.method == 'POST':
         files = request.files.getlist('images')
         category_id = request.form.get('category_id', type=int)
@@ -645,18 +673,14 @@ def upload_images():
                     unique_id = uuid.uuid4().hex[:8]
                     new_filename = f"{unique_id}_{timestamp}_{filename}"
                     
-                    # حفظ مؤقتاً
                     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                     file.save(temp_path)
                     
-                    # رفع إلى Azure
                     azure_url = upload_to_azure(temp_path, new_filename)
                     
                     if azure_url:
-                        # حذف الملف المؤقت
                         os.remove(temp_path)
                         
-                        # حفظ في قاعدة البيانات
                         new_image = Image(
                             title=request.form.get('title', filename),
                             description=request.form.get('description', ''),
@@ -689,27 +713,21 @@ def upload_images():
 @app.route('/admin/edit/<int:image_id>', methods=['GET', 'POST'])
 @login_required
 def edit_image(image_id):
-
-    """تعديل صورة - نسخة متكاملة"""
+    """تعديل صورة"""
     image = Image.query.get_or_404(image_id)
     categories = Category.query.all()
     
     if request.method == 'POST':
-        # المعلومات الأساسية
         image.title = request.form['title']
         image.description = request.form['description']
         image.category_id = request.form.get('category_id', type=int) or None
-        
-        # خيارات إضافية
         image.is_featured = 'is_featured' in request.form
         image.is_published = 'is_published' in request.form
         image.sort_order = request.form.get('sort_order', 0, type=int)
         
-        # معالجة رفع صورة جديدة (إذا تم اختيارها)
         if 'new_image' in request.files and request.files['new_image'].filename:
             file = request.files['new_image']
             if file and allowed_file(file.filename):
-                # حذف الصورة القديمة
                 if image.filename:
                     old_file = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
                     if os.path.exists(old_file):
@@ -718,24 +736,20 @@ def edit_image(image_id):
                     if os.path.exists(old_thumb):
                         os.remove(old_thumb)
                 
-                # رفع الصورة الجديدة
                 filename = secure_filename(file.filename)
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 new_filename = f"{timestamp}_{filename}"
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                 file.save(file_path)
                 
-                # إنشاء صورة مصغرة
                 thumb_path = create_thumbnail(file_path)
                 
-                # تحديث معلومات الملف
                 image.filename = new_filename
                 image.file_size = os.path.getsize(file_path)
                 image.mime_type = file.mimetype
                 image.image_url = url_for('static', filename=f'uploads/{new_filename}', _external=True)
                 image.thumbnail_url = url_for('static', filename=f'uploads/{os.path.basename(thumb_path)}', _external=True)
         
-        # حفظ التغييرات
         image.updated_at = datetime.utcnow()
         db.session.commit()
         
@@ -758,7 +772,6 @@ def delete_image(image_id):
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
         if os.path.exists(file_path):
             os.remove(file_path)
-        
         thumb_path = file_path.replace('.', '_thumb.')
         if os.path.exists(thumb_path):
             os.remove(thumb_path)
@@ -768,10 +781,6 @@ def delete_image(image_id):
     
     flash('تم حذف الصورة بنجاح', 'success')
     return redirect(url_for('manage_images'))
-
-
-
-
 
 @app.route('/admin/images/bulk-action', methods=['POST'])
 @login_required
@@ -792,13 +801,10 @@ def bulk_action():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
                 if os.path.exists(file_path):
                     os.remove(file_path)
-                
                 thumb_path = file_path.replace('.', '_thumb.')
                 if os.path.exists(thumb_path):
                     os.remove(thumb_path)
-            
             db.session.delete(image)
-        
         flash(f'تم حذف {len(images)} صورة', 'success')
     
     elif action == 'publish':
@@ -817,7 +823,6 @@ def bulk_action():
         flash(f'تم تمييز {len(images)} صورة', 'success')
     
     db.session.commit()
-    
     log_activity(current_user.id, 'bulk_action', {'action': action, 'count': len(images)})
     
     return redirect(url_for('manage_images'))
@@ -834,13 +839,10 @@ def manage_categories():
 def add_category():
     """إضافة تصنيف"""
     name = request.form['name']
-    
     slug = name.lower().replace(' ', '-')
-    
     category = Category(name=name, slug=slug, description=request.form.get('description', ''))
     db.session.add(category)
     db.session.commit()
-    
     flash('تم إضافة التصنيف بنجاح', 'success')
     return redirect(url_for('manage_categories'))
 
@@ -852,7 +854,6 @@ def edit_category(category_id):
     category.name = request.form['name']
     category.description = request.form.get('description', '')
     db.session.commit()
-    
     flash('تم تحديث التصنيف', 'success')
     return redirect(url_for('manage_categories'))
 
@@ -861,18 +862,14 @@ def edit_category(category_id):
 def delete_category(category_id):
     """حذف تصنيف"""
     category = Category.query.get_or_404(category_id)
-    
     default_category = Category.query.filter_by(name='عام').first()
     if not default_category:
         default_category = Category(name='عام', slug='general')
         db.session.add(default_category)
-    
     for image in category.images:
         image.category_id = default_category.id
-    
     db.session.delete(category)
     db.session.commit()
-    
     flash('تم حذف التصنيف', 'success')
     return redirect(url_for('manage_categories'))
 
@@ -882,7 +879,6 @@ def manage_users():
     """إدارة المستخدمين"""
     if current_user.role != 'admin':
         abort(403)
-    
     users = User.query.all()
     return render_template('manage_users.html', users=users)
 
@@ -892,7 +888,6 @@ def add_user():
     """إضافة مستخدم"""
     if current_user.role != 'admin':
         abort(403)
-    
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
@@ -904,10 +899,8 @@ def add_user():
     
     user = User(username=username, email=email, role=role)
     user.set_password(password)
-    
     db.session.add(user)
     db.session.commit()
-    
     flash('تم إضافة المستخدم', 'success')
     return redirect(url_for('manage_users'))
 
@@ -917,24 +910,14 @@ def toggle_user(user_id):
     """تفعيل/تعطيل مستخدم"""
     if current_user.role != 'admin':
         abort(403)
-    
     user = User.query.get_or_404(user_id)
     user.is_active = not user.is_active
     db.session.commit()
-    
     status = 'تفعيل' if user.is_active else 'تعطيل'
     flash(f'تم {status} المستخدم', 'success')
     return redirect(url_for('manage_users'))
 
- 
-
-
-
-
-
-
-
-# ==================== دالة الإعدادات النصية ====================
+# ==================== إعدادات الموقع ====================
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @login_required
 def site_settings():
@@ -968,8 +951,6 @@ def site_settings():
     
     return render_template('settings_advanced.html', settings=settings)
 
-
-# ==================== دالة رفع الشعار (منفصلة) ====================
 @app.route('/admin/upload-logo', methods=['POST'])
 @login_required
 def upload_logo():
@@ -984,21 +965,17 @@ def upload_logo():
         return redirect(url_for('site_settings'))
     
     if file and allowed_file(file.filename):
-        # حفظ مؤقتاً
         filename = secure_filename(file.filename)
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         new_filename = f"logo_{timestamp}_{filename}"
         temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
         file.save(temp_path)
         
-        # رفع إلى Azure
         logo_url = upload_to_azure(temp_path, new_filename)
         
         if logo_url:
-            # حذف الملف المؤقت
             os.remove(temp_path)
             
-            # تحديث الإعدادات
             settings = SiteSettings.query.first()
             if not settings:
                 settings = SiteSettings()
@@ -1015,21 +992,7 @@ def upload_logo():
     
     return redirect(url_for('site_settings'))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# ==================== التحليلات ====================
 @app.route('/admin/analytics')
 @login_required
 def analytics():
@@ -1074,6 +1037,7 @@ def analytics():
                          active_users=active_users,
                          stats=stats)
 
+# ==================== النسخ الاحتياطي ====================
 @app.route('/admin/backup')
 @login_required
 def backup_system():
@@ -1101,29 +1065,7 @@ def backup_system():
     flash('تم إنشاء النسخة الاحتياطية', 'success')
     return send_file(backup_path, as_attachment=True)
 
-
- 
-
-def generate_qr_code(url, size=10):
-    """توليد QR Code"""
-    qr = qrcode.QRCode(
-        version=1,
-        box_size=size,
-        border=5,
-        error_correction=qrcode.constants.ERROR_CORRECT_H
-    )
-    qr.add_data(url)
-    qr.make(fit=True)
-    
-    img = qr.make_image(fill_color="black", back_color="white")
-    
-    img_io = io.BytesIO()
-    img.save(img_io, 'PNG')
-    img_io.seek(0)
-    img_base64 = base64.b64encode(img_io.getvalue()).decode()
-    
-    return img_base64
-
+# ==================== QR Code ====================
 @app.route('/admin/generate-qr')
 @login_required
 def admin_generate_qr():
@@ -1132,15 +1074,23 @@ def admin_generate_qr():
     qr_base64 = generate_qr_code(site_url)
     return render_template('show_qr.html', qr_code=qr_base64, site_url=site_url)
 
-# ==================== API للاستخدام مع AJAX ====================
+@app.route('/api/generate-qr')
+def api_generate_qr():
+    """API لتوليد QR Code"""
+    site_url = request.host_url
+    qr_base64 = generate_qr_code(site_url)
+    return jsonify({
+        'qr_code': f'data:image/png;base64,{qr_base64}',
+        'site_url': site_url
+    })
 
+# ==================== API للاستخدام مع AJAX ====================
 @app.route('/api/images/featured')
 def api_featured_images():
     """API للحصول على الصور المميزة"""
     images = Image.query.filter_by(is_featured=True, is_published=True)\
                         .order_by(Image.created_at.desc())\
                         .limit(6).all()
-    
     return jsonify([{
         'id': img.id,
         'title': img.title,
@@ -1153,10 +1103,8 @@ def api_featured_images():
 def api_search():
     """API للبحث"""
     q = request.args.get('q', '')
-    
     if len(q) < 2:
         return jsonify([])
-    
     images = Image.query.filter(
         db.or_(
             Image.title.contains(q),
@@ -1164,7 +1112,6 @@ def api_search():
         ),
         Image.is_published == True
     ).limit(10).all()
-    
     return jsonify([{
         'id': img.id,
         'title': img.title,
@@ -1180,7 +1127,6 @@ def track_view(image_id):
     return jsonify({'success': True})
 
 # ==================== معالجات الأخطاء ====================
-
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
@@ -1195,7 +1141,6 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 # ==================== تهيئة قاعدة البيانات ====================
-
 def init_db():
     """تهيئة قاعدة البيانات"""
     with app.app_context():
@@ -1203,205 +1148,27 @@ def init_db():
         db.create_all()
         print("✅ تم إنشاء الجداول بنجاح")
         
-        # إنشاء مستخدم admin افتراضي إذا لم يوجد
         if not User.query.filter_by(username='admin').first():
-            admin = User(
-                username='admin',
-                email='admin@example.com',
-                role='admin'
-            )
+            admin = User(username='admin', email='admin@example.com', role='admin')
             admin.set_password('admin123')
             db.session.add(admin)
             print("✅ تم إنشاء مستخدم admin افتراضي")
         
-        # إنشاء تصنيفات افتراضية
         default_categories = ['عام', 'أعمال', 'منتجات', 'فعاليات']
         for cat_name in default_categories:
             if not Category.query.filter_by(name=cat_name).first():
-                category = Category(
-                    name=cat_name,
-                    slug=cat_name.lower().replace(' ', '-')
-                )
+                category = Category(name=cat_name, slug=cat_name.lower().replace(' ', '-'))
                 db.session.add(category)
         
-        # إعدادات افتراضية
         if not SiteSettings.query.first():
             settings = SiteSettings()
             db.session.add(settings)
         
         db.session.commit()
         print("✅ تم تهيئة قاعدة البيانات بنجاح")
+
 # ==================== تشغيل التطبيق ====================
-
-# ==================== API QR Code ====================
-
-@app.route('/api/generate-qr')
-def api_generate_qr():
-    """API لتوليد QR Code"""
-    site_url = request.host_url
-    qr_base64 = generate_qr_code(site_url)
-    
-    return jsonify({
-        'qr_code': f'data:image/png;base64,{qr_base64}',
-        'site_url': site_url
-    })
-
-# تأكد من وجود هذه الدالة (إذا لم تكن موجودة)
-def generate_qr_code(url, size=10):
-    """توليد QR Code"""
-    import qrcode
-    import io
-    import base64
-    
-    qr = qrcode.QRCode(
-        version=1,
-        box_size=size,
-        border=5,
-        error_correction=qrcode.constants.ERROR_CORRECT_H
-    )
-    qr.add_data(url)
-    qr.make(fit=True)
-    
-    img = qr.make_image(fill_color="black", back_color="white")
-    
-    img_io = io.BytesIO()
-    img.save(img_io, 'PNG')  # ✅ تصحيح: img_io وليس img_jo
-    img_io.seek(0)
-    img_base64 = base64.b64encode(img_io.getvalue()).decode()
-    
-    return img_base64
-
-
-
-
-
-# ==================== Google Drive Integration (نسخة مبسطة) ====================
- 
-# ==================== Google Drive Integration ====================
-import json
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-
-def get_drive_service():
-    """الاتصال بخدمة Google Drive"""
-    try:
-        # البحث عن ملف JSON
-        credentials_path = 'google-credentials.json'
-        if not os.path.exists(credentials_path):
-            print("⚠️ ملف google-credentials.json غير موجود")
-            return None
-        
-        credentials = service_account.Credentials.from_service_account_file(
-            credentials_path,
-            scopes=['https://www.googleapis.com/auth/drive.file']
-        )
-        
-        service = build('drive', 'v3', credentials=credentials)
-        print("✅ تم الاتصال بـ Google Drive")
-        return service
-        
-    except Exception as e:
-        print(f"❌ خطأ في الاتصال: {e}")
-        return None
-
-def upload_to_drive(file_path, filename, folder_id=None):
-    """رفع ملف إلى Google Drive"""
-    try:
-        drive_service = get_drive_service()
-        if not drive_service:
-            return None
-        
-        # 🔴 استبدل هذا بمعرف مجلدك
-        if not folder_id:
-            folder_id = '1AxV1rFoS2KaeyQzFRhlf1rvn1m1_6UEb'  # ⬅️ ضع معرف مجلدك هنا
-        
-        # إعدادات الملف
-        file_metadata = {
-            'name': filename,
-            'parents': [folder_id]
-        }
-        
-        # رفع الملف
-        media = MediaFileUpload(file_path, mimetype='image/jpeg', resumable=True)
-        file = drive_service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id'
-        ).execute()
-        
-        file_id = file.get('id')
-        
-        # جعل الملف عاماً
-        drive_service.permissions().create(
-            fileId=file_id,
-            body={'type': 'anyone', 'role': 'reader'}
-        ).execute()
-        
-        # رابط مباشر للصورة
-        direct_link = f"https://drive.google.com/uc?id={file_id}"
-        print(f"✅ تم رفع {filename}, ID: {file_id}")
-        
-        return direct_link
-        
-    except Exception as e:
-        print(f"❌ خطأ في رفع {filename}: {e}")
-        return None
-
-
-# ==================== Azure Blob Storage Integration ====================
-from azure.storage.blob import BlobServiceClient, ContainerClient
-import os
-import uuid
-
-# إعدادات Azure - ضعها في متغيرات بيئة للأمان
-AZURE_CONNECTION_STRING = os.environ.get('AZURE_CONNECTION_STRING', '')
-AZURE_CONTAINER_NAME = 'gallery-images'  # اسم الحاوية التي أنشأتها
-
-def upload_to_azure(file_path, filename):
-    """
-    رفع ملف إلى Azure Blob Storage
-    returns: رابط الصورة العامة أو None في حالة الفشل
-    """
-    try:
-        # التأكد من وجود Connection String
-        if not AZURE_CONNECTION_STRING:
-            print("⚠️ AZURE_CONNECTION_STRING غير موجود")
-            return None
-        
-        # الاتصال بـ Azure
-        blob_service = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
-        container_client = blob_service.get_container_client(AZURE_CONTAINER_NAME)
-        
-        # التأكد من وجود الحاوية (اختياري)
-        try:
-            container_client.get_container_properties()
-        except Exception:
-            print(f"⚠️ الحاوية {AZURE_CONTAINER_NAME} غير موجودة")
-            return None
-        
-        # اسم فريد للملف
-        blob_name = f"{uuid.uuid4().hex}_{filename}"
-        
-        # رفع الملف
-        with open(file_path, "rb") as data:
-            blob_client = container_client.upload_blob(
-                name=blob_name, 
-                data=data,
-                overwrite=True
-            )
-        
-        # الحصول على رابط الملف
-        blob_url = f"https://{blob_service.account_name}.blob.core.windows.net/{AZURE_CONTAINER_NAME}/{blob_name}"
-        print(f"✅ تم رفع {filename} إلى Azure Blob Storage")
-        print(f"🔗 الرابط: {blob_url}")
-        
-        return blob_url
-        
-    except Exception as e:
-        print(f"❌ خطأ في رفع الملف إلى Azure: {e}")
-        return None
 if __name__ == '__main__':
     init_db()
-    port = int(os.environ.get('PORT', 5000))  # هذا السطر مهم
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
