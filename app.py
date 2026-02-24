@@ -43,7 +43,11 @@ def debug_db():
         <p>الخطأ: {str(e)}</p>
         <p>نوع الخطأ: {type(e).__name__}</p>
         """
+
 #app.config['UPLOAD_FOLDER'] = 'static/uploads'
+# استخدام القيمة من الإعدادات أو قيمة افتراضية
+upload_folder = app.config.get('UPLOAD_FOLDER', 'static/uploads')
+os.makedirs(upload_folder, exist_ok=True)
 app.config['QR_FOLDER'] = 'static/qrcodes'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
