@@ -1167,8 +1167,12 @@ def init_db():
         db.session.commit()
         print("✅ تم تهيئة قاعدة البيانات بنجاح")
 
+# ✅ هذا هو السطر الجديد الذي يجب إضافته
+with app.app_context():
+    init_db()
+
 # ==================== تشغيل التطبيق ====================
 if __name__ == '__main__':
-    init_db()
+    # init_db()  # يمكنك تعليق أو إزالة هذا السطر الآن
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
