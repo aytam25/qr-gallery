@@ -607,67 +607,99 @@ function copyQRUrl() {
 
 <!-- قسم الترحيب -->
  
-<section class="hero-section" style="margin-top: 56px; padding: 25px 0; position: relative; overflow: hidden;">
-    <!-- خلفية الشعار الكبير -->
+<!-- قسم الترحيب الاحترافي -->
+<section class="hero-section position-relative" style="margin-top: 56px; padding: 40px 0; background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%), url('data:image/svg+xml,...') center/cover; overflow: hidden;">
+    
+    <!-- خلفية الشعار المتحركة -->
     {% if settings and settings.site_logo %}
-    <div class="position-absolute" style="top: 50%; right: 20px; transform: translateY(-50%); opacity: 0.1; z-index: 0;">
-        <img src="{{ settings.site_logo }}" alt="" style="height: 200px; width: auto;">
+    <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; z-index: 0; animation: rotate 30s linear infinite;">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 300px; width: auto; filter: blur(2px);">
     </div>
     {% endif %}
     
-    <div class="container position-relative" style="z-index: 1;">
-        <div class="row align-items-center">
-            <!-- الشعار المصغر على اليمين -->
-            <div class="col-auto">
+    <!-- خلفية الشعار الجانبي -->
+    {% if settings and settings.site_logo %}
+    <div class="position-absolute" style="top: 20%; right: -50px; opacity: 0.1; z-index: 0; transform: rotate(15deg);">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 150px; width: auto;">
+    </div>
+    <div class="position-absolute" style="bottom: 10%; left: -30px; opacity: 0.1; z-index: 0; transform: rotate(-10deg);">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 120px; width: auto;">
+    </div>
+    {% endif %}
+    
+    <!-- جسيمات متحركة (اختياري) -->
+    <div class="position-absolute" style="top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+        <div class="particle" style="position: absolute; top: 20%; left: 10%; width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.3; animation: float 8s ease-in-out infinite;"></div>
+        <div class="particle" style="position: absolute; top: 70%; right: 15%; width: 6px; height: 6px; background: white; border-radius: 50%; opacity: 0.2; animation: float 12s ease-in-out infinite;"></div>
+        <div class="particle" style="position: absolute; bottom: 30%; left: 20%; width: 3px; height: 3px; background: white; border-radius: 50%; opacity: 0.25; animation: float 10s ease-in-out infinite;"></div>
+    </div>
+    
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-8 mx-auto text-center">
+                <!-- الشعار الرئيسي -->
                 {% if settings and settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" alt="شعار" height="70" style="border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                <div class="mb-4 animate__animated animate__fadeInDown">
+                    <img src="{{ settings.site_logo }}" alt="شعار" height="90" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                </div>
                 {% endif %}
-            </div>
-            
-            <!-- العنوان والوصف -->
-            <div class="col">
-                <h1 class="hero-title animate__animated animate__fadeInDown" style="font-size: 2.2rem; margin-bottom: 5px;">
+                
+                <!-- العنوان مع تأثير الكتابة -->
+                <h1 class="display-3 fw-bold text-white mb-3 animate__animated animate__fadeInUp" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
                     {{ settings.site_title if settings else 'معرض الأعمال' }}
                 </h1>
-                <p class="lead animate__animated animate__fadeInUp" style="font-size: 1.1rem; margin-bottom: 0;">
+                
+                <!-- الوصف -->
+                <p class="lead text-white-50 mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.3rem;">
                     {{ settings.site_description if settings else 'مرحباً بكم في معرض أعمالنا' }}
                 </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
- <section class="hero1-section" style="margin-top: 56px; padding: 20px 0;">
-    <div class="container">
-        <div class="card bg-white bg-opacity-10 border-0 rounded-4 overflow-hidden">
-            <div class="card-body p-4">
-                <div class="row align-items-center">
-                    <!-- الشعار على اليمين -->
-                    <div class="col-md-2 text-center text-md-start mb-3 mb-md-0">
-                        {% if settings and settings.site_logo %}
-                            <img src="{{ settings.site_logo }}" alt="شعار" style="max-height: 80px; border-radius: 10px;">
-                        {% else %}
-                            <i class="bi bi-camera-fill" style="font-size: 4rem; color: white;"></i>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- العنوان والوصف -->
-                    <div class="col-md-10 text-center text-md-start">
-                        <h1 class="text-white fw-bold" style="font-size: 2.2rem;">
-                            {{ settings.site_title if settings else 'معرض الأعمال' }}
-                        </h1>
-                        <p class="text-white-50 lead" style="font-size: 1.1rem;">
-                            {{ settings.site_description if settings else 'مرحباً بكم في معرض أعمالنا' }}
-                        </p>
-                    </div>
+                
+                <!-- أزرار إضافية -->
+                <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="#gallery" class="btn btn-light btn-lg px-5 py-3 rounded-pill">
+                        <i class="bi bi-images me-2"></i>استعرض الأعمال
+                    </a>
+                    <a href="#featured" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                        <i class="bi bi-star-fill me-2"></i>المميزة
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- CSS إضافي للحركات -->
+<style>
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
 
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+.hero-section {
+    position: relative;
+    isolation: isolate;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    z-index: 1;
+}
+</style>
 
 
 
