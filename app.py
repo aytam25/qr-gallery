@@ -21,35 +21,29 @@ from PIL import Image as PILImage
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db' الاصلي
-
-# استخدام PostgreSQL في الإنتاج، SQLite في التطوير المحلي
-import os
-from urllib.parse import urlparse
-
-database_url = os.environ.get('DATABASE_URL')
-if database_url:
-    # تأكد من الصيغة
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    
-    # أضف SSL إذا لم يكن موجوداً
-    if 'sslmode' not in database_url:
-        if '?' in database_url:
-            database_url += '&sslmode=require'
-        else:
-            database_url += '?sslmode=require'
-    
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-    print(f"✅ استخدام PostgreSQL مع SSL")
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db'
-    print("✅ استخدام SQLite محلياً")
-    # التطوير المحلي
-   
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+# استخدام SQLite فقط
+ 
+@app.route('/debug-db')
+def debug_db():
+    """اختبار الاتصال بقاعدة البيانات"""
+    try:
+        from sqlalchemy import text
+        with app.app_context():
+            # محاولة الاتصال بقاعدة البيانات
+            db.session.execute(text('SELECT 1'))
+            db_url = app.config['SQLALCHEMY_DATABASE_URI']
+            return f"""
+            <h1>✅ الاتصال بقاعدة البيانات ناجح</h1>
+            <p>نوع قاعدة البيانات: {'PostgreSQL' if 'postgresql' in db_url else 'SQLite'}</p>
+            <p>الرابط: {db_url}</p>
+            """
+    except Exception as e:
+        return f"""
+        <h1>❌ فشل الاتصال بقاعدة البيانات</h1>
+        <p>الخطأ: {str(e)}</p>
+        <p>نوع الخطأ: {type(e).__name__}</p>
+        """
+#app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['QR_FOLDER'] = 'static/qrcodes'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -59,12 +53,38 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['QR_FOLDER'], exist_ok=True)
 
 # تهيئة قاعدة البيانات
+# بعد تهيئة db وقبل أي استخدام للقاعدة البيانات
 db = SQLAlchemy(app)
 
 # تهيئة Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+# ==================== إعدادات قاعدة البيانات ====================
+import os
+from urllib.parse import urlparse
+
+# استخدام PostgreSQL في الإنتاج إذا كان متغير البيئة موجوداً، وإلا SQLite محلياً
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    print("✅ استخدام PostgreSQL مع SSL")
+    # تأكد من الصيغة
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    # أضف SSL إذا لم يكن موجوداً
+    if 'sslmode' not in database_url:
+        if '?' in database_url:
+            database_url += '&sslmode=require'
+        else:
+            database_url += '?sslmode=require'
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    print("✅ استخدام SQLite محلياً للتطوير")
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///gallery.db'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 # ==================== نماذج قاعدة البيانات ====================
 
@@ -1171,8 +1191,11 @@ def internal_error(error):
 def init_db():
     """تهيئة قاعدة البيانات"""
     with app.app_context():
+        print("🔄 جاري إنشاء جداول قاعدة البيانات...")
         db.create_all()
+        print("✅ تم إنشاء الجداول بنجاح")
         
+        # إنشاء مستخدم admin افتراضي إذا لم يوجد
         if not User.query.filter_by(username='admin').first():
             admin = User(
                 username='admin',
@@ -1181,7 +1204,9 @@ def init_db():
             )
             admin.set_password('admin123')
             db.session.add(admin)
+            print("✅ تم إنشاء مستخدم admin افتراضي")
         
+        # إنشاء تصنيفات افتراضية
         default_categories = ['عام', 'أعمال', 'منتجات', 'فعاليات']
         for cat_name in default_categories:
             if not Category.query.filter_by(name=cat_name).first():
@@ -1191,13 +1216,13 @@ def init_db():
                 )
                 db.session.add(category)
         
+        # إعدادات افتراضية
         if not SiteSettings.query.first():
             settings = SiteSettings()
             db.session.add(settings)
         
         db.session.commit()
         print("✅ تم تهيئة قاعدة البيانات بنجاح")
-
 # ==================== تشغيل التطبيق ====================
 
 # ==================== API QR Code ====================
