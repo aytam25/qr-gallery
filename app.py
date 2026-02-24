@@ -46,8 +46,14 @@ def debug_db():
 
 #app.config['UPLOAD_FOLDER'] = 'static/uploads'
 # استخدام القيمة من الإعدادات أو قيمة افتراضية
+# التأكد من وجود المجلدات
 upload_folder = app.config.get('UPLOAD_FOLDER', 'static/uploads')
-os.makedirs(upload_folder, exist_ok=True)
+ 
+# التأكد من وجود المجلدات
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['QR_FOLDER'], exist_ok=True)
+# إعدادات المجلدات (تأكد من أنها غير مُعلّقة)
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['QR_FOLDER'] = 'static/qrcodes'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -55,7 +61,6 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 # التأكد من وجود المجلدات
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['QR_FOLDER'], exist_ok=True)
-
 # تهيئة قاعدة البيانات
 # بعد تهيئة db وقبل أي استخدام للقاعدة البيانات
 db = SQLAlchemy(app)
