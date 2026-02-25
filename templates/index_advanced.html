@@ -641,56 +641,7 @@
     {% if featured_images %}
     <section class="carousel-section">
 
-
-<!-- ===== الكاروسيل المحسن ===== -->
-<div class="container my-4">
-    <div id="mainCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" style="border-radius: 20px; overflow: hidden;">
-        <div class="carousel-inner" style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            {% for image in featured_images %}
-            <div class="carousel-item {% if loop.first %}active{% endif %} h-100" style="background: #1a1a1a;">
-                <img src="{{ image.image_url }}" 
-                     class="d-block w-100 h-100" 
-                     alt="{{ image.title }}"
-                     style="object-fit: contain; padding: 20px; background: #1a1a1a;"
-                     onerror="this.src='https://via.placeholder.com/800x500?text=صورة'">
-                
-                {% if image.title or image.description %}
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3" style="bottom: 30px;">
-                    {% if image.title %}<h5>{{ image.title }}</h5>{% endif %}
-                    {% if image.description %}<p>{{ image.description|truncate(80) }}</p>{% endif %}
-                </div>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
         
-        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">السابق</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">التالي</span>
-        </button>
-    </div>
-</div>
-
-<!-- أضف هذا داخل الكاروسيل، قبل أزرار التحكم -->
-<div class="carousel-indicators">
-    {% for image in featured_images %}
-    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="{{ loop.index0 }}" 
-            class="{% if loop.first %}active{% endif %}" 
-            aria-label="Slide {{ loop.index }}"></button>
-    {% endfor %}
-</div>
-
-
-
-
-
-
-
-
         <div class="container">
             <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -744,24 +695,45 @@
     </section>
     {% endif %}
 
-    <!-- ===== الصور المميزة ===== -->
-    {% if featured_images %}
-    <section id="featured" class="featured-section">
-        <div class="container">
-            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-            <div class="featured-grid">
-                {% for image in featured_images %}
-                <div class="featured-item">
-                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                    </a>
-                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
+
+
+
+
+
+
+
+
+
+
+<!-- ===== الصور المميزة بمعادلات ذكية ===== -->
+<section id="featured" class="featured-section">
+    <div class="container">
+        <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+            {% for image in featured_images %}
+            <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <div style="position: relative; width: 100%; padding-top: 75%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <!-- padding-top: 75% = نسبة ارتفاع 3:4 (مثالية للصور العمودية والأفقية) -->
+                    <img src="{{ image.thumbnail_url or image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a; padding: 5px;"
+                         onerror="this.src='https://via.placeholder.com/300x225?text=صورة'"
+                         loading="lazy">
+                    
+                    <!-- شارة مميزة -->
+                    <span style="position: absolute; top: 10px; right: 10px; background: gold; color: #333; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 10;">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-    </section>
-    {% endif %}
+    </div>
+</section>
+
+
+
+
 
     <!-- ===== المعرض الرئيسي ===== -->
 <!-- ===== المعرض الرئيسي (بدون قص للصور) ===== -->
@@ -772,9 +744,9 @@
         {% if images and images.items %}
         <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px;">
             {% for image in images.items %}
-            <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})" 
-                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; aspect-ratio: 1 / 1; position: relative;">
-                
+            <div class="gallery-item" data-img="{{ image.image_url }}" data-id="{{ image.id }}"
+                 onclick="openLightbox(this)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; aspect-ratio: 1 / 1; position: relative;">
+                  <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
                 <!-- حاوية الصورة مع object-fit: contain (بدون قص) -->
                 <div style="position: relative; width: 100%; height: 100%; background: #1a1a1a;">
                     <img src="{{ image.thumbnail_url or image.image_url }}" 
