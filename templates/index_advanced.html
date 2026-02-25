@@ -77,26 +77,6 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .search-form {
-            position: relative;
-        }
-
-        .search-form input {
-            border-radius: 50px;
-            border: 1px solid #e0e0e0;
-            padding-right: 40px;
-            height: 36px;
-        }
-
-        .search-form button {
-            position: absolute;
-            left: 5px;
-            top: 2px;
-            background: transparent;
-            border: none;
-            color: var(--primary-color);
-        }
-
         /* ===== قسم الترحيب ===== */
         .hero-section {
             margin-top: 70px;
@@ -129,13 +109,6 @@
             z-index: 2;
         }
 
-        .hero-logo {
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            border-radius: 20px;
-            max-height: 100px;
-        }
-
         .hero-title {
             font-size: 3.5rem;
             font-weight: 700;
@@ -162,7 +135,7 @@
             transform: translateY(-3px);
         }
 
-        /* ===== كاروسيل ===== */
+        /* ===== الكاروسيل المحسن (المدمج من TEST.HTML) ===== */
         .carousel-section {
             padding: 40px 0;
         }
@@ -174,22 +147,29 @@
         }
 
         .carousel-inner {
-            height: 400px;
+            height: 500px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .carousel-item {
+            background: #1a1a1a;
+            height: 100%;
         }
 
         .carousel-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            padding: 20px;
+            background: #1a1a1a;
         }
 
         .carousel-caption {
-            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 30px;
-            text-align: right;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            bottom: 30px;
+            padding: 15px;
         }
 
         /* ===== البحث ===== */
@@ -317,10 +297,10 @@
         }
 
         .gallery-item {
-            background: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             transition: all 0.3s;
             cursor: pointer;
             aspect-ratio: 1 / 1;
@@ -329,18 +309,31 @@
 
         .gallery-item:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .gallery-item .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
         }
 
         .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             transition: transform 0.5s;
         }
 
         .gallery-item:hover img {
-            transform: scale(1.1);
+            transform: translate(-50%, -50%) scale(1.05);
         }
 
         .gallery-overlay {
@@ -363,10 +356,6 @@
             display: flex;
             gap: 15px;
             font-size: 0.9rem;
-        }
-
-        .gallery-stats i {
-            margin-left: 5px;
         }
 
         /* ===== التصفح ===== */
@@ -425,15 +414,6 @@
             opacity: 0.5;
         }
 
-        /* ===== تذييل الصفحة ===== */
-        .footer {
-            background: rgba(0,0,0,0.3);
-            color: white;
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 60px;
-        }
-
         /* ===== نافذة QR ===== */
         .qr-modal .modal-content {
             border-radius: 20px;
@@ -485,72 +465,19 @@
             .hero-description { font-size: 1.1rem; }
             .gallery-grid { grid-template-columns: 1fr; }
             .featured-grid { grid-template-columns: repeat(2, 1fr); }
-            .carousel-inner { height: 250px; }
+            .carousel-inner { height: 300px; }
+            .carousel-item img { padding: 10px; }
         }
 
         @media (max-width: 480px) {
             .hero-title { font-size: 2rem; }
             .featured-grid { grid-template-columns: 1fr; }
         }
-
-
-
-
-
-
-
-
-
-        /* ===== تحسين الكاروسيل ===== */
-.carousel-inner {
-    height: 500px; /* أو أي ارتفاع تريده */
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.carousel-item {
-    height: 100%;
-    background: #1a1a1a; /* خلفية داكنة */
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* يعرض الصورة كاملة مع خلفية */
-    background: #1a1a1a;
-    padding: 20px; /* مسافة حول الصورة */
-}
-
-/* للموبايل */
-@media (max-width: 768px) {
-    .carousel-inner {
-        height: 300px;
-    }
-    
-    .carousel-item img {
-        padding: 10px;
-    }
-}
-
-
-.carousel-item {
-    position: relative;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    mix-blend-mode: normal; /* يسمح بظهور الخلفية خلف الصورة */
-}
-
-
     </style>
 </head>
 <body>
 
-    <!-- ===== شريط التنقل (نسخة واحدة) ===== -->
+    <!-- ===== شريط التنقل ===== -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
@@ -584,18 +511,15 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2">
-                    <!-- زر QR -->
                     <button class="btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
                         <i class="bi bi-qr-code-scan"></i>
                     </button>
 
-                    <!-- نموذج البحث -->
-                    <form class="search-form" action="{{ url_for('search') }}" method="GET">
-                        <input class="form-control" type="search" name="q" placeholder="بحث..." value="{{ search_query }}">
-                        <button type="submit"><i class="bi bi-search"></i></button>
+                    <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                        <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." style="width:130px; border-radius:20px;">
+                        <button class="btn btn-sm btn-outline-primary ms-1" type="submit"><i class="bi bi-search"></i></button>
                     </form>
 
-                    <!-- حساب المستخدم -->
                     {% if current_user.is_authenticated %}
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -626,7 +550,7 @@
     <section class="hero-section">
         <div class="container hero-content">
             {% if settings and settings.site_logo %}
-                <img src="{{ settings.site_logo }}" alt="شعار" class="hero-logo" style="max-height: 100px;">
+                <img src="{{ settings.site_logo }}" alt="شعار" style="max-height:100px; margin-bottom:1.5rem; border-radius:20px; box-shadow:var(--shadow);">
             {% endif %}
             <h1 class="hero-title">{{ settings.site_title }}</h1>
             <p class="hero-description">{{ settings.site_description }}</p>
@@ -637,28 +561,37 @@
         </div>
     </section>
 
-    <!-- ===== كاروسيل (إذا وجد صور مميزة) ===== -->
+    <!-- ===== الكاروسيل المحسن (المدمج من TEST.HTML) ===== -->
     {% if featured_images %}
     <section class="carousel-section">
-
-        
-        <div class="container">
-            <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for image in featured_images[:5] %}
-                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>{{ image.title }}</h5>
+        <div class="container my-4">
+            <div id="mainCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" style="border-radius: 20px; overflow: hidden;">
+                <div class="carousel-inner" style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    {% for image in featured_images %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %} h-100" style="background: #1a1a1a;">
+                        <img src="{{ image.image_url }}" 
+                             class="d-block w-100 h-100" 
+                             alt="{{ image.title }}"
+                             style="object-fit: contain; padding: 20px; background: #1a1a1a;"
+                             onerror="this.src='https://via.placeholder.com/800x500?text=صورة'">
+                        
+                        {% if image.title or image.description %}
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3" style="bottom: 30px;">
+                            {% if image.title %}<h5>{{ image.title }}</h5>{% endif %}
+                            {% if image.description %}<p>{{ image.description|truncate(80) }}</p>{% endif %}
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
+                
                 <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">السابق</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">التالي</span>
                 </button>
             </div>
         </div>
@@ -695,138 +628,100 @@
     </section>
     {% endif %}
 
-
-
-
-
-
-
-
-
-
-
-<!-- ===== الصور المميزة بمعادلات ذكية ===== -->
-<section id="featured" class="featured-section">
-    <div class="container">
-        <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
-            {% for image in featured_images %}
-            <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
-                <div style="position: relative; width: 100%; padding-top: 75%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <!-- padding-top: 75% = نسبة ارتفاع 3:4 (مثالية للصور العمودية والأفقية) -->
-                    <img src="{{ image.thumbnail_url or image.image_url }}" 
-                         alt="{{ image.title }}"
-                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a; padding: 5px;"
-                         onerror="this.src='https://via.placeholder.com/300x225?text=صورة'"
-                         loading="lazy">
-                    
-                    <!-- شارة مميزة -->
-                    <span style="position: absolute; top: 10px; right: 10px; background: gold; color: #333; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 10;">
-                        <i class="bi bi-star-fill"></i>
-                    </span>
+    <!-- ===== الصور المميزة ===== -->
+    {% if featured_images %}
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
+            <div class="featured-grid">
+                {% for image in featured_images %}
+                <div class="featured-item">
+                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
+                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                    </a>
+                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-</section>
-
-
-
-
+    </section>
+    {% endif %}
 
     <!-- ===== المعرض الرئيسي ===== -->
-<!-- ===== المعرض الرئيسي (بدون قص للصور) ===== -->
-<section id="gallery" class="gallery-section">
-    <div class="container">
-        <h2 class="section-title"><i class="bi bi-images me-2"></i>جميع الصور</h2>
+    <section id="gallery" class="gallery-section">
+        <div class="container">
+            <h2 class="section-title"><i class="bi bi-images me-2"></i>جميع الصور</h2>
 
-        {% if images and images.items %}
-        <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px;">
-            {% for image in images.items %}
-            <div class="gallery-item" data-img="{{ image.image_url }}" data-id="{{ image.id }}"
-                 onclick="openLightbox(this)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; aspect-ratio: 1 / 1; position: relative;">
-                  <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                <!-- حاوية الصورة مع object-fit: contain (بدون قص) -->
-                <div style="position: relative; width: 100%; height: 100%; background: #1a1a1a;">
-                    <img src="{{ image.thumbnail_url or image.image_url }}" 
-                         alt="{{ image.title }}" 
-                         style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%; width: auto; height: auto; object-fit: contain; transition: transform 0.5s;"
-                         onerror="this.src='https://via.placeholder.com/300x200?text=صورة'">
-                </div>
-
-                <!-- طبقة المعلومات (تظهر عند التحويم) -->
-                <div class="gallery-overlay" 
-                     style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 20px; transform: translateY(100%); transition: transform 0.3s;">
-                    <div class="gallery-stats" style="display: flex; gap: 15px; font-size: 0.9rem;">
-                        <span><i class="bi bi-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
-                        <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
-                        {% if image.category %}<span><i class="bi bi-tag"></i> {{ image.category.name }}</span>{% endif %}
+            {% if images and images.items %}
+            <div class="gallery-grid">
+                {% for image in images.items %}
+                <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
+                    <div class="image-container">
+                        <img src="{{ image.thumbnail_url or image.image_url }}" 
+                             alt="{{ image.title }}"
+                             onerror="this.src='https://via.placeholder.com/300x200?text=صورة'">
+                    </div>
+                    <div class="gallery-overlay">
+                        <div class="gallery-stats">
+                            <span><i class="bi bi-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
+                            <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
+                            {% if image.category %}<span><i class="bi bi-tag"></i> {{ image.category.name }}</span>{% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- تأثير التحويم (CSS داخل الـ style) -->
-        <style>
-            .gallery-item:hover .gallery-overlay {
-                transform: translateY(0) !important;
-            }
-            .gallery-item:hover img {
-                transform: translate(-50%, -50%) scale(1.1) !important;
-            }
-        </style>
-
-        <!-- التصفح بين الصفحات (نفس الكود) -->
-        {% if images.pages > 1 %}
-        <nav>
-            <ul class="pagination">
-                {% if images.has_prev %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}">
-                        <i class="bi bi-chevron-right"></i> السابق
-                    </a>
-                </li>
-                {% endif %}
-
-                {% for page_num in images.iter_pages() %}
-                    {% if page_num %}
-                    <li class="page-item {% if page_num == images.page %}active{% endif %}">
-                        <a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">{{ page_num }}</a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    {% endif %}
                 {% endfor %}
+            </div>
 
-                {% if images.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">
-                        التالي <i class="bi bi-chevron-left"></i>
-                    </a>
-                </li>
+            <!-- التصفح بين الصفحات -->
+            {% if images.pages > 1 %}
+            <nav>
+                <ul class="pagination">
+                    {% if images.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}">
+                            <i class="bi bi-chevron-right"></i> السابق
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in images.iter_pages() %}
+                        {% if page_num %}
+                        <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if images.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">
+                            التالي <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-images"></i>
+                <h3>لا توجد صور بعد</h3>
+                <p>ابدأ بإضافة صور رائعة إلى المعرض</p>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('upload_images') }}" class="btn btn-light mt-3">
+                    <i class="bi bi-cloud-upload"></i> أضف أول صورة
+                </a>
                 {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-
-        {% else %}
-        <div class="empty-state">
-            <i class="bi bi-images"></i>
-            <h3>لا توجد صور بعد</h3>
-            <p>ابدأ بإضافة صور رائعة إلى المعرض</p>
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('upload_images') }}" class="btn btn-light mt-3">
-                <i class="bi bi-cloud-upload"></i> أضف أول صورة
-            </a>
+            </div>
             {% endif %}
         </div>
-        {% endif %}
-    </div>
-</section>
+    </section>
+
     <!-- ===== تذييل الصفحة ===== -->
-    <footer class="footer">
+    <footer class="footer" style="background: rgba(0,0,0,0.3); color: white; text-align: center; padding: 30px 0; margin-top: 60px;">
         <div class="container">
             <p>{{ settings.site_title }} &copy; {{ now.year if now else '2026' }}</p>
         </div>
@@ -878,15 +773,17 @@
             document.getElementById('lightboxImg').src = imgSrc;
 
             // زيادة المشاهدات عبر API
-            fetch(`/api/view/${imageId}`, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const viewElement = document.querySelector(`.view-count-${imageId}`);
-                        if (viewElement) viewElement.textContent = data.views;
-                    }
-                })
-                .catch(error => console.error('خطأ في زيادة المشاهدة:', error));
+            if (imageId) {
+                fetch(`/api/view/${imageId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const viewElement = document.querySelector(`.view-count-${imageId}`);
+                            if (viewElement) viewElement.textContent = data.views;
+                        }
+                    })
+                    .catch(error => console.error('خطأ في زيادة المشاهدة:', error));
+            }
         }
 
         function closeLightbox() {
@@ -907,7 +804,7 @@
             });
         }
 
-        // ===== دوال QR الإضافية (اختياري) =====
+        // ===== دوال QR الإضافية =====
         function downloadQRImage() {
             const base64 = "{{ qr_code }}";
             const link = document.createElement('a');

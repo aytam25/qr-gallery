@@ -1,0 +1,1144 @@
+
+<!DOCTYPE html><html lang="en" dir="ltr"><head><title>Website Maker Editor</title><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><style type="text/css">@font-face {font-family:Montserrat;font-style:normal;font-weight:100;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/100/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:100;src:url(/cf-fonts/s/montserrat/5.0.16/latin/100/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:100;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/100/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:100;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/100/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:100;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/100/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/300/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/s/montserrat/5.0.16/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/300/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/300/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:300;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/300/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/400/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/400/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/400/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/400/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:400;src:url(/cf-fonts/s/montserrat/5.0.16/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/500/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/500/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/500/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/s/montserrat/5.0.16/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:500;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/500/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/600/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/600/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/s/montserrat/5.0.16/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/600/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:600;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/600/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/s/montserrat/5.0.16/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/700/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/700/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/700/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:700;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/700/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic/800/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/s/montserrat/5.0.16/latin/800/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/s/montserrat/5.0.16/cyrillic-ext/800/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/s/montserrat/5.0.16/latin-ext/800/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:Montserrat;font-style:normal;font-weight:800;src:url(/cf-fonts/s/montserrat/5.0.16/vietnamese/800/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}</style><link rel="stylesheet" href="https://fonts.rfstat.com/website-builder/v1/wb-fonts.css"><link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="https://cdn.renderforest.com/website-maker-spa/1.7.111/main.min.css"><script src="https://cdn.renderforest.com/website-maker-spa/bundles/builtIcons_5.js" async></script><style>body {
+    margin: 0;
+    padding: 0;
+}
+
+.project-loader {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.first-section {
+    position: relative;
+    width: 100%;
+    height: 20%;
+    display: flex;
+}
+
+.title-skeleton {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35%;
+    height: 25%;
+    background: #eef5ff;
+    animation: contentLoaderKeyframes 3s infinite ease-in-out;
+}
+
+.description-skeleton {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    height: 25%;
+    background: #eef5ff;
+    animation: contentLoaderKeyframes 3s infinite ease-in-out;
+}
+
+.second-section {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-block {
+    width: 50%;
+    height: 100%;
+    position: relative;
+}
+
+.right-block {
+    width: 45%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.image-skeleton {
+    position: absolute;
+    top: 13%;
+    left: 8%;
+    width: 90%;
+    height: 48%;
+    background: #eef5ff;
+    animation: contentLoaderKeyframes 3s infinite ease-in-out;
+}
+
+.text-skeleton {
+    position: absolute;
+    height: 3%;
+    background: #eef5ff;
+    animation: contentLoaderKeyframes 3s infinite ease-in-out;
+}
+
+.first-text-skeleton {
+    top: 20%;
+    width: 92%;
+}
+
+.second-text-skeleton {
+    top: 26%;
+    width: 85%;
+}
+
+.third-text-skeleton {
+    top: 32%;
+    width: 80%;
+}
+
+.fourth-text-skeleton {
+    top: 38%;
+    width: 94%;
+}
+
+.button-skeleton {
+    position: absolute;
+    top: 48%;
+    height: 8%;
+    width: 30%;
+    background: #eef5ff;
+    border-radius: 20px;
+    left: 46%;
+    transform: translateX(-46%);
+    animation: contentLoaderKeyframes 3s infinite ease-in-out;
+}
+
+.second-section-mobile {
+    display: none;
+}
+
+@keyframes contentLoaderKeyframes {
+    0% {
+        background-color: rgba(238, 245, 255, 0.7);
+    }
+    50% {
+        background-color: rgba(207, 224, 255);
+    }
+    100% {
+        background-color: rgba(238, 245, 255, 0.7);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .second-section-mobile {
+        display: flex;
+    }
+    .first-section, .second-section {
+        flex-grow: 1;
+    }
+    .left-block, .right-block {
+        height: auto;
+    }
+}</style><!-- Google Tag Manager--><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;j.defer=true;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T435FFR');</script><!-- End Google Tag Manager--></head><body><div id="root"><div class="ie-message container" style="display:none;margin-top:100px"><div class="noti"><h2 class="whatnow"><b></b>Your browser is out-of-date. Please download one of these up-to-date, free and excellent browsers:</h2><table class="logos"><tbody><tr><td class="b bc"><a class="l" href="https://www.google.com/chrome/browser/desktop/" target="_blank" onmousedown="countBrowser('c')"><span class="bro">Chrome</span><span class="vendor">Google</span></a></td><td class="b bf"><a class="l" href="http://www.mozilla.com/firefox/" target="_blank" onmousedown="countBrowser('f')"><span class="bro">Firefox</span><span class="vendor">Mozilla Foundation</span></a></td><td class="b bo"><a class="l" href="http://www.opera.com/browser/" target="_blank" onmousedown="countBrowser('o')"><span class="bro">Opera</span><span class="vendor">Opera Software</span></a></td></tr></tbody></table></div><style>#editor-content .ie-message{
+    display:block!important;
+}
+.whatnow {
+    text-align: center;
+    margin: 13px 25px;
+    }
+.logos {
+    width: 100%;
+    border: none;
+}
+.logos td {
+    vertical-align: top;
+    padding: 10px;
+    border: none;
+    background: none;
+    width: 25%;
+}
+a.l {
+    display: block;
+    padding: 4px;
+    padding-top: 110px;
+    background-repeat: no-repeat;
+    background-position: center top;
+    text-decoration: none;
+    text-align: center;
+}
+a.l .bro {
+    white-space: nowrap;
+    text-decoration: underline;
+    font-size: 19px;
+    color: #01CC7B;
+}
+a span.vendor {
+    color: #aaa;
+    text-align: center;
+    font-size: 10px;
+    display: block;
+}
+.screenScroll {
+    position: initial!important;
+}
+@media (min-width: 48em) and (max-width: 61.9em) {
+    .mobile-navbar {
+        width: 100%;
+        position: relative;
+        background: none;
+    }
+    .mobile-navbar .nav.navbar-nav li{
+        float: left;
+    }
+}</style></div><div class="project-loader"><div class="first-section"><div class="title-skeleton"></div><div class="description-skeleton"></div></div><div class="second-section"><div class="left-block"><div class="image-skeleton"></div></div><div class="right-block"><div class="text-skeleton first-text-skeleton"></div><div class="text-skeleton second-text-skeleton"></div><div class="text-skeleton third-text-skeleton"></div><div class="text-skeleton fourth-text-skeleton"></div><div class="button-skeleton"></div></div></div><div class="second-section second-section-mobile"><div class="left-block"><div class="image-skeleton"></div></div><div class="right-block"><div class="text-skeleton first-text-skeleton"></div><div class="text-skeleton second-text-skeleton"></div><div class="text-skeleton third-text-skeleton"></div><div class="text-skeleton fourth-text-skeleton"></div><div class="button-skeleton"></div></div></div><div class="second-section second-section-mobile"><div class="left-block"><div class="image-skeleton"></div></div><div class="right-block"><div class="text-skeleton first-text-skeleton"></div><div class="text-skeleton second-text-skeleton"></div><div class="text-skeleton third-text-skeleton"></div><div class="text-skeleton fourth-text-skeleton"></div><div class="button-skeleton"></div></div></div></div></div><script type="text/javascript">var IS_PROD = true
+var langStr = ''
+var staticPath = 'https://static.rfstat.com/renderforest/'
+var CURRENT_LANGUAGE = 'en'
+var AVAILABLE_LANGUAGES = ["en","pt","es","de","fr","ar","jp","tr","ru"];
+var RF_COOKIE_USER_META_KEY = "__rf_user_meta";
+var RF_COOKIE_META_INFO = "__rf_meta_info";
+var CURRENT_HOST = 'https://www.renderforest.com'
+var SITE_MAKER_API_PATH = 'https://site-maker-api.renderforest.com/api/v1'
+
+var LOGO_MAKER_API_PATH = 'https://logo-maker-api.renderforest.com/api/v1'
+var LOGO_MAKER_API_HOST = 'https://logo-maker-api.renderforest.com'
+var VIDEO_API_PATH = 'https://video-api.renderforest.com/api/v1'
+var AI_IMAGE_API_PATH = 'https://ai-image-api.renderforest.com/api/v1'
+var MEDIAS_API_PATH = 'https://medias-api.renderforest.com/api/v1'
+var AI_VIDEO_API_PATH = 'https://ai-video-api.renderforest.com/api/v1'
+var SPEECH_API_PATH = 'https://tts-api.renderforest.com/api/v1'
+var LOGO_MAKER_SUGGESTION_API_HOST = 'https://logo-suggestion.renderforest.com'
+var LOGO_MAKER_SUGGESTION_API_PATH= 'https://logo-suggestion.renderforest.com/api/v1'
+var MOCKUP_MAKER_API_PATH = 'https://gm-api.renderforest.com/api/v1/mockup-maker'
+var RECOMMENDATION_API_PATH = 'https://engine.renderforest.com/api/v1'
+var CREDIT_MANAGER_API_PATH = 'https://credit-manager.renderforest.com/api/v1'
+
+var GRAPHIC_MAKER_API_PATH = 'https://gm-api.renderforest.com/api/v1/graphic-maker'
+var GRAPHIC_MAKER_EXPORTER_API_PATH = 'https://gm-exporter.renderforest.com/api/v1/graphic-maker'
+
+var GROWTHBOOK_API_HOST = 'https://cdn.growthbook.io'
+var GROWTHBOOK_CLIENT_KEY = 'sdk-ijxAfs7rewOH1dyR'
+
+var WEB_PATH = 'https://www.renderforest.com';
+var API_RENDER_HOST = 'https://api.renderforest.com/api/v1';
+var API_RENDER_PATH = 'https://api.renderforest.com/api/v1';
+var FILE_UPLOAD_PATH = '//user-media-upload.renderforest.com/api/v3'
+var CURRENCY_SYMBOLS = {"USD":"$","AMD":"֏","EUR":"€","RUB":"₽","BRL":"R$","CNY":"¥","INR":"₹","JPY":"¥","MXN":"Mex$","PLN":"zł","CHF":"CHF","TRY":"₺","GBP":"£"};
+var CURRENT_CUSTOM_CURRENCY = "USD";
+var CURRENT_COUNTRY='PS'
+
+var GOOGLE_CLIENT_ID = '720565468126-fob7jcnecgkdouicdlesjlt1kubg3uk6.apps.googleusercontent.com'
+var GM_GIPHY_API_KEY = 'QhWCYO15KcCNRmIMolStdjinT2362yne'
+var DROPBOX_APP_KEY = 'wlldepjyuly96ar'
+var GOOGLE_DEVELOPER_KEY = 'AIzaSyD0ro3mObI32CsU5oBP476jMqYO-5JN9Zg'
+var FACEBOOK_CLIENT_ID = '738134836291464'
+var ASSET_KEY=''
+var URL_WITHOUT_SEARCH='/website-maker/new/lang/edit/home'
+var CLOUDFLARE_STREAM_HOST = 'https://customer-24xspop0hr9timh1.cloudflarestream.com'
+
+var MEDIA_BUNNY_JS = 'https://cdn.renderforest.com/mediabunny/1.31.1/mediabunny.min.mjs'
+var FRAME_EXTRACTOR_WORKER_JS = 'https://cdn.renderforest.com/worker-frames-extractor/1.1.0/worker.min.js'
+</script><script>var showVideoHighDemandMessage = false;
+var topMessages = {};
+</script><script>function addListenerMulti(el, evN, l) {
+  var es = evN.split(' ');
+  for (var i = 0, iLen = es.length; i < iLen; i++) {
+    el.addEventListener(es[i], l, {once: true});
+  }
+}</script><script type="text/javascript">var SITE_ID = ''
+var PROJECT_ID = ''
+var GENERATOR = '1.7.111'
+var IS_VERSION_FORCED = false;
+</script><style>.rf-btn,.rf-btn-sq{display:inline-block}.migrate-popup-overlay .migrate-popup__btn-ok.show-loader,.rf-btn.rf-disabled{pointer-events:none}.rf-btn-sq{border:none;border-radius:5px;color:#FFF;font-size:18px;height:50px;line-height:50px;box-sizing:border-box;padding:0 30px;font-weight:500;min-width:100px;text-align:center;transition:all .2s ease;white-space:nowrap;background:linear-gradient(180deg,#8C83F7 0,#655BE2 100%);box-shadow:0 6px 12px #766DE880}@media only screen and (min-width:993px){.rf-btn-sq:hover{background:linear-gradient(180deg,#B5AFFF 0,#9B94FC 100%);box-shadow:0 6px 24px #766DE880}}.rf-btn-sq.purple,.rf-btn-sq:focus{background:linear-gradient(180deg,#8C83F7 0,#655BE2 100%)}.rf-btn-sq:focus{box-shadow:none}.rf-btn-sq.purple{box-shadow:0 6px 12px #766DE880}@media only screen and (min-width:993px){.rf-btn-sq.purple:hover{background:linear-gradient(180deg,#B5AFFF 0,#9B94FC 100%);box-shadow:0 6px 24px #766DE880}}.rf-btn-sq.dark-purple,.rf-btn-sq.purple:focus{background:linear-gradient(180deg,#8C83F7 0,#655BE2 100%)}.rf-btn-sq.purple:focus{box-shadow:none}.rf-btn-sq.dark-purple{box-shadow:0 6px 12px #766DE880}@media only screen and (min-width:993px){.rf-btn-sq.dark-purple:hover{background-image:linear-gradient(to bottom,#4136C1,#4136C1)}}.rf-btn-sq.dark-purple:focus{background:linear-gradient(180deg,#8C83F7 0,#655BE2 100%);box-shadow:none}.rf-btn-sq.blue{background:linear-gradient(180deg,#5690FF 0,#3271E6 100%);box-shadow:0 6px 12px #387DFF80}@media only screen and (min-width:993px){.rf-btn-sq.blue:hover{background:linear-gradient(180deg,#6EA0FF 0,#518DFF 100%);box-shadow:0 6px 24px #387DFF80}}.rf-btn-sq.blue:focus{background:linear-gradient(180deg,#5690FF 0,#3271E6 100%);box-shadow:none}.rf-btn-sq.white{background:#fff!important;border:1px solid #5449E2;box-shadow:none;color:#5449E2}@media only screen and (min-width:993px){.rf-btn-sq.white:hover{box-shadow:0 6px 12px #766DE880}}.rf-btn-sq.white:focus{box-shadow:0 3px 6px #766DE880}.rf-btn-sq.red{background-image:linear-gradient(180deg,#FF3035 0,#AA1A04 100%);color:#FFF;box-shadow:0 3px 16px 0 rgba(255,76,76,.5)}@media only screen and (min-width:993px){.rf-btn-sq.red:hover{box-shadow:0 6px 20px 0 #CB1D0180;background-image:linear-gradient(178.58deg,#FE3035 22.2%,#AC1B06 169.16%)}}.rf-btn-sq.red:focus{background:linear-gradient(180deg,#B01C07 0,#FE3035 100%)}.rf-btn-sq.sm{height:42px;line-height:42px;font-size:16px;min-width:142px}.rf-btn-sq.lg{min-width:208px}.rf-btn{border-radius:38px;color:#FFF;cursor:pointer;transition:all .1s linear;text-decoration:none!important;text-transform:uppercase;border:none;font-weight:400;background-repeat:no-repeat!important;user-select:none}.rf-btn.hidden{display:none}.rf-btn.rf-disabled{opacity:.5;touch-action:none}.rf-btn.rf-60{height:60px;line-height:60px;padding:0 78px;font-size:18px}.rf-btn.rf-50{height:50px;line-height:50px;padding:0 30px;font-size:18px}.rf-btn.rf-40{height:40px;line-height:40px;padding:0 28px;font-size:14px}.loader-carousel{align-items:center;display:inline-flex;justify-content:center;height:20px;position:relative;width:60px}.loader-carousel div:after,.loader-carousel div:before{background:#FFF;border-radius:50%;content:'';display:block;height:8px;position:absolute;top:0;width:8px}.error-popup-overlay:not(.show),.migrate-popup-overlay:not(.show){display:none}.loader-carousel div:first-child:after{left:6px;animation:.6s ease 0s infinite normal none running lds-ellipsis1}.loader-carousel div:first-child:before{left:6px;animation:.6s ease 0s infinite normal none running lds-ellipsis2}.loader-carousel div:last-child:after{left:26px;animation:.6s ease 0s infinite normal none running lds-ellipsis3}.loader-carousel div:last-child:before{left:45px;animation:.6s ease 0s infinite normal none running lds-ellipsis4}@keyframes lds-ellipsis1{from{transform:scale(0)}to{transform:scale(1)}}@keyframes lds-ellipsis2{from{transform:translate(0,0)}to{transform:translate(20px,0)}}@keyframes lds-ellipsis3{from{transform:translate(0,0)}to{transform:translate(20px,0)}}@keyframes lds-ellipsis4{from{transform:scale(1)}to{transform:scale(0)}}.error-popup-overlay .error-popup,.migrate-popup-overlay .migrate-popup{box-shadow:0 6px 12px #387DFF4D;max-width:90%;transform:translate(-50%,-50%);box-sizing:border-box}.error-popup-overlay{background:rgba(0,0,0,.6);height:100%;left:0;position:fixed;top:0;width:100%;z-index:104}.error-popup-overlay .error-popup{background-color:#FFF;border-radius:20px;left:50%;min-height:200px;padding:44px;position:absolute;top:50%;width:360px;z-index:11}@media only screen and (max-width:768px){.error-popup-overlay .error-popup{padding:32px}}.error-popup-overlay .error-popup__desc{color:#252E48;font-size:16px;font-weight:400;line-height:1.5;margin-bottom:32px;text-align:center}.error-popup-overlay .error-popup__btn{border-radius:5px;width:100%}.migrate-popup-overlay{background:rgba(0,0,0,.6);height:100%;left:0;position:fixed;top:0;width:100%;z-index:104}.migrate-popup-overlay .migrate-popup{background-color:#FFF;border-radius:20px;display:flex;left:50%;min-height:526px;position:absolute;top:50%;width:880px;z-index:10}.migrate-popup-overlay .migrate-popup__container{border-radius:20px 0 0 20px;box-sizing:border-box;flex:1;max-width:490px;padding:44px 36px 32px}@media only screen and (max-width:1150px){.migrate-popup-overlay .migrate-popup{overflow:hidden;width:720px}.migrate-popup-overlay .migrate-popup__container{max-width:473px;padding:44px 32px 32px}}@media only screen and (max-width:767px){.migrate-popup-overlay .migrate-popup__container{max-width:100%;background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back-xs.png);background-position:center;background-repeat:no-repeat;background-size:cover;padding:32px 20px}.webp-available .migrate-popup-overlay .migrate-popup__container{background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back-xs.webp)}}.migrate-popup-overlay .migrate-popup__wrapper{display:flex;flex-direction:column;height:100%;max-width:100%;position:relative;z-index:1}.migrate-popup-overlay .migrate-popup__slider.owl-carousel{display:flex;flex-direction:column;flex-grow:1}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-stage-outer{flex-grow:1}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav{display:flex;height:50px;order:1;position:relative}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-next.disabled,.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev.disabled{display:none}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev{bottom:0;margin:auto 0;position:absolute;top:0;transition:opacity .2s ease-in-out;width:24px}html[dir=ltr] .migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev{left:0}html[dir=rtl] .migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev{right:0}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev:hover{opacity:.6}@media only screen and (max-width:1150px){.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-prev{display:none}}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-next{border-radius:5px;box-shadow:0 6px 12px #766DE880;margin:0 auto}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-next>span{box-shadow:none;min-width:200px;text-transform:uppercase}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-dots{margin:0 auto 32px;pointer-events:none}@media only screen and (max-width:350px){.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-nav>.owl-next>span{font-size:16px;min-width:180px}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-dots{margin-bottom:16px}}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-dots .owl-dot{padding:2px!important;vertical-align:middle}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-dots .owl-dot>span{background:#C1C9E0;border-radius:50%;display:inline-block;height:6px;opacity:1;transition:all .3s cubic-bezier(.05,1,.7,1.15);width:6px}.migrate-popup-overlay .migrate-popup__slider.owl-carousel .owl-dots .owl-dot.active>span{background:#766DE8;border-radius:5px;height:6px;width:16px}.migrate-popup-overlay .migrate-popup__slide{text-align:center;width:100%}.migrate-popup-overlay .migrate-popup__desc_upd{color:#252E48;font-size:18px;font-weight:600;margin:0 auto 8px;max-width:290px}.migrate-popup-overlay .migrate-popup__desc_old{color:#7683A8;font-size:12px;font-weight:400;text-decoration:line-through}.migrate-popup-overlay .migrate-popup__desc_new{color:#252E48;font-size:12px;font-weight:400}.migrate-popup-overlay .migrate-popup__desc_new:after,.migrate-popup-overlay .migrate-popup__desc_new:before{background:url(https://static.rfstat.com/renderforest/images/v2/migration/party-icon.png) center/contain no-repeat;content:'';display:inline-block;height:26px;margin-top:-6px;vertical-align:middle;width:21px}.migrate-popup-overlay .migrate-popup__desc_new:after{transform:scale(-1,1)}.migrate-popup-overlay .migrate-popup__img{display:inline-block!important;object-fit:contain;user-select:none;width:auto!important}.migrate-popup-overlay .migrate-popup__title{color:#252E48;font-size:20px;font-weight:700;line-height:1.4;margin-bottom:45px;text-align:center}@media only screen and (max-width:350px){.migrate-popup-overlay .migrate-popup__title{margin-bottom:25px}}.migrate-popup-overlay .migrate-popup__title span{background:-webkit-linear-gradient(0deg,#766DE8 0,#FF0089 80%,#FF006B 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone}.migrate-popup-overlay .migrate-popup__ill-block{background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back.png);background-position:center left;background-repeat:no-repeat;background-size:cover;border-radius:0 20px 20px 0;flex:0 1 390px;position:relative}.webp-available .migrate-popup-overlay .migrate-popup__ill-block{background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back.webp)}@media only screen and (max-width:767px){.migrate-popup-overlay .migrate-popup__title{font-size:16px}.migrate-popup-overlay .migrate-popup__ill-block{display:none}}.migrate-popup-overlay .migrate-popup__ill-wrap{bottom:30px;height:230px;position:absolute;right:-80px;transform:translate(-14%,0);width:208px;will-change:transform}@media only screen and (max-width:1150px){.migrate-popup-overlay .migrate-popup__ill-block{background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back-sm.png);flex:0 1 247px}.webp-available .migrate-popup-overlay .migrate-popup__ill-block{background-image:url(https://static.rfstat.com/renderforest/images/v2/migration/migration-back-sm.webp)}.migrate-popup-overlay .migrate-popup__ill-wrap{display:none}}.migrate-popup-overlay .migrate-popup__ill-img{animation:astronautAnim 20s linear infinite .4s;height:100%;object-fit:contain;user-select:none;width:100%;will-change:transform}.migrate-popup-overlay .migrate-popup__btn-ok{bottom:0;display:none;left:0;margin:0 auto;max-width:fit-content;min-width:200px;position:absolute;right:0;text-transform:uppercase;z-index:1}@media only screen and (max-width:350px){.migrate-popup-overlay .migrate-popup__btn-ok{font-size:16px;min-width:180px}}.migrate-popup-overlay .migrate-popup__btn-ok.active{display:inline-block}.appear-migrate{opacity:0;visibility:hidden}.appear-migrate.show{animation:fadeInDownSmall 1s forwards .2s}@keyframes fadeInDownSmall{from{transform:translate3d(0,-20px,0);opacity:0;visibility:hidden}to{transform:translateZ(0);opacity:1;visibility:visible}}@keyframes astronautAnim{0%,100%{transform:translateZ(0) translateY(0) scale(1)}17%{transform:translateZ(0) translateY(-60px) rotate(-20deg) scale(1.05)}34%{transform:translateZ(0) translateY(-120px) rotate(0) scale(1.1)}50%{transform:translateZ(0) translateY(-150px) rotate(-10deg) scale(1)}66%{transform:translateZ(0) translateY(-90px) rotate(-20deg) scale(1.1)}83%{transform:translateZ(0) translateY(-60px) rotate(-10deg) scale(1.05)}}html[lang=ar] .migrate-popup__ill-block{transform:scale(-1,1)}html[lang=ar] .migrate-popup__slider.owl-carousel .owl-prev>svg{transform:rotate(-180deg)}</style><div class="migrate-popup-overlay appear-migrate" id="migrateModal"><div class="migrate-popup"><div class="migrate-popup__container"><div class="migrate-popup__wrapper"><p class="migrate-popup__title">We have <span class="gradient">updated your plan</span>, grab your rewards as a sign of gratitude</p><div class="migrate-popup__slider owl-carousel" id="migrateSlider"><div class="migrate-popup__slide" id="videoHD"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_video-hd.png" alt="Video HD" height="166" width="229"></picture><p class="migrate-popup__desc_upd"></p><p class="migrate-popup__desc_old"></p></div><div class="migrate-popup__slide" id="videoDuration"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_video-duration.png" alt="Video Duration" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Unlimited video duration</p><p class="migrate-popup__desc_old"></p></div><div class="migrate-popup__slide"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_premium-templates.png" alt="Premiumn Templates" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Access to premium templates and scenes</p></div><div class="migrate-popup__slide"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_color-pallets.png" alt="Color Pallets" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Unlimited color pallets and font uploads</p><p class="migrate-popup__desc_old">Limited color palettes and fonts</p></div><div class="migrate-popup__slide"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_logos-hq.png" alt="Logos HQ" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Unlimited high quality logos, graphics and mockups</p><p class="migrate-popup__desc_old">Limited logos, graphics and mockups</p></div><div class="migrate-popup__slide" id="accountManager"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_account-manager.png" alt="Account Manager" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Dedicated account manager</p><p class="migrate-popup__desc_new">A new feature just for you</p></div><div class="migrate-popup__slide" id="brandingGuideline"><picture><img class="migrate-popup__img" src="https://static.rfstat.com/renderforest/images/v2/migration/plan_logos-guideline.png" alt="Logos Guideline" height="166" width="229"></picture><p class="migrate-popup__desc_upd">Branding guideline for logos</p><p class="migrate-popup__desc_new">A new feature just for you</p></div></div><button class="migrate-popup__btn-ok rf-btn-sq" id="btnOk" data-next-text="Next">OK, AWESOME</button></div></div><div class="migrate-popup__ill-block"><div class="migrate-popup__ill-wrap" id="parallaxImg"><picture><source srcset="https://static.rfstat.com/renderforest/images/v2/migration/migration-rendy.webp" type="image/webp"><source srcset="https://static.rfstat.com/renderforest/images/v2/migration/migration-rendy.png" type="image/png"><img class="migrate-popup__ill-img" src="https://static.rfstat.com/renderforest/images/v2/migration/migration-rendy.png" alt="Rendy image"></picture></div></div></div></div><div class="error-popup-overlay appear-item appear-2" id="errorModal"><div class="error-popup"><div class="error-popup__desc">Oops, something went wrong. Please, try again later.</div><button class="rf-btn rf-50 blue error-popup__btn" id="errorBtnOk" type="button">OK</button></div></div><script></script><script src="https://accounts.google.com/gsi/client" defer></script><div class="google_prompt" id="google_prompt"></div><script>var langStr = ''
+var loginPageUrl = langStr + '/signin'
+
+function getCsrfAndCallCb(cb) {
+  var http = new XMLHttpRequest()
+  var url = "/csrf"
+
+  http.open("GET", url, true)
+
+  http.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+  http.setRequestHeader("x-requested-with", "XMLHttpRequest");
+
+  http.onreadystatechange = function() {
+    if(http.readyState == 4) {
+      if(http.status == 200) {
+        var parsedData = JSON.parse(http.responseText)
+        return cb(parsedData.token)
+      } else {
+        var warnMsg = JSON.parse(http.responseText)
+        alert(warnMsg.message || 'Something went wrong')
+      }
+    }
+  }
+  http.send()
+}
+
+
+// check if there is ajaxLogin, use that one. if no, redirect.
+function processLoginResult(err, url, isNewUser) {
+  if (err) {
+    if (typeof window.ajaxLogin === 'function') {
+      window.ajaxLogin(err)
+    } else {
+      window.location = loginPageUrl
+    }
+    return
+  }
+
+  if (isNewUser && typeof setDataLayerData === 'function') {
+    setDataLayerData({
+      "event": "sign_up",
+      "sign_up_type": "google_auto_login"
+    })
+  }
+
+  if (typeof window.ajaxLogin === 'function') {
+    window.ajaxLogin()
+  } else {
+    window.location = url
+  }
+}
+
+
+function signupByCredentials (credential) {
+  return function (subscriberCsrf) {
+    var http = new XMLHttpRequest()
+    var url = 'https://www.renderforest.com/signin/google/callback'
+    var returnUrl = window.location.href
+    http.open("POST", url, true)
+
+    http.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+    http.setRequestHeader("x-requested-with", "XMLHttpRequest");
+    http.setRequestHeader("x-csrf-token", subscriberCsrf);
+
+    var body = { credential, returnUrl }
+
+    http.onreadystatechange = function() {
+      if(http.readyState == 4 && (http.status == 200 || http.status == 400)) {
+        if(http.status == 200) {
+          var parsedData = JSON.parse(http.responseText)
+          if (parsedData && parsedData.data && parsedData.data.redirectUrl ) {
+            processLoginResult(null, parsedData.data.redirectUrl, parsedData.data.isNewUser)
+          } else {
+            processLoginResult(http.responseText, loginPageUrl)
+          }
+          return
+        } else {
+          processLoginResult(http.responseText, loginPageUrl)
+        }
+      }
+    }
+
+    http.send(JSON.stringify(body))
+
+  }
+}
+
+function handleCredentialResponse (payload) {
+    return getCsrfAndCallCb(signupByCredentials(payload.credential))
+}
+
+window.onload = function () {
+  if (typeof google !== 'undefined') {
+    google.accounts.id.initialize({
+      client_id: '720565468126-fob7jcnecgkdouicdlesjlt1kubg3uk6.apps.googleusercontent.com',
+      login_uri: 'https://www.renderforest.com/signin/google/callback',
+      callback: handleCredentialResponse,
+      prompt_parent_id: 'google_prompt',
+      cancel_on_tap_outside: true
+    });
+  }
+}
+
+var oneTapTimeout = null
+var hideOneTapLogin = false
+
+function initGoogleOneTapLogin (timeoutSec) {
+  var _timeoutSec = timeoutSec || 0
+  oneTapTimeout = setTimeout(function(){
+    if (typeof google === 'undefined') {
+      return
+    }
+    if (hideOneTapLogin) {
+      return
+    }
+    google.accounts.id.prompt();
+
+  }, _timeoutSec * 1000);
+}
+
+function removeGoogleOneTapLogin () {
+  hideOneTapLogin = true
+  if (oneTapTimeout) {
+    clearTimeout(oneTapTimeout)
+  }
+
+  var googleOneTapLoginPrompt = document.getElementById('google_prompt')
+
+  if (googleOneTapLoginPrompt) {
+    googleOneTapLoginPrompt.classList.add('hidden')
+  }
+}
+</script><style>.google_prompt {
+  position: absolute;
+  top: 64px;
+  right: 0px;
+  z-index: 1001;
+}
+
+.google_prompt.hidden {
+  display: none;
+}</style><script>function loadJsScript(url, async = false) {
+  return new Promise((resolve, reject) => {
+    try {
+      // load the script
+      var script = document.createElement("script");
+      script.src = url;
+      if (async) {
+        script.async = true
+      }
+      script.type = 'text/javascript';
+      script.addEventListener('load', () => {
+        return resolve()
+      });
+    
+      script.addEventListener('error', () => {
+        return reject({ message: `Failed to load the script ${url}`});
+      });
+
+      document.body.appendChild(script);
+    } catch(err) {
+      return reject({ message: `something went wrong`});
+    }
+  })
+}
+
+function loadCssStyles(url) {
+  return new Promise((resolve, reject) => {
+    var style = document.createElement("link");
+    style.href = url;
+    style.type = 'text/css';
+    style.rel = 'stylesheet';
+
+    style.addEventListener('load', () => {
+        return resolve()
+    });
+    
+    style.addEventListener('error', () => {
+      return reject({message: `Failed to load the style ${url}`});
+    });
+
+    document.head.appendChild(style);
+  })
+}</script><script>function determineRFApp () {
+  var rfApp = false
+  var rfApps = ["RenderForest App","RenderForest iOS App","RenderForest Android App"];
+  var userAgent = navigator.userAgent || null;
+
+  if (userAgent && rfApps) {
+    rfApps.map(agent => {
+      if (!rfApp && userAgent.includes(agent)) {
+       rfApp = true
+      }
+    })
+  }
+  return rfApp
+}
+var __isRfApp = determineRFApp()</script><script>var langStr = ""
+window.ga = window.ga||function(){};
+
+var avatarGradientList = [
+  '130deg, #DFD7FD 10%, #5870AC 90%',
+  '130deg, #E3ECFF 10%, #87A6EB 85%',
+  '135deg, #F6F4FF -45%, #7F6AFF 205%',
+  '330deg, #E8A7FF 5%, #F0E3FF 85%',
+  '150deg, #FFD1D1 10%, #FEA4BF 90%',
+  '130deg, #C2F4E5 10%, #7BE0E7 90%',
+  '135deg, #DBE6FC -45%, #DFDEFA 90%',
+  '130deg, #F9FAFF -10%, #B7C4E7 90%',
+  '145deg, #D2FABC 15%, #4FC470 95%',
+  '145deg, #FFE999 10%, #EDCD4B 105%',
+  '135deg, #FFE0C9 15%, #FAADA0 90%',
+  '130deg, #DDE4FF 0%, #74F3FB 185%'
+]
+
+var createFakeAvatarImg = function (path) {
+  var img = new Image()
+  img.src = path
+  img.onerror = function () {
+    if (typeof window.getCurrentUserMeta === 'function' && typeof window.initUserInfo === 'function') {
+      window.getCurrentUserMeta(window.initUserInfo, true)
+    }
+  }
+}
+
+function handleAuthUserNavigation() {
+  document.addEventListener("click", function (e) {
+    var target = e.target.closest('[data-auth-href]')
+    if (target) {
+      var _href = target.getAttribute("data-auth-href")
+      if (_href) {
+        e.preventDefault()
+        window.location.href = _href
+      }
+    }
+  });
+}
+
+function handleAuthUserUrls () {
+  if (window.URL_WITHOUT_SEARCH === '/') {
+    window.location.href = window.langStr + '/home/main'
+  }
+  handleAuthUserNavigation()
+  
+}
+
+var getAvatarBackground = function(avatar) {
+  var avatarFilePath = avatar.filePath1x
+  if (avatarFilePath) {
+    createFakeAvatarImg(avatarFilePath)
+    return "url('" + avatarFilePath + "')"
+  } else {
+    var avatarIconIndex = avatar.iconIndex
+    var avatarColorIndex = avatar.colorIndex
+    return "url('https://cdn.renderforest.com/website/media/avatars/avater_" + avatarIconIndex + "_38x38.svg'), linear-gradient(" + avatarGradientList[avatarColorIndex] + ")"
+  }
+}
+
+var setRandomProfileThumb = function(userMeta) {
+  if(userMeta.avatar) {
+    var avatarBackground = getAvatarBackground(userMeta.avatar)
+
+    var avatarList = document.querySelectorAll('.user-icon')
+    avatarList.forEach(function (avatar) {
+      avatar.style.setProperty('--user-bg', avatarBackground);
+    })
+  }
+}
+
+function getCookie(cName) {
+  var name = cName + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function updateCookiesFromBk (cb) {
+  var http = new XMLHttpRequest()
+  var url = "/profile/update-cookies"
+
+  http.open("GET", url, true)
+
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.setRequestHeader("x-requested-with", "XMLHttpRequest");
+
+  http.onreadystatechange = function() {
+      if (http.readyState == 4) {
+          if (http.status == 200) {
+            if (cb && typeof cb === 'function') {
+              cb()
+            }
+          } else {
+            console.log('error cannot update cookies')
+          }
+      }
+  }
+  http.send()
+}
+
+var mouseMoved = false
+window.needLoadCustomOffers = true
+function checkActivePromo (userMeta) {
+  var rfCookiePromoCodeKey = "__rf_pd";
+  var promoString = getCookie(rfCookiePromoCodeKey)
+  if (!userMeta || !userMeta.tariffPlans || userMeta.tariffPlans.length === 0) {
+    if (typeof loadPromoScripts === 'function') {
+      if (promoString) {
+        promoData = JSON.parse(promoString)
+        window.needLoadCustomOffers = false
+        function func () {
+          if (!mouseMoved) {
+            mouseMoved = true
+            window.removeEventListener('mousemove', func);
+            window.removeEventListener('touchstart', func);
+            var __currentIsRfApp = typeof determineRFApp === 'function' ? determineRFApp() : false
+            if (!__currentIsRfApp) {
+              return loadPromoScripts(promoData, userMeta)
+            }
+          }
+        }
+        window.addEventListener('mousemove', func);
+        window.addEventListener('touchstart', func);
+      }
+    }
+  }
+}
+
+var announcementMouseMoved = false
+window.needLoadAnnouncement = true
+function checkActiveAnnouncement () {
+  if (typeof loadAnnouncementScripts === 'function') {
+    var __currentIsRfApp = typeof determineRFApp === 'function' ? determineRFApp() : false
+    if (!__currentIsRfApp) {
+      window.needLoadAnnouncement = false
+      return loadAnnouncementScripts()
+    }
+    function csFunc () {
+      if (!announcementMouseMoved) {
+        announcementMouseMoved = true
+        window.removeEventListener('mousemove', csFunc);
+        window.removeEventListener('touchstart', csFunc);
+      }
+    }
+    window.addEventListener('mousemove', csFunc);
+    window.addEventListener('touchstart', csFunc);
+  }
+}
+
+var tryCount = 0
+function getCurrentUserFromCookie(cb, isForceUpdate) {
+  var _isForceUpdate = isForceUpdate || false
+  var rfCookieUserMetaKey = "__rf_user_meta";
+  var userMetaString = getCookie(rfCookieUserMetaKey)
+
+  // CHECKED, user is not logged in.
+  if (userMetaString === null) {
+    cb(null, null)
+    return
+  }
+
+  if (userMetaString && !_isForceUpdate) {
+    try {
+      var _userMeta = JSON.parse(userMetaString)
+      cb(null, _userMeta)
+      return
+    } catch (error) {
+      cb(error, null)
+      return
+    }
+    return
+  }
+
+  // NO COOKIE EXIST, WE NEED TO CHECK API
+  if (_isForceUpdate || userMetaString === '') {
+    // on COOKIE disabled try only 2 times and set not logged in user
+    if (tryCount > 1) {
+      cb(null, null)
+      return
+    }
+    tryCount ++
+    updateCookiesFromBk(function() {
+      getCurrentUserFromCookie(cb)
+    })
+    return
+  }
+}
+
+function runOnlyOnce(fn) {
+  var cbs = []
+  var isRunning = false
+
+  return function(cb, isForceUpdate) {
+    cbs.push(cb)
+
+    if (isRunning) {
+      return
+    }
+
+    isRunning = true
+    fn(function (error, value) {
+      isRunning = false
+      cbs.map(function (_cb) { _cb(error, value) })
+      cbs = []
+    }, isForceUpdate)
+  }
+}
+
+var getCurrentUserMeta = runOnlyOnce(getCurrentUserFromCookie)
+
+function drawPricingButton (userMeta) {
+  if (userMeta.tariffPlans.length && !userMeta.tariffPlans.includes(29)) {
+    var pricingButtonLink = document.getElementById('pricingButtonLink')
+    if (pricingButtonLink) {
+      var pricingButtonText = pricingButtonLink.dataset.userText
+      pricingButtonLink.innerHTML = pricingButtonText
+    }
+  }
+
+  if (userMeta.subUserId) {
+    var pricingButton = document.getElementById('pricingButton')
+    if (pricingButton) {
+      pricingButton.style.display = 'none'
+    }
+  }
+}
+
+function loadAndShowMigrate (migrateData, tariffPlansIds) {
+    if (typeof window.loadJsScript === 'function') {
+      var url = '/javascripts/migrate.js'
+      return window.loadJsScript(url)
+        .then(() => {
+          return window.getMigrateModalDataAndDraw(migrateData, tariffPlansIds)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  }
+
+function showMigrate (migrateData, tariffPlansIds) {
+  setTimeout(function() {
+    if (typeof window.loadAndShowMigrate === 'function') {
+      loadAndShowMigrate(migrateData, tariffPlansIds)
+    }
+  }, 3500)
+}
+
+
+
+function cutEmailText(email, maxLength) {
+  var tempEmail = "noemail@rf.com"
+  if (!email || email.endsWith(tempEmail) ) {
+    return ''
+  }
+  if (email.length > maxLength) {
+    var lastCount = email.indexOf('@')
+    var endPart = email.slice(lastCount, email.length)
+    var startPart = maxLength - endPart.length
+    return email.substr(0, startPart + 1) + '...' + endPart
+  }
+  return email
+}
+
+function setDataLayerData (data) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(data)
+}
+
+
+function setIdentToDataLayerData (ident) {
+  return setDataLayerData({ userId: ident })
+}
+
+function initUserInfo (error, userMeta) {
+  if (error) {
+    console.log('initUserInfo: error', {error})
+  }
+
+  var anonymMenu = document.getElementById('header-anonym-menu')
+
+  window.__userMeta = userMeta
+  if (userMeta) {
+    handleAuthUserUrls()
+    var userMenu = document.getElementById('header-user-menu')
+    var userName = document.querySelectorAll('.name-text')
+    var userEmail = document.querySelectorAll('.mail-text')
+    var viewAccounts = document.querySelectorAll('.view-account')
+
+    var isSubAccount = !!userMeta.subUserId
+
+    if (isSubAccount && viewAccounts && viewAccounts.length > 0) {
+      viewAccounts.forEach(function(viewAccount){
+        viewAccount.style.display = "none"
+      })
+    }
+
+    if (anonymMenu && userMenu && userName) {
+      anonymMenu.style.display = "none"
+      userMenu.style.display = "flex"
+      var userFirstName = userMeta.first_name || userMeta.name || userMeta.id
+      var userLastName = userMeta.last_name || ''
+      var userFullName = userFirstName + (userLastName ? ' ' + userLastName : '')
+
+      userName.forEach(function(name){
+        name.innerHTML = userFullName
+      })
+
+      setRandomProfileThumb(userMeta)
+    }
+
+    if (anonymMenu && userMenu && userName) {
+      userEmail.forEach(function(email){
+        if(email.classList.contains('dropped')){
+          email.innerHTML = cutEmailText(userMeta.email, 27)
+        } else {
+          email.innerHTML = cutEmailText(userMeta.email, 21)
+        }
+      })
+    }
+    drawPricingButton(userMeta)
+
+    if (userMeta.migrateData && !isSubAccount) {
+      showMigrate(userMeta.migrateData, userMeta.tariffPlans)
+    }
+
+    if (userMeta.ident) {
+      setIdentToDataLayerData(userMeta.ident)
+    }
+    checkActivePromo(userMeta)
+    checkActiveAnnouncement()
+  } else {
+    if (anonymMenu) {
+      anonymMenu.style.display = "flex"
+    }
+    if (typeof window.initGoogleOneTapLogin === 'function') {
+      initGoogleOneTapLogin(30)
+    }
+    checkActivePromo(null)
+    checkActiveAnnouncement()
+  }
+}
+
+getCurrentUserMeta(initUserInfo)
+
+function updateMetaCookiesAndUpdateUserMeta () {
+  if (typeof window.getCurrentUserMeta === 'function' && typeof window.initUserInfo === 'function') {
+    if (window.tryCount > 0) {
+      window.tryCount = 0
+    }
+    window.getCurrentUserMeta(window.initUserInfo, true)
+  }
+}
+</script><script>function getTypesFromUrl (url) {
+  var keys = ["rfp","irclickid"] || [];
+  return keys.filter(function (k) { return url.includes(k + '=') })
+}
+
+function updateBkCookies (body) {
+  return function(err, token) {
+    if (err) {
+      console.log('err')
+      return 
+    }
+    var http = new XMLHttpRequest()
+    var url = langStr + "/trjpaf"
+
+    http.open("POST", url, true)
+
+    http.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+    http.setRequestHeader("x-requested-with", "XMLHttpRequest");
+    http.setRequestHeader("x-csrf-token", token);
+
+    http.onreadystatechange = function() {
+        if (http.readyState == 4) {
+            if (http.status == 200) {
+              return
+            } else {
+              console.log('error cannot update cookies')
+            }
+        }
+    }
+    http.send(JSON.stringify(body))
+  }
+}
+
+function getTokenAndCallCallback(cb) {
+  var http = new XMLHttpRequest()
+  var url = "/csrf"
+
+  http.open("GET", url, true)
+
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.setRequestHeader("x-requested-with", "XMLHttpRequest");
+
+  http.onreadystatechange = function() {
+    if(http.readyState == 4) {
+      if(http.status == 200) {
+        var parsedData = JSON.parse(http.responseText)
+        return cb(null, parsedData.token)
+      } else {
+        return cb('something went wrong', null)
+      }
+    }
+  }
+  http.send()
+}
+
+function checkUrlAndPrepareIfNeeded () {
+  var href = (window && window.location && window.location.href ) || null
+
+  if (!href) { 
+    return 
+  }
+  var _types = getTypesFromUrl(href)
+
+  if (_types.length === 0) {
+    return 
+  }
+
+  var body = { url: href, types: _types}
+  return getTokenAndCallCallback(updateBkCookies(body))
+}
+
+
+checkUrlAndPrepareIfNeeded()</script><script>var isEditor = true;
+</script><script>var startedCustomOfferLoad = false
+var startedCommonJsLoad = false
+var commonLoaded = false
+var cbs = []
+
+function callCbs () {
+  return cbs.map(function (_cb) {
+    return _cb()
+  })
+}
+function loadCommonJs (cb) {
+  if (typeof window.loadJsScript === 'function') {
+    var url = 'https://cdn.renderforest.com/common/custom-offers/1.0.31/bundle.min.js'
+    cbs.push(cb)
+
+    if (startedCommonJsLoad) {
+      return
+    }
+
+    if (commonLoaded) {
+     return callCbs()
+    }
+
+    startedCommonJsLoad = true
+    return window.loadJsScript(url)
+      .then(() => {
+        startedCommonJsLoad = false
+        commonLoaded = true
+        return callCbs()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+
+function callOfferFn (payload) {
+  if (window.isEditor) {
+    if (typeof window.loadIconCustomUpgradeOffer === 'function') {
+      return window.loadIconCustomUpgradeOffer(payload)
+    }
+  } else {
+    if (typeof window.loadCustomUpgradeOffer === 'function') {
+      return window.loadCustomUpgradeOffer(payload, false, 'badgeRoot')
+    }
+  }
+}
+
+function callFreeOfferFn (payload) {
+  if (window.isEditor) {
+    if (typeof window.loadIconCustomUpgradeOffer === 'function') {
+      return window.loadIconCustomOfferForFree(payload)
+    }
+  } else {
+    if (typeof window.loadCustomUpgradeOffer === 'function') {
+      return window.loadUpgradeOfferForFree(payload, false, 'badgeRoot')
+    }
+  }
+}
+
+function callFreeTariffPlanOfferFn (payload) {
+  if (payload.tariffPlanId === 30) {
+    if (window.isEditor) {
+      if (typeof window.loadLimitedLiteOfferBtnForEditors === 'function') {
+        return window.loadLimitedLiteOfferBtnForEditors(payload)
+      }
+    } else {
+      if (typeof window.loadLimitedLiteOffer === 'function') {
+        return window.loadLimitedLiteOffer(payload, false, 'badgeRoot')
+      }
+    }
+  }
+}
+
+function showTrialButton (offerId) {
+  var freeTrialItem = document.querySelector('.free-trial-link')
+  if (freeTrialItem) {
+    var LinkText = "Activate Free Trial"
+    var link = "/offers/" + offerId
+    freeTrialItem.innerHTML = "<a " + "class='user-menu__link'" + "href='" + link +  "'>" + LinkText + "</a>"
+    freeTrialItem.style.display= 'block'
+  }
+}
+
+function loadAndShowCustomOffer (offerData) {
+  function _cb () {
+    return callOfferFn(offerData)
+  }
+
+  return loadCommonJs(_cb)
+}
+
+function loadAndShowUserFreeOffer (offerData) {
+  function _cb () {
+    return callFreeOfferFn(offerData)
+  }
+
+  return loadCommonJs(_cb)
+}
+
+function loadAndShowUserFreeTariffPlanOffer (offerData) {
+  function _cb () {
+    return callFreeTariffPlanOfferFn(offerData)
+  }
+
+  return loadCommonJs(_cb)
+}
+
+function getOfferDataAndCheckOffers (error, userMeta) {
+  if (error) {
+      console.log('loadAndShowCustomOffer: error', {error})
+    }
+    if (!userMeta) {
+      return
+    }
+  if (userMeta.userOffer && userMeta.userOffer.id && userMeta.userOffer.type) {
+    if (userMeta.userOffer.type === 'free_trial_subscription') {
+      showTrialButton(userMeta.userOffer.id)
+    }
+    if (userMeta.userOffer.type === 'custom_upgrade_discount') {
+      loadAndShowCustomOffer(userMeta.userOffer)
+    }
+  }
+  if (userMeta.userFreeTariffPlanOffer) {
+    loadAndShowUserFreeTariffPlanOffer(userMeta.userFreeTariffPlanOffer)
+  }
+  if (userMeta.userFreeOffer) {
+    loadAndShowUserFreeOffer(userMeta.userFreeOffer)
+  }
+}
+
+function drawOfferIfNeeded () {
+  if (!document) {
+    return
+  }
+
+  if (typeof window.getCurrentUserMeta !== 'function') {
+    return
+  }
+  addListenerMulti(document, 'mousemove touchmove', function(){
+    if (!startedCustomOfferLoad) {
+      return window.getCurrentUserMeta(getOfferDataAndCheckOffers)
+    }
+  });
+}
+
+drawOfferIfNeeded()</script><script>var startedGracePeriodLoad = false
+
+function loadAndCallJsFunction (gradePeriodData) {
+  if (typeof window.loadJsScript === 'function') {
+    var url = 'https://cdn.renderforest.com/common/custom-offers/1.0.31/bundle.min.js'
+    startedGracePeriodLoad = true
+    return window.loadJsScript(url)
+      .then(() => {
+        if (typeof window.loadGracePeriodPopup === 'function') {
+          var payload = {
+            title: gradePeriodData.title,
+            buttonUrl: window.langStr + '/profile/subscription/' + gradePeriodData.id + '/update-billing'
+          }
+          return window.loadGracePeriodPopup(payload)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+
+function loadAndCallYooKassaConfirmation (data) {
+  if (typeof window.loadJsScript === 'function') {
+    var url = 'https://cdn.renderforest.com/common/custom-offers/1.0.31/bundle.min.js'
+    startedGracePeriodLoad = true
+    return window.loadJsScript(url)
+      .then(() => {
+        if (typeof window.loadYooKassaPaymentConfirmationPopup === 'function') {
+          return window.loadYooKassaPaymentConfirmationPopup(data)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+
+function getGracePeriodDataAndCheck (error, userMeta) {
+  if (error) {
+      console.log('loadAndCallJsFunction: error', {error})
+    }
+    if (!userMeta) {
+      return
+    }
+  if (userMeta.tariffInPaddleGracePeriod && userMeta.tariffInPaddleGracePeriod.id) {
+    loadAndCallJsFunction(userMeta.tariffInPaddleGracePeriod)
+  }
+  if (userMeta.yooKassaPaymentConfirmationData) {
+    loadAndCallYooKassaConfirmation(userMeta.yooKassaPaymentConfirmationData)
+  }
+}
+
+function drawGracePeriodPopupIfNeeded () {
+  if (!document || typeof window.getCurrentUserMeta !== 'function') {
+    return
+  }
+  addListenerMulti(document, 'mousemove touchmove', function(){
+    if (!startedGracePeriodLoad) {
+      return window.getCurrentUserMeta(getGracePeriodDataAndCheck)
+    }
+  });
+}
+
+drawGracePeriodPopupIfNeeded()</script><script src="https://cdn.renderforest.com/rf-auth/1.0.48/index.min.js"></script><script src="https://cdn.renderforest.com/website-maker-spa/1.7.111/en.js"></script><script src="https://cdn.renderforest.com/website-maker-spa/1.7.111/bundle.min.js"></script><script src="https://cdn.renderforest.com/media_lib/3.0.58/en.js"></script><script src="https://cdn.renderforest.com/media_lib/3.0.58/index.min.js"></script><!-- Google Tag Manager (noscript)--><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T435FFR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!-- End Google Tag Manager (noscript)--><script type="text/javascript">window.__brazeInitDelay = 5;
+window.BRAZE_SDK_API_KEY = "d5a44f40-441c-4217-8675-e57ccd8d1a1a";
+window.BRAZE_SDK_ENDPOINT = "sdk.fra-02.braze.eu";
+window.BRAZE_PAGE_VIEW_URLS = ["/business-name-generator","/logo-maker"];
+
+
+window.startedBrazeLoad = window.startedBrazeLoad || false
+function loadBraze () {
+
+  if (typeof window.loadJsScript === 'function') {
+    var url = '/javascripts/braze.1.0.4.js'
+    window.startedBrazeLoad = true
+    return window.loadJsScript(url)
+      .then(() => {
+        if (typeof window.initBraze === 'function') {
+          return window.initBraze()
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+
+if (typeof window.addListenerMulti === 'function') {
+  window.addListenerMulti(document, 'mousemove touchmove', function(){
+    if (!startedBrazeLoad) {
+      return loadBraze()
+    }
+  });
+}
+</script><script type="text/javascript">window.sendBrazeCustomEvent = function(payload, retryCount) {
+  var _retryCount = retryCount || 0
+  if (window.isBrazeInitialized) {
+    if (window.braze && window.braze.logCustomEvent) {
+      window.braze.logCustomEvent(payload.eventName, payload.eventData)
+    }
+  } else {
+    if(_retryCount > 3) {
+      return
+    }
+    setTimeout(function(){
+      window.sendBrazeCustomEvent(payload, _retryCount+1)
+    }, 2000)
+  }
+}</script><script>var __socket_url = 'https://sockets-2.renderforest.com';</script><script src="https://sockets-2.renderforest.com/socket.io/socket.io.js"></script><script src="https://sockets-2.renderforest.com/javascripts/sockets-window.2.0.4.js"></script></body></html>
