@@ -492,6 +492,60 @@
             .hero-title { font-size: 2rem; }
             .featured-grid { grid-template-columns: 1fr; }
         }
+
+
+
+
+
+
+
+
+
+        /* ===== تحسين الكاروسيل ===== */
+.carousel-inner {
+    height: 500px; /* أو أي ارتفاع تريده */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.carousel-item {
+    height: 100%;
+    background: #1a1a1a; /* خلفية داكنة */
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* يعرض الصورة كاملة مع خلفية */
+    background: #1a1a1a;
+    padding: 20px; /* مسافة حول الصورة */
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .carousel-inner {
+        height: 300px;
+    }
+    
+    .carousel-item img {
+        padding: 10px;
+    }
+}
+
+
+.carousel-item {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: normal; /* يسمح بظهور الخلفية خلف الصورة */
+}
+
+
     </style>
 </head>
 <body>
@@ -586,6 +640,57 @@
     <!-- ===== كاروسيل (إذا وجد صور مميزة) ===== -->
     {% if featured_images %}
     <section class="carousel-section">
+
+
+<!-- ===== الكاروسيل المحسن ===== -->
+<div class="container my-4">
+    <div id="mainCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" style="border-radius: 20px; overflow: hidden;">
+        <div class="carousel-inner" style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            {% for image in featured_images %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} h-100" style="background: #1a1a1a;">
+                <img src="{{ image.image_url }}" 
+                     class="d-block w-100 h-100" 
+                     alt="{{ image.title }}"
+                     style="object-fit: contain; padding: 20px; background: #1a1a1a;"
+                     onerror="this.src='https://via.placeholder.com/800x500?text=صورة'">
+                
+                {% if image.title or image.description %}
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3 p-3" style="bottom: 30px;">
+                    {% if image.title %}<h5>{{ image.title }}</h5>{% endif %}
+                    {% if image.description %}<p>{{ image.description|truncate(80) }}</p>{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">السابق</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">التالي</span>
+        </button>
+    </div>
+</div>
+
+<!-- أضف هذا داخل الكاروسيل، قبل أزرار التحكم -->
+<div class="carousel-indicators">
+    {% for image in featured_images %}
+    <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+            class="{% if loop.first %}active{% endif %}" 
+            aria-label="Slide {{ loop.index }}"></button>
+    {% endfor %}
+</div>
+
+
+
+
+
+
+
+
         <div class="container">
             <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
