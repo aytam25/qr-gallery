@@ -496,110 +496,9 @@
 </head>
 <body>
 
-    <!-- ===== شريط التنقل (نسخة واحدة) ===== -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                {% if settings and settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" alt="شعار">
-                {% else %}
-                    <span style="color: var(--primary-color); font-weight: 700; font-size: 1.5rem;">
-                        <i class="bi bi-camera-fill"></i> {{ settings.site_title }}
-                    </span>
-                {% endif %}
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="#gallery">المعرض</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#featured">مميزة</a></li>
-                    {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">التصنيفات</a>
-                        <ul class="dropdown-menu">
-                            {% for category, count in categories %}
-                            <li><a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">{{ category.name }} ({{ count }})</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
-
-                <div class="d-flex align-items-center gap-2">
-                    <!-- زر QR -->
-                    <button class="btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
-                        <i class="bi bi-qr-code-scan"></i>
-                    </button>
-
-                    <!-- نموذج البحث -->
-                    <form class="search-form" action="{{ url_for('search') }}" method="GET">
-                        <input class="form-control" type="search" name="q" placeholder="بحث..." value="{{ search_query }}">
-                        <button type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-
-                    <!-- حساب المستخدم -->
-                    {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
-                            {% if current_user.role in ['admin', 'editor'] %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
-                            {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}">دخول</a>
-                    <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}">تسجيل</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </nav>
-
- 
 
 
-    <!-- تعويض المساحة -->
-    <div style="height: 70px;"></div>
-
-    <!-- ===== قسم الترحيب ===== -->
-    <section class="hero-section">
-        <div class="container hero-content">
-            {% if settings and settings.site_logo %}
-                <img src="{{ settings.site_logo }}" alt="شعار" class="hero-logo" style="max-height: 100px;">
-            {% endif %}
-            <h1 class="hero-title">{{ settings.site_title }}</h1>
-            <p class="hero-description">{{ settings.site_description }}</p>
-            <div class="hero-buttons">
-                <a href="#gallery" class="btn btn-light"><i class="bi bi-images me-2"></i>استعرض الأعمال</a>
-                <a href="#featured" class="btn btn-outline-light"><i class="bi bi-star-fill me-2"></i>المميزة</a>
-            </div>
-        </div>
-    </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- ===== شريط التنقل الذكي ===== 111111111111111111111111 -->
+ <!-- ===== شريط التنقل الذكي ===== -->
 <nav class="navbar navbar-expand-lg fixed-top" style="backdrop-filter: blur(10px); background: rgba(255,255,255,0.95); box-shadow: 0 2px 20px rgba(0,0,0,0.1);">
     <div class="container">
         <!-- الشعار بحجم ديناميكي -->
@@ -680,15 +579,28 @@
 </nav>
 
 
-
-
     <!-- تعويض المساحة -->
     <div style="height: 70px;"></div>
 
+    <!-- ===== قسم الترحيب ===== -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            {% if settings and settings.site_logo %}
+                <img src="{{ settings.site_logo }}" alt="شعار" class="hero-logo" style="max-height: 100px;">
+            {% endif %}
+            <h1 class="hero-title">{{ settings.site_title }}</h1>
+            <p class="hero-description">{{ settings.site_description }}</p>
+            <div class="hero-buttons">
+                <a href="#gallery" class="btn btn-light"><i class="bi bi-images me-2"></i>استعرض الأعمال</a>
+                <a href="#featured" class="btn btn-outline-light"><i class="bi bi-star-fill me-2"></i>المميزة</a>
+            </div>
+        </div>
+    </section>
 
 
 
 
+    
     <!-- ===== كاروسيل (إذا وجد صور مميزة) ===== -->
     {% if featured_images %}
     <section class="carousel-section">
