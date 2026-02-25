@@ -12,380 +12,995 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
     <style>
-        :root { --primary-color: {{ settings.theme_color or '#667eea' }}; }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        /* ===== الشريط العلوي ===== */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 5px 0;
-            transition: all 0.3s ease;
-            z-index: 1030;
-        }
-        
-        .navbar-brand {
-            transition: transform 0.2s ease;
-        }
-        
-        .navbar-brand:hover {
-            transform: scale(1.02);
-        }
-        
-        .nav-link {
-            font-size: 0.95rem;
-            padding: 5px 10px !important;
-        }
-        
-        .btn-sm.p-1 {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* ===== قسم الترحيب ===== */
-        .hero-section {
-            margin-top: 56px;
-            padding: 60px 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: white;
-        }
-        
-        .hero-title {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        /* ===== كاروسيل واحد فقط ===== */
-        .carousel-section {
-            margin: 40px 0;
-        }
-        
-        .carousel-inner {
-            background-color: #1a1a1a;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        
-        .carousel-item {
-            transition: transform 1.5s ease, opacity 1s ease !important;
-        }
-        
-        .carousel-item img {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* ===== باقي التنسيقات ===== */
-        .category-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 30px 0;
-        }
-        
-        .category-pill {
-            background: white;
-            color: #333;
-            padding: 8px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .category-pill:hover,
-        .category-pill.active {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-        
-        .gallery-item {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-            aspect-ratio: 1 / 1;
-        }
-        
-        .gallery-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-        
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            padding: 20px;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-        
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-        
-        .gallery-stats {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-        
-        .featured-section {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px 0;
-            margin: 40px 0;
-            border-radius: 20px;
-        }
-        
-        .featured-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 0 20px;
-        }
-        
-        .search-box {
-            max-width: 500px;
-            margin: 20px auto;
-        }
-        
-        .search-box .input-group {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border-radius: 50px;
-            overflow: hidden;
-        }
-        
-        .search-box button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-        }
-        
-        .floating-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary-color);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        
-        .floating-btn:hover {
-            transform: scale(1.1);
-            color: white;
-        }
-        
-        /* ===== تحسينات الموبايل ===== */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2em; }
-            .gallery-grid { grid-template-columns: 1fr; }
-            .featured-grid { grid-template-columns: repeat(2, 1fr); }
-            .carousel-inner { height: 300px !important; }
-        }
+ :root {
+    --primary-color: {{ settings.theme_color or '#667eea' }};
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* ===== الشريط العلوي الموحد ===== */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    z-index: 1030;
+    min-height: 50px;
+}
+
+.navbar-brand {
+    transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.02);
+}
+
+.nav-link {
+    font-size: 0.95rem;
+    padding: 5px 10px !important;
+}
+
+/* تنسيق زر QR */
+.btn-sm.p-1 {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* تحسين الموبايل */
+@media (max-width: 768px) {
+    .navbar .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .navbar-brand img {
+        height: 30px;
+    }
+    
+    .form-control-sm {
+        width: 100px !important;
+    }
+}
+
+/* ===== الأقسام الأخرى ===== */
+.hero-section {
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 100%);
+    color: white;
+    padding: 80px 0;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2em;
+    }
+}
+
+/* ===== QR Code ===== */
+.qr-code-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 300px;
+    margin: 0 auto 40px;
+}
+
+.qr-code-card img {
+    width: 200px;
+    height: 200px;
+    margin: 10px auto;
+}
+
+/* ===== التصنيفات ===== */
+.category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.category-pill {
+    background: white;
+    color: #333;
+    padding: 8px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.category-pill:hover,
+.category-pill.active {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===== المعرض ===== */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.gallery-item {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 1 / 1; /* مربع */
+}
+
+.gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+}
+
+.gallery-stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.gallery-stats i {
+    margin-left: 5px;
+}
+
+/* ===== الصور المميزة ===== */
+.featured-section {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 40px 0;
+    margin: 40px 0;
+    border-radius: 20px;
+}
+
+.featured-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.featured-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.featured-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: gold;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ===== البحث ===== */
+.search-box {
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.search-box .input-group {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.search-box input {
+    border: none;
+    padding: 15px 25px;
+}
+
+.search-box button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+}
+
+/* ===== أزرار ===== */
+.floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+/* ===== التصفح ===== */
+.pagination {
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.page-link {
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ===== الحالات الفارغة ===== */
+.empty-state {
+    text-align: center;
+    color: white;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 5em;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+/* ===== كاروسيل ===== */
+.carousel-item {
+    transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease !important;
+}
+
+.carousel-caption {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ===== تحسينات الموبايل ===== */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .carousel-inner {
+        height: 300px !important;
+    }
+    
+    .display-3 {
+        font-size: 2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
     </style>
 </head>
 <body>
-    <!-- ===== شريط علوي واحد فقط ===== -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
-                {% if settings and settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" alt="شعار الموقع" height="40" style="border-radius: 5px;">
-                {% else %}
-                    <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
-                        <i class="bi bi-camera-fill fs-4"></i>
-                        <span style="font-size: 1.2rem;">{{ settings.site_title }}</span>
-                    </div>
+    <!-- شريط التنقل -->
+<!-- شريط التنقل العلوي (نسخة واحدة نظيفة) -->
+<nav class="navbar navbar-expand-lg fixed-top" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px 0;">
+    <div class="container">
+        <!-- الشعار واللوجو - نسخة واحدة فقط -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+            {% if settings and settings.site_logo %}
+                <img src="{{ settings.site_logo }}" alt="شعار الموقع" height="40" style="border-radius: 5px; max-height: 40px; width: auto;">
+            {% else %}
+                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
+                    <i class="bi bi-camera-fill fs-4"></i>
+                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
+                </div>
+            {% endif %}
+        </a>
+
+        <!-- زر القائمة للموبايل -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- محتويات القائمة -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- روابط القائمة في المنتصف -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#gallery">المعرض</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#featured">مميزة</a>
+                </li>
+                {% if categories %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        التصنيفات
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for category, count in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
+                                {{ category.name }} ({{ count }})
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 {% endif %}
-            </a>
+            </ul>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="#gallery">المعرض</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#featured">مميزة</a></li>
-                    {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">التصنيفات</a>
-                        <ul class="dropdown-menu">
-                            {% for category, count in categories %}
-                            <li><a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">{{ category.name }} ({{ count }})</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
+            <!-- الأزرار على اليسار -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- زر QR Code -->
+                <button class="btn btn-sm p-1" type="button" data-bs-toggle="modal" data-bs-target="#qrSmallModal" 
+                        style="background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                    <i class="bi bi-qr-code-scan fs-6"></i>
+                </button>
                 
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-sm p-1" type="button" data-bs-toggle="modal" data-bs-target="#qrModal" 
-                            style="background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color: white;">
-                        <i class="bi bi-qr-code-scan fs-6"></i>
+                <!-- البحث -->
+                <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                    <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." 
+                           style="width: 130px; border-radius: 20px; height: 32px;">
+                    <button class="btn btn-sm btn-outline-primary ms-1" type="submit" style="height: 32px;">
+                        <i class="bi bi-search"></i>
                     </button>
-                    
-                    <form class="d-flex" action="{{ url_for('search') }}" method="GET">
-                        <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." style="width: 130px; border-radius: 20px; height: 32px;">
-                        <button class="btn btn-sm btn-outline-primary ms-1" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-                    
-                    {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
-                            {% if current_user.role in ['admin', 'editor'] %}<li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>{% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}">دخول</a>
-                    <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}">تسجيل</a>
-                    {% endif %}
+                </form>
+                
+                <!-- قائمة المستخدم -->
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="height: 32px;">
+                        <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                        {% if current_user.role in ['admin', 'editor'] %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}" style="height: 32px;">دخول</a>
+                <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}" style="height: 32px;">تسجيل</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- تعويض المساحة -->
+  <!-- <div style="height: 60px;"></div> -->
+                    <!-- الشعار واللوجو على اليمين - استبدل هذا الجزء كاملاً -->
+      
+
+<!-- شريط التنقل العلوي (Navbar) -->
+<nav class="navbar navbar-expand-lg fixed-top" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 5px 0;">
+    <div class="container">
+     
+
+
+
+
+  <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}" style="gap: 8px;">
+            {% if settings and settings.site_logo %}
+                <!-- لوجو من قاعدة البيانات -->
+                <img src="{{ settings.site_logo }}" 400
+                     alt="شعار الموقع" 
+                     height="40" 
+                     style="border-radius: 5px; max-height: 40px; width: auto;">
+            {% else %}
+                <!-- النص البديل إذا لم يوجد لوجو -->
+                <div class="d-flex align-items-center" style="gap: 5px; color: var(--primary-color); font-weight: 600;">
+                    <i class="bi bi-camera-fill fs-4"></i>
+                    <span style="font-size: 1.2rem;">{{ settings.site_title if settings else 'معرض الأعمال' }}</span>
+               <img src="{{ settings.site_logo }}" height="50" alt="Logo">  </div>  
+            {% endif %}
+        </a>
+
+ 
+
+
+
+        <!-- زر القائمة للموبايل -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- محتويات القائمة -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- روابط القائمة في المنتصف -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="#gallery">المعرض</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#featured">مميزة</a>
+                </li>
+                {% if categories %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        التصنيفات
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for category, count in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">
+                                {{ category.name }} ({{ count }})
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            
+            <!-- الأزرار على اليسار (مربع QR صغير) -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- زر QR Code مصغر جداً -->
+                <button class="btn btn-sm p-1" type="button" data-bs-toggle="modal" data-bs-target="#qrSmallModal" 
+                        style="background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                    <i class="bi bi-qr-code-scan fs-6"></i>
+                </button>
+                
+                <!-- البحث -->
+                <form class="d-flex" action="{{ url_for('search') }}" method="GET">
+                    <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." 
+                           style="width: 130px; border-radius: 20px; height: 32px;">
+                    <button class="btn btn-sm btn-outline-primary ms-1" type="submit" style="height: 32px;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                
+                <!-- قائمة المستخدم -->
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="height: 32px;">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                        {% if current_user.role in ['admin', 'editor'] %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}" style="height: 32px;">دخول</a>
+                <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}" style="height: 32px;">تسجيل</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- تعويض المساحة -->
+  <!-- <div style="height: 60px;"></div> -->
+
+<!-- نافذة QR Code صغيرة (Modal) -->
+<div class="modal fade" id="qrSmallModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h6 class="modal-title"><i class="bi bi-qr-code-scan" style="color: var(--primary-color);"></i> QR Code</h6>
+                <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-3">
+                <!-- صورة QR Code صغيرة -->
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid" style="max-width: 150px;">
+                <div class="mt-2">
+                    <small class="text-muted">امسح الكود لزيارة الموقع</small>
+                </div>
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                    <a href="data:image/png;base64,{{ qr_code }}" download="qr-code.png" class="btn btn-sm btn-primary">
+                        <i class="bi bi-download"></i>
+                    </a>
+                    <button class="btn btn-sm btn-success" onclick="copyQRUrl()">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                      <button class="btn btn-sm btn-outline-info" onclick="shareQR()" title="مشاركة">
+                        <i class="bi bi-share"></i>
+                    </button>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</div>
+
+<script>
+function copyQRUrl() {
+    const url = "{{ request.host_url }}";
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ تم نسخ الرابط');
+    });
+}
+</script>
+
+
+
+
+
+
+
+
+
+<!-- قسم الترحيب -->
+ 
+<!-- قسم الترحيب الاحترافي -->
+<section class="hero-section position-relative" style="margin-top: 56px; padding: 40px 0; background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%), url('data:image/svg+xml,...') center/cover; overflow: hidden;">
     
-    <!-- تعويض المساحة -->
-    <div style="height: 60px;"></div>
+    <!-- خلفية الشعار المتحركة -->
+    {% if settings and settings.site_logo %}
+    <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; z-index: 0; animation: rotate 30s linear infinite;">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 300px; width: auto; filter: blur(2px);">
+    </div>
+    {% endif %}
     
-    <!-- ===== قسم الترحيب ===== -->
-    <section class="hero-section">
-        <div class="container hero-content">
-            {% if settings and settings.site_logo %}
-            <div class="mb-4 animate__animated animate__fadeInDown">
-                <img src="{{ settings.site_logo }}" alt="شعار" height="90" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-            </div>
-            {% endif %}
-            
-            <h1 class="hero-title animate__animated animate__fadeInUp">{{ settings.site_title }}</h1>
-            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ settings.site_description }}</p>
-            
-            <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
-                <a href="#gallery" class="btn btn-light btn-lg px-5 py-3 rounded-pill">
-                    <i class="bi bi-images me-2"></i>استعرض الأعمال
-                </a>
-                <a href="#featured" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
-                    <i class="bi bi-star-fill me-2"></i>المميزة
-                </a>
+    <!-- خلفية الشعار الجانبي -->
+    {% if settings and settings.site_logo %}
+    <div class="position-absolute" style="top: 20%; right: -50px; opacity: 0.1; z-index: 0; transform: rotate(15deg);">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 150px; width: auto;">
+    </div>
+    <div class="position-absolute" style="bottom: 10%; left: -30px; opacity: 0.1; z-index: 0; transform: rotate(-10deg);">
+        <img src="{{ settings.site_logo }}" alt="" style="height: 120px; width: auto;">
+    </div>
+    {% endif %}
+    
+    <!-- جسيمات متحركة (اختياري) -->
+    <div class="position-absolute" style="top: 0; left: 0; right: 0; bottom: 0; z-index: 1;">
+        <div class="particle" style="position: absolute; top: 20%; left: 10%; width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0.3; animation: float 8s ease-in-out infinite;"></div>
+        <div class="particle" style="position: absolute; top: 70%; right: 15%; width: 6px; height: 6px; background: white; border-radius: 50%; opacity: 0.2; animation: float 12s ease-in-out infinite;"></div>
+        <div class="particle" style="position: absolute; bottom: 30%; left: 20%; width: 3px; height: 3px; background: white; border-radius: 50%; opacity: 0.25; animation: float 10s ease-in-out infinite;"></div>
+    </div>
+    
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-8 mx-auto text-center">
+                <!-- الشعار الرئيسي -->
+                {% if settings and settings.site_logo %}
+                <div class="mb-4 animate__animated animate__fadeInDown">
+                    <img src="{{ settings.site_logo }}" alt="شعار" height="90" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                </div>
+                {% endif %}
+                
+                <!-- العنوان مع تأثير الكتابة -->
+                <h1 class="display-3 fw-bold text-white mb-3 animate__animated animate__fadeInUp" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                    {{ settings.site_title if settings else 'معرض الأعمال' }}
+                </h1>
+                
+                <!-- الوصف -->
+                <p class="lead text-white-50 mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.3rem;">
+                    {{ settings.site_description if settings else 'مرحباً بكم في معرض أعمالنا' }}
+                </p>
+                
+                <!-- أزرار إضافية -->
+                <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="#gallery" class="btn btn-light btn-lg px-5 py-3 rounded-pill">
+                        <i class="bi bi-images me-2"></i>استعرض الأعمال
+                    </a>
+                    <a href="#featured" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                        <i class="bi bi-star-fill me-2"></i>المميزة
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- CSS إضافي للحركات -->
+<style>
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+.hero-section {
+    position: relative;
+    isolation: isolate;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    z-index: 1;
+}
+</style>
+
+
+
+<!-- JavaScript للتفاعل -->
+<script>
+function copyQRUrl() {
+    const url = "{{ request.host_url }}";
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ تم نسخ الرابط');
+    }).catch(() => {
+        alert('❌ فشل النسخ');
+    });
+}
+
+function downloadQRImage() {
+    const base64 = "{{ qr_code }}";
+    const link = document.createElement('a');
+    link.download = 'qr-code.png';
+    link.href = 'data:image/png;base64,' + base64;
+    link.click();
+}
+
+function shareQR() {
+    const url = "{{ request.host_url }}";
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ settings.site_title }}',
+            text: 'تعال شاهد معرض الأعمال',
+            url: url
+        }).catch(console.error);
+    } else {
+        copyQRUrl();
+    }
+}
+</script>
     
-    <!-- ===== كاروسيل واحد فقط ===== -->
-    {% if featured_images %}
-    <section class="container carousel-section">
-        <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner" style="height: 400px;">
-                {% for image in featured_images[:5] %}
-                <div class="carousel-item {% if loop.first %}active{% endif %} h-100">
-                    <img src="{{ image.image_url }}" class="d-block w-100 h-100" alt="{{ image.title }}" style="object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
-                        <h5>{{ image.title }}</h5>
+ 
+ 
+ 
+
+
+
+
+
+
+ 
+<!-- أضف هذا CSS -->
+<style>
+    /* تأثيرات إضافية */
+    .carousel-item {
+        transition: transform 2s ease, opacity 1.5s ease !important;
+    }
+    
+    .carousel-item.active .display-3 {
+        animation: slideDown 1s ease;
+    }
+    
+    .carousel-item.active .lead {
+        animation: slideUp 1s ease 0.3s both;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* تنسيق المؤشرات عند التحويم */
+    .carousel-indicators button:hover {
+        background: white !important;
+        width: 70px !important;
+    }
+    
+    .carousel-indicators button.active {
+        background: white !important;
+        width: 70px !important;
+    }
+</style>
+
+ 
+
+ 
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل المتجاوب مع الصور -->
+<section class="container-fluid px-0 mb-4">
+    <div id="responsiveCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in featured_images[:6] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <!-- حاوية الصورة بنسبة عرض إلى ارتفاع متغيرة -->
+                <div class="position-relative" style="padding-bottom: 45%; background: #1a1a1a;">  <!-- 45% من العرض -->
+                    <img src="{{ image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a;">
+                    
+                    <!-- نص الصورة -->
+                    <div class="position-absolute bottom-0 start-0 end-0 p-4 text-white" 
+                         style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                        <h3>{{ image.title }}</h3>
+                        <p class="d-none d-md-block">{{ image.description|truncate(100) }}</p>
                     </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- أزرار التحكم -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#responsiveCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#responsiveCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</section>
+
+<!-- CSS إضافي للكاروسيل المتجاوب -->
+<style>
+    /* تحسين الكاروسيل للموبايل */
+    @media (max-width: 768px) {
+        .carousel-item div[style*="padding-bottom"] {
+            padding-bottom: 75% !important;  /* نسبة أعرض للموبايل */
+        }
+        
+        .carousel-item h3 {
+            font-size: 1.2rem !important;
+            margin-bottom: 5px !important;
+        }
+    }
+    
+    /* تأثيرات حركية */
+    .carousel-item {
+        transition: transform 1.5s ease !important;
+    }
+    
+    /* تنسيق النص */
+    .carousel-item .position-absolute {
+        pointer-events: none;  /* يسمح بالنقر من خلال النص */
+    }
+</style>
+
+<!-- أضف هذا CSS -->
+<style>
+   /* تحسين عرض الكاروسيل */
+.carousel-inner {
+    background-color: #000;  /* خلفية سوداء أثناء التحميل */
+}
+
+.carousel-item img {
+    object-fit: cover;  /* يجعل الصورة تغطي المساحة بدون تشويه */
+    width: 100%;
+    height: 100%;
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .carousel-inner {
+        height: 250px !important;  /* أصغر للجوال */
+    }
+    
+    .carousel-item .position-absolute h2 {
+        font-size: 1.5rem !important;  /* تصغير العنوان */
+    }
+    
+    .carousel-item .position-absolute p {
+        font-size: 0.9rem !important;  /* تصغير الوصف */
+        margin-bottom: 10px !important;
+    }
+    
+    .carousel-item .position-absolute .btn {
+        padding: 5px 10px !important;  /* تصغير الأزرار */
+        font-size: 0.9rem !important;
+    }
+}
+
+/* للموبايل الصغير جداً */
+@media (max-width: 480px) {
+    .carousel-inner {
+        height: 200px !important;
+    }
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+<!-- قسم الكاروسيل مع معرض مصغر -->
+<section class="container mb-5">
+    <h2 class="text-white text-center mb-4">
+        <i class="bi bi-star-fill text-warning"></i> أبرز الأعمال
+    </h2>
+    
+    <div class="row g-4">
+        <!-- الكاروسيل الرئيسي -->
+        <div class="col-lg-8">
+            <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                <div class="carousel-inner rounded-4 shadow" style="height: 400px;">
+                    {% for image in featured_images[:5] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %} h-100">
+                        <img src="{{ image.image_url }}" 
+                             class="d-block w-100 h-100" 
+                             alt="{{ image.title }}"
+                             style="object-fit: cover;">
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
+                            <h5>{{ image.title }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- الصور المصغرة -->
+        <div class="col-lg-4">
+            <div class="row g-3">
+                {% for image in featured_images[:4] %}
+                <div class="col-6">
+                    <img src="{{ image.thumbnail_url or image.image_url }}" 
+                         class="img-fluid rounded-3 shadow-sm" 
+                         alt="{{ image.title }}"
+                         style="height: 120px; width: 100%; object-fit: cover; cursor: pointer; transition: 0.3s;"
+                         onmouseover="this.style.transform='scale(1.05)'"
+                         onmouseout="this.style.transform='scale(1)'"
+                         onclick="goToSlide({{ loop.index0 }})">
                 </div>
                 {% endfor %}
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
-    </section>
-    {% endif %}
-    
-    <!-- ===== البحث ===== -->
+    </div>
+</section>
+
+<script>
+function goToSlide(index) {
+    const carousel = new bootstrap.Carousel('#mainCarousel');
+    carousel.to(index);
+}
+</script>
+
+
+
+
+
+
+    <!-- البحث -->
     <div class="container search-box">
         <form action="{{ url_for('search') }}" method="GET">
             <div class="input-group">
                 <input type="text" class="form-control" name="q" placeholder="ابحث عن صور..." value="{{ search_query }}">
-                <button class="btn" type="submit"><i class="bi bi-search"></i> بحث</button>
+                <button class="btn" type="submit">
+                    <i class="bi bi-search"></i> بحث
+                </button>
             </div>
         </form>
     </div>
     
-    <!-- ===== التصنيفات ===== -->
+    <!-- التصنيفات -->
     {% if categories %}
     <div class="container">
         <div class="category-pills">
-            <a href="{{ url_for('index') }}" class="category-pill {% if not current_category %}active{% endif %}">الكل</a>
+            <a href="{{ url_for('index') }}" class="category-pill {% if not current_category %}active{% endif %}">
+                الكل
+            </a>
             {% for category, count in categories %}
-            <a href="{{ url_for('index') }}?category={{ category.id }}" class="category-pill {% if current_category == category.id %}active{% endif %}">
+            <a href="{{ url_for('index') }}?category={{ category.id }}" 
+               class="category-pill {% if current_category == category.id %}active{% endif %}">
                 {{ category.name }} ({{ count }})
             </a>
             {% endfor %}
@@ -393,11 +1008,13 @@
     </div>
     {% endif %}
     
-    <!-- ===== صور مميزة ===== -->
+    <!-- الصور المميزة -->
     {% if featured_images %}
     <section id="featured" class="featured-section">
         <div class="container">
-            <h2 class="featured-title"><i class="bi bi-star-fill"></i> صور مميزة</h2>
+            <h2 class="featured-title">
+                <i class="bi bi-star-fill"></i> صور مميزة
+            </h2>
             <div class="featured-grid">
                 {% for image in featured_images %}
                 <div class="featured-item">
@@ -412,34 +1029,70 @@
     </section>
     {% endif %}
     
-    <!-- ===== المعرض الرئيسي ===== -->
+
+
+
+
+
+
+    
+    <!-- المعرض الرئيسي -->
     <section id="gallery" class="container">
-        <h2 class="text-white text-center mb-4"><i class="bi bi-images"></i> جميع الصور</h2>
+        <h2 class="text-white text-center mb-4">
+            <i class="bi bi-images"></i> جميع الصور
+        </h2>
         
         {% if images.items %}
-        <div class="gallery-grid">
-            {% for image in images.items %}
-            <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
-                <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}" onerror="this.src='https://via.placeholder.com/300x200?text=صورة'">
-                <div class="gallery-overlay">
-                    <div class="gallery-stats">
-                        <span><i class="bi bi-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
-                        <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
-                    </div>
-                </div>
+<div class="gallery-grid">
+    {% for image in images.items %}
+    <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
+        <img src="{{ image.thumbnail_url or image.image_url }}" 
+             alt="{{ image.title }}"
+             onerror="this.src='https://via.placeholder.com/300x200?text=صورة'">
+        <div class="gallery-overlay">
+            <div class="gallery-stats">
+                <span><i class="bi bi-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
+                <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
             </div>
-            {% endfor %}
         </div>
-        
+    </div>
+    {% endfor %}
+</div>
+
+
+  
+
         <!-- التصفح -->
         {% if images.pages > 1 %}
         <nav>
             <ul class="pagination">
-                {% if images.has_prev %}<li class="page-item"><a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}"><i class="bi bi-chevron-right"></i> السابق</a></li>{% endif %}
+                {% if images.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}">
+                        <i class="bi bi-chevron-right"></i> السابق
+                    </a>
+                </li>
+                {% endif %}
+                
                 {% for page_num in images.iter_pages() %}
-                    {% if page_num %}<li class="page-item {% if page_num == images.page %}active{% endif %}"><a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">{{ page_num }}</a></li>{% endif %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
                 {% endfor %}
-                {% if images.has_next %}<li class="page-item"><a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">التالي <i class="bi bi-chevron-left"></i></a></li>{% endif %}
+                
+                {% if images.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">
+                        التالي <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
             </ul>
         </nav>
         {% endif %}
@@ -449,57 +1102,119 @@
             <i class="bi bi-images"></i>
             <h3>لا توجد صور</h3>
             <p>لم يتم إضافة أي صور بعد</p>
-            {% if current_user.is_authenticated %}<a href="{{ url_for('upload_images') }}" class="btn btn-light"><i class="bi bi-cloud-upload"></i> أضف أول صورة</a>{% endif %}
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('upload_images') }}" class="btn btn-light">
+                <i class="bi bi-cloud-upload"></i> أضف أول صورة
+            </a>
+            {% endif %}
         </div>
         {% endif %}
     </section>
     
-    <!-- ===== زر العودة للأعلى ===== -->
-    <a href="#" class="floating-btn"><i class="bi bi-arrow-up"></i></a>
+    <!-- زر الصفحة الرئيسية -->
+    <a href="#" class="floating-btn" title="العودة للأعلى">
+        <i class="bi bi-arrow-up"></i>
+    </a>
     
-    <!-- ===== Modal QR Code ===== -->
-    <div class="modal fade" id="qrModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 300px;">
-            <div class="modal-content">
-                <div class="modal-header py-2">
-                    <h6 class="modal-title"><i class="bi bi-qr-code-scan" style="color: var(--primary-color);"></i> QR Code</h6>
-                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center p-3">
-                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid" style="max-width: 150px;">
-                    <div class="mt-2"><small class="text-muted">امسح الكود لزيارة الموقع</small></div>
-                    <div class="d-flex justify-content-center gap-2 mt-2">
-                        <a href="data:image/png;base64,{{ qr_code }}" download="qr-code.png" class="btn btn-sm btn-primary"><i class="bi bi-download"></i></a>
-                        <button class="btn btn-sm btn-success" onclick="copyUrl()"><i class="bi bi-clipboard"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ===== Lightbox ===== -->
+    <!-- Lightbox Container -->
     <div id="lightbox-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center;">
         <span onclick="closeLightbox()" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer;">&times;</span>
         <img id="lightbox-img" style="max-width: 90%; max-height: 80%;">
+        <div id="lightbox-caption" style="text-align: center; color: white; margin-top: 20px;"></div>
     </div>
     
-    <!-- ===== Scripts ===== -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
     <script>
-        function openLightbox(imgSrc, imageId) {
+
+
+function openLightbox(imgSrc, imageId) {
+    // فتح الصورة
+    document.getElementById('lightbox-modal').style.display = 'flex';
+    document.getElementById('lightbox-img').src = imgSrc;
+    
+    // زيادة المشاهدات عبر API
+    fetch(`/api/view/${imageId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // تحديث العدد في الصفحة
+            const viewElement = document.querySelector(`.view-count-${imageId}`);
+            if (viewElement) {
+                viewElement.textContent = data.views;
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+
+    function closeLightbox() {
+        document.getElementById('lightbox-modal').style.display = 'none';
+    }
+    
+    // Close lightbox with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        }
+    });
+    
+    // Close when clicking outside the image
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('lightbox-modal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+        }
+    });
+</script>
+    <script>
+        // Lightbox function
+        function openLightbox(imgSrc, title, description) {
             document.getElementById('lightbox-modal').style.display = 'flex';
             document.getElementById('lightbox-img').src = imgSrc;
-            fetch(`/api/view/${imageId}`, {method:'POST'})
-                .then(r=>r.json()).then(d=>{
-                    if(d.success) document.querySelector(`.view-count-${imageId}`).textContent = d.views;
-                });
+            document.getElementById('lightbox-caption').innerHTML = `<h3>${title}</h3><p>${description}</p>`;
         }
-        function closeLightbox() { document.getElementById('lightbox-modal').style.display = 'none'; }
-        document.addEventListener('keydown', e => e.key === 'Escape' && closeLightbox());
         
-        function copyUrl() {
-            navigator.clipboard.writeText("{{ request.host_url }}").then(() => alert('✅ تم نسخ الرابط'));
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').style.display = 'none';
         }
+        
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Track image views
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // يمكن إضافة tracking هنا
+            });
+        });
     </script>
 </body>
 </html>
