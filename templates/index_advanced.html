@@ -817,34 +817,6 @@
             </div>
 
 
- <!-- ===== كاروسيل Swiper الاحترافي ===== -->
-     
-      {% if featured_images %}
-    <section class="swiper-flip-section">
-        <div class="swiper myFlipSwiper" style="height: 100%; width: 100%;">
-            <div class="swiper-wrapper">
-                {% for image in featured_images[:6] %}
-                <div class="swiper-slide">
-                    <div class="flip-slide-content">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}" onerror="this.src='https://via.placeholder.com/1200x800?text=صورة'">
-                        <div class="overlay"></div>
-                        <div class="flip-slide-text">
-                            <h3>{{ image.title or 'عمل إبداعي' }}</h3>
-                            <p>{{ image.description|truncate(100) or 'تصميم احترافي بجودة عالية' }}</p>
-                            <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-light">
-                                <i class="bi bi-eye me-2"></i>عرض التفاصيل
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
-        </div>
-    </section>
-    {% endif %} 
 
 
             
