@@ -7,6 +7,56 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+
+
+/* تنسيقات دليل الأحجام */
+.bg-opacity-10 {
+    --bg-opacity: 0.1;
+}
+
+.progress {
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+    border-radius: 10px;
+}
+
+.alert-info {
+    background-color: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    color: #333;
+    border-radius: 15px;
+}
+
+.card {
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+
+.badge {
+    padding: 8px 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.bg-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.bg-success { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+.bg-warning { background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); }
+.bg-danger { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); }
+.bg-info { background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); }
+
+
+
+
+
         :root { --primary-color: #667eea; }
         body {
             background: #f4f6f9;
@@ -224,6 +274,174 @@
                 </button>
             </form>
         </div>
+        
+
+
+
+
+<!-- ===== تعليمات أحجام الصور المثالية ===== -->
+<div class="settings-card mt-4">
+    <h4 class="section-title"><i class="bi bi-image"></i> دليل أحجام الصور المثالية</h4>
+    
+    <div class="row g-4">
+        <!-- كاروسيل Swiper -->
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 ms-3">
+                            <i class="bi bi-collection-play fs-2 text-primary"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">كاروسيل Swiper (الرئيسي)</h5>
+                            <small class="text-muted">أفضل حجم للصور المتحركة</small>
+                        </div>
+                    </div>
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">المقاس المثالي:</span>
+                            <span class="badge bg-primary fs-6 p-2">1200 × 600 بكسل</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-bold">نسبة العرض إلى الارتفاع:</span>
+                            <span class="badge bg-info fs-6 p-2">2:1 (عريض)</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-success" style="width: 100%">ممتاز</div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-check-circle-fill text-success me-1"></i>
+                        يضمن ملء الشاشة بدون تشويه أو قص
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- المعرض الرئيسي -->
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 ms-3">
+                            <i class="bi bi-grid-3x3-gap-fill fs-2 text-success"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">المعرض الرئيسي (Grid)</h5>
+                            <small class="text-muted">صور متساوية مربعة</small>
+                        </div>
+                    </div>
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">المقاس المثالي:</span>
+                            <span class="badge bg-success fs-6 p-2">800 × 800 بكسل</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-bold">نسبة العرض إلى الارتفاع:</span>
+                            <span class="badge bg-info fs-6 p-2">1:1 (مربع)</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-success" style="width: 100%">ممتاز</div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-check-circle-fill text-success me-1"></i>
+                        صور مربعة مثالية لعرض المنتجات
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الصور المصغرة -->
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 ms-3">
+                            <i class="bi bi-images fs-2 text-warning"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">الصور المصغرة (Thumbnails)</h5>
+                            <small class="text-muted">صور سريعة التحميل</small>
+                        </div>
+                    </div>
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">المقاس المثالي:</span>
+                            <span class="badge bg-warning fs-6 p-2">300 × 300 بكسل</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-bold">نسبة العرض إلى الارتفاع:</span>
+                            <span class="badge bg-info fs-6 p-2">1:1 (مربع)</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-warning" style="width: 90%">جيد جداً</div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
+                        حجم صغير لسرعة التحميل
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- صور مميزة -->
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3 ms-3">
+                            <i class="bi bi-star-fill fs-2 text-danger"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">الصور المميزة (Featured)</h5>
+                            <small class="text-muted">أفضل الأعمال</small>
+                        </div>
+                    </div>
+                    <div class="bg-light p-3 rounded-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">المقاس المثالي:</span>
+                            <span class="badge bg-danger fs-6 p-2">400 × 300 بكسل</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-bold">نسبة العرض إلى الارتفاع:</span>
+                            <span class="badge bg-info fs-6 p-2">4:3 (كلاسيكي)</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 10px;">
+                            <div class="progress-bar bg-danger" style="width: 95%">ممتاز</div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-star-fill text-danger me-1"></i>
+                        نسبة مثالية للصور المميزة
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نصائح إضافية -->
+    <div class="alert alert-info mt-4">
+        <div class="d-flex">
+            <div class="ms-3">
+                <i class="bi bi-info-circle-fill fs-3"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-2">نصائح ذهبية لرفع الصور:</h6>
+                <ul class="mb-0 small">
+                    <li>✓ يفضل رفع الصور بالحجم المثالي مباشرة للحصول على أفضل نتيجة</li>
+                    <li>✓ الصور الأكبر من 2MB سيتم ضغطها تلقائياً مع الحفاظ على الجودة</li>
+                    <li>✓ استخدم صوراً عالية الجودة (72-96 dpi) للعرض على الشاشات</li>
+                    <li>✓ الصور بصيغة PNG أفضل للشعارات والنصوص، و JPG للصور الفوتوغرافية</li>
+                    <li>✓ النظام يدعم: JPG, PNG, GIF, WebP (أقصى حجم 50MB)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
         
         <!-- النسخ الاحتياطي -->
         <div class="settings-card">
