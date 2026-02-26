@@ -798,6 +798,52 @@
             {% endif %}
             <h1 class="hero-title">{{ settings.site_title }}</h1>
             <p class="hero-description">{{ settings.site_description }}</p>
+
+
+<!-- ===== كاروسيل Swiper الاحترافي مع صور مضبوطة ===== -->
+<section class="swiper-flip-section" style="margin-top: 70px; height: 500px; width: 100%;">
+    <div class="swiper myFlipSwiper" style="height: 100%; width: 100%;">
+        <div class="swiper-wrapper">
+            {% for image in featured_images[:6] %}
+            <div class="swiper-slide">
+                <div class="flip-slide-content">
+                    <img src="{{ image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="width:100%; height:100%; object-fit:cover;"
+                         onerror="this.src='https://via.placeholder.com/1200x600?text=صورة'">
+                    <div class="overlay"></div>
+                    <div class="flip-slide-text">
+                        <h3>{{ image.title or 'عمل إبداعي' }}</h3>
+                        <p>{{ image.description|truncate(100) or 'تصميم احترافي بجودة عالية' }}</p>
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-light">
+                            <i class="bi bi-eye me-2"></i>عرض التفاصيل
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+            
+            
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    {% for image in featured_images %}
+                    <div class="swiper-slide" onclick="openLightbox('{{ image.image_url }}', '{{ image.title }}', '{{ image.description }}')">
+                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
+                        <div class="slide-caption">
+                            <h5>{{ image.title }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            
             <div class="hero-buttons">
                 <a href="#gallery" class="btn btn-light"><i class="bi bi-images me-2"></i>استعرض الأعمال</a>
                 <a href="#featured" class="btn btn-outline-light"><i class="bi bi-star-fill me-2"></i>المميزة</a>
@@ -819,6 +865,37 @@
         </div>
     </div>
 
+
+
+<!-- ===== الصور المميزة بمعادلات ذكية ===== -->
+<section id="featured" class="featured-section">
+    <div class="container">
+        <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+            {% for image in featured_images %}
+            <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                <div style="position: relative; width: 100%; padding-top: 75%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <!-- padding-top: 75% = نسبة ارتفاع 3:4 (مثالية للصور العمودية والأفقية) -->
+                    <img src="{{ image.thumbnail_url or image.image_url }}" 
+                         alt="{{ image.title }}"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a; padding: 5px;"
+                         onerror="this.src='https://via.placeholder.com/300x225?text=صورة'"
+                         loading="lazy">
+                    
+                    <!-- شارة مميزة -->
+                    <span style="position: absolute; top: 10px; right: 10px; background: gold; color: #333; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 10;">
+                        <i class="bi bi-star-fill"></i>
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+
+    
     <div class="container pb-5" id="gallery">
         <div class="row g-4">
             {% for image in images.items %}
