@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ settings.site_title }} | لوحة الإبداع</title>
+    <title>{{ settings.site_title }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -13,121 +13,124 @@
     <style>
         :root {
             --primary-color: {{ settings.theme_color or '#4f46e5' }};
-            --accent-color: #f59e0b;
-            --dark-glass: rgba(15, 23, 42, 0.85);
-            --light-glass: rgba(255, 255, 255, 0.9);
+            --dark-blue: #0f172a;
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: #f1f5f9;
         }
 
-        /* ===== شريط التنقل المطور (حل مشكلة ظهور الاسم) ===== */
+        /* ===== شريط التنقل (Navbar) المطور ===== */
         .navbar {
-            background: var(--light-glass) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            padding: 12px 0;
+            background: var(--glass) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary-color);
+            padding: 10px 0;
+            z-index: 1050;
         }
 
-        .user-profile-nav {
+        .navbar-brand img {
+            max-height: 45px;
+            border-radius: 5px;
+        }
+
+        .user-badge {
             background: var(--primary-color);
             color: white !important;
-            padding: 6px 15px;
+            padding: 5px 15px;
             border-radius: 50px;
             font-weight: 600;
+        }
+
+        /* ===== قسم الترحيب (Hero) مع مكان الشعار المحدد ===== */
+        .hero-banner {
+            background: var(--dark-blue);
+            padding: 80px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+            margin-top: 60px;
+        }
+
+        /* الشعار في منطقة الدائرة (كما طلبت في الصورة) */
+        .hero-logo-area {
+            position: absolute;
+            top: 50%;
+            left: 10%; /* جهة الدائرة الحمراء في الصورة */
+            transform: translateY(-50%);
+            width: 150px;
+            height: 150px;
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .hero-logo-area img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .hero-title { font-size: 3rem; font-weight: 800; margin-bottom: 10px; }
+        .hero-subtitle { font-size: 1.5rem; opacity: 0.8; }
+
+        /* ===== قسم التصنيفات (Pills) ===== */
+        .category-section {
+            padding: 30px 0;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .category-pill {
+            display: inline-block;
+            padding: 8px 25px;
+            margin: 5px;
+            border-radius: 50px;
+            background: #f8fafc;
+            color: var(--dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
             transition: 0.3s;
         }
 
-        .user-profile-nav:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        /* ===== قسم الـ Hero والكاروسيل القلاب ===== */
-        .premium-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            padding: 100px 0 60px;
-            text-align: center;
-            color: white;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-        }
-
-        .swiper-flip-container {
-            width: 100%;
-            max-width: 900px;
-            margin: -80px auto 40px; /* تداخل أنيق مع الهيدر */
-            perspective: 1200px;
-        }
-
-        .swiper-slide-content {
-            border-radius: 25px;
-            overflow: hidden;
-            height: 450px;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-
-        .slide-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, transparent 60%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 40px;
-            text-align: right;
-        }
-
-        /* ===== نظام الـ QR المطور ===== */
-        .qr-highlight-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            border: 2px dashed var(--primary-color);
-        }
-
-        .btn-copy-link {
+        .category-pill:hover, .category-pill.active {
             background: var(--primary-color);
             color: white;
-            border-radius: 12px;
-            width: 100%;
-            padding: 12px;
-            font-weight: 700;
-            border: none;
-            margin-top: 15px;
+            border-color: var(--primary-color);
         }
 
-        /* ===== شبكة المعرض (تأكد من الربط) ===== */
+        /* ===== معرض الصور ===== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px 0;
+        }
+
         .gallery-card {
             background: white;
             border-radius: 20px;
             overflow: hidden;
-            transition: 0.4s;
-            border: 1px solid #edf2f7;
-            height: 100%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
         }
 
-        .gallery-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
+        .gallery-card:hover { transform: translateY(-10px); }
 
-        .img-box {
-            height: 250px;
-            position: relative;
-            background: #f1f5f9;
-        }
+        .img-wrapper { height: 250px; background: #eee; overflow: hidden; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
-        .img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        /* موبايل */
+        @media (max-width: 768px) {
+            .hero-logo-area { position: static; margin: 20px auto; transform: none; }
+            .hero-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -135,80 +138,103 @@
 
     <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('index') }}">
-                <i class="bi bi-stars me-2" style="color: var(--primary-color); font-size: 1.5rem;"></i>
-                <span style="color: #0f172a;">{{ settings.site_title }}</span>
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+                {% if settings and settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" alt="شعار">
+                {% else %}
+                    <span class="fw-bold" style="color: var(--primary-color);">{{ settings.site_title }}</span>
+                {% endif %}
             </a>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
-                {% if current_user.is_authenticated %}
-                <div class="dropdown">
-                    <a class="user-profile-nav dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle fs-5"></i>
-                        <span>{{ current_user.username }}</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                        <li><a class="dropdown-item py-2" href="{{ url_for('profile') }}"><i class="bi bi-gear me-2"></i>الإعدادات</a></li>
-                        {% if current_user.role in ['admin', 'editor'] %}
-                        <li><a class="dropdown-item py-2" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>لوحة التحكم</a></li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item py-2 text-danger" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right me-2"></i>خروج</a></li>
-                    </ul>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link fw-bold" href="{{ url_for('index') }}">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold" href="#gallery">المعرض</a></li>
+                    {% if categories %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" data-bs-toggle="dropdown">الأقسام</a>
+                        <ul class="dropdown-menu">
+                            {% for category, count in categories %}
+                            <li><a class="dropdown-item" href="{{ url_for('index', category=category.id) }}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-outline-dark btn-sm rounded-circle" data-bs-toggle="modal" data-bs-target="#qrModal">
+                        <i class="bi bi-qr-code"></i>
+                    </button>
+
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="#" class="user-badge text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-fill"></i> {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">إعدادات الحساب</a></li>
+                            {% if current_user.role in ['admin', 'editor'] %}
+                            <li><a class="dropdown-item fw-bold text-primary" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-primary px-3 rounded-pill" href="{{ url_for('login') }}">دخول</a>
+                    {% endif %}
                 </div>
-                {% else %}
-                <a href="{{ url_for('login') }}" class="btn btn-outline-primary rounded-pill px-4 btn-sm">دخول</a>
-                {% endif %}
-                
-                <button class="btn btn-dark rounded-circle btn-sm" data-bs-toggle="modal" data-bs-target="#qrModal">
-                    <i class="bi bi-qr-code-scan"></i>
-                </button>
             </div>
         </div>
     </nav>
 
-    <header class="premium-header">
-        <div class="container">
-            <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown">إنجازاتنا في صورة</h1>
-            <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown"> {{ settings.site_title }}</h1>
-            <p class="lead opacity-75 mb-5 animate__animated animate__fadeInUp">{{ settings.site_description }}</p>
+    <header class="hero-banner">
+        <div class="container position-relative">
+            <h1 class="hero-title animate__animated animate__fadeInDown">{{ settings.site_title }}</h1>
+            <p class="hero-subtitle animate__animated animate__fadeInUp">{{ settings.site_description }}</p>
+            
+            <div class="hero-logo-area animate__animated animate__zoomIn">
+                {% if settings and settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" alt="شعار المؤسسة">
+                {% else %}
+                    <i class="bi bi-patch-check-fill fs-1 text-white-50"></i>
+                {% endif %}
+            </div>
         </div>
     </header>
 
-    <div class="swiper-flip-container animate__animated animate__zoomIn">
-        <div class="swiper myFlipSwiper">
-            <div class="swiper-wrapper">
-                {% for image in featured_images[:5] %}
-                <div class="swiper-slide">
-                    <div class="swiper-slide-content">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}" class="w-100 h-100 object-fit-cover">
-                        <div class="slide-overlay">
-                            <span class="badge bg-warning text-dark align-self-start mb-2">مميز</span>
-                            <h2 class="text-white fw-bold">{{ image.title }}</h2>
-                            <p class="text-white-50 mb-0">{{ image.description|truncate(80) }}</p>
-                        </div>
-                    </div>
-                </div>
+    <section class="category-section text-center">
+        <div class="container">
+            <h6 class="mb-3 text-muted fw-bold">تصفح حسب القسم:</h6>
+            <div class="category-pills">
+                <a href="{{ url_for('index') }}" class="category-pill {% if not current_category %}active{% endif %}">الكل</a>
+                {% for category, count in categories %}
+                <a href="{{ url_for('index', category=category.id) }}" class="category-pill {% if current_category == category.id|string %}active{% endif %}">
+                    {{ category.name }} <span class="badge bg-white text-dark ms-1">{{ count }}</span>
+                </a>
                 {% endfor %}
             </div>
-            <div class="swiper-pagination"></div>
         </div>
-    </div>
+    </section>
 
     <main class="container py-5" id="gallery">
-        <div class="row g-4">
+        <div class="gallery-grid">
             {% for image in images.items %}
-            <div class="col-lg-4 col-md-6">
-                <div class="gallery-card shadow-sm" onclick="openLightbox('{{ image.image_url }}', '{{ image.title }}', '{{ image.description }}')">
-                    <div class="img-box">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}" loading="lazy">
-                        <div class="p-3 position-absolute top-0 start-0 w-100 d-flex justify-content-between">
-                            <span class="badge bg-light text-dark shadow-sm rounded-pill"><i class="bi bi-eye"></i> {{ image.views }}</span>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h5 class="fw-bold mb-1 text-dark">{{ image.title }}</h5>
-                        <p class="text-muted small mb-0">{{ image.description|truncate(60) or 'تفاصيل المشروع المميز للشركة' }}</p>
+            <div class="gallery-card animate__animated animate__fadeInUp">
+                <div class="img-wrapper" onclick="openLightbox('{{ image.image_url }}', '{{ image.title }}', '{{ image.description }}')">
+                    <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}" loading="lazy">
+                </div>
+                <div class="p-4">
+                    <span class="badge bg-primary mb-2">{{ image.category.name if image.category else 'عام' }}</span>
+                    <h5 class="fw-bold">{{ image.title }}</h5>
+                    <div class="d-flex justify-content-between text-muted small mt-3">
+                        <span><i class="bi bi-eye"></i> {{ image.views }}</span>
+                        <span><i class="bi bi-calendar-event"></i> إنجازاتنا</span>
                     </div>
                 </div>
             </div>
@@ -217,54 +243,25 @@
     </main>
 
     <div class="modal fade" id="qrModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 rounded-4 overflow-hidden">
-                <div class="modal-header bg-dark text-white border-0">
-                    <h6 class="modal-title">شارك المعرض</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center p-4">
-                    <div class="qr-highlight-card mb-3">
-                        <img src="data:image/png;base64,{{ qr_code }}" class="img-fluid" alt="QR Code">
-                    </div>
-                    <p class="small text-muted mb-3">امسح الكود لزيارة الموقع من الجوال</p>
-                    <button class="btn-copy-link shadow-sm" onclick="copySiteLink()">
-                        <i class="bi bi-clipboard-check me-2"></i>نسخ رابط الموقع
-                    </button>
-                    <div id="copyAlert" class="text-success small mt-2 fw-bold" style="display:none;">✅ تم نسخ الرابط بنجاح!</div>
-                </div>
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content text-center p-4 rounded-4">
+                <h5 class="mb-3">مسح الكود للمشاركة</h5>
+                <img src="data:image/png;base64,{{ qr_code }}" class="img-fluid rounded shadow-sm mb-3">
+                <button class="btn btn-primary w-100 rounded-pill" onclick="copyLink()">نسخ رابط الموقع</button>
+                <div id="copyMsg" class="text-success small mt-2" style="display:none;">تم النسخ!</div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <script>
-        // تفعيل الكاروسيل القلاب
-        const swiper = new Swiper('.myFlipSwiper', {
-            effect: 'flip',
-            grabCursor: true,
-            loop: true,
-            autoplay: { delay: 4000 },
-            pagination: { el: '.swiper-pagination', clickable: true },
-        });
-
-        // وظيفة نسخ الرابط
-        function copySiteLink() {
-            const url = window.location.origin;
-            navigator.clipboard.writeText(url).then(() => {
-                const alertBox = document.getElementById('copyAlert');
-                alertBox.style.display = 'block';
-                setTimeout(() => { alertBox.style.display = 'none'; }, 2500);
-            });
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            document.getElementById('copyMsg').style.display = 'block';
+            setTimeout(() => { document.getElementById('copyMsg').style.display = 'none'; }, 2000);
         }
 
-        // Lightbox (يمكنك ربطه بالـ Modal الخاص بك)
-        function openLightbox(url, title, desc) {
-            console.log("عرض الصورة: " + title);
-            // ضع هنا كود الـ Lightbox المفضل لديك
-        }
+        // هنا تضع سكريبت الـ Lightbox الخاص بك كما في ملفك الأصلي
     </script>
 </body>
 </html>
