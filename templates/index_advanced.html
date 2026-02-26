@@ -644,14 +644,14 @@
 
 
 
-
+ 
 
 <!-- ===== كاروسيل احترافي جذاب (يجذب الزبائن) ===== -->
-{% if featured_images %}
-<section class="hero-carousel-section position-relative" style="margin-top: 70px;">
+<!-- {% if featured_images %} -->
+<!-- <section class="hero-carousel-section position-relative" style="margin-top: 70px;"> 
     <div id="professionalCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-        <!-- المؤشرات (النقاط) الأنيقة -->
-        <div class="carousel-indicators">
+         المؤشرات (النقاط) الأنيقة -->
+<!--         <div class="carousel-indicators">
             {% for image in featured_images[:5] %}
             <button type="button" data-bs-target="#professionalCarousel" data-bs-slide-to="{{ loop.index0 }}" 
                     class="{% if loop.first %}active{% endif %}" 
@@ -659,42 +659,41 @@
                     aria-label="Slide {{ loop.index }}"></button>
             {% endfor %}
         </div>
-
+ -->
         <!-- صور الكاروسيل مع تأثير الزوم البطيء -->
-        <div class="carousel-inner" style="height: 600px;">
+       <!--  <div class="carousel-inner" style="height: 600px;">
             {% for image in featured_images[:5] %}
-            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative overflow-hidden">
+            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative overflow-hidden"> -->
                 <!-- الصورة مع تأثير التكبير البطيء -->
-                <div class="zoom-effect" style="width: 100%; height: 100%; animation: zoomInOut 20s infinite alternate;">
+<!--                 <div class="zoom-effect" style="width: 100%; height: 100%; animation: zoomInOut 20s infinite alternate;">
                     <img src="{{ image.image_url }}" 
                          class="d-block w-100 h-100" 
                          alt="{{ image.title }}"
                          style="object-fit: cover;"
                          onerror="this.src='https://via.placeholder.com/1920x1080?text=صورة+مميزة'">
-                </div>
+                </div> -->
                 
                 <!-- طبقة داكنة شفافة لجعل النص واضحاً -->
-                <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
-                
+<!--                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
+ -->                
                 <!-- محتوى النص التسويقي (يظهر بحركة أنيقة) -->
-                <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index: 2; width: 80%; max-width: 800px;">
-                    <!-- أيقونة أو شعار صغير -->
-                    <div class="mb-4 animate__animated animate__fadeInDown">
+ِ                    <!-- أيقونة أو شعار صغير -->
+             <!--        <div class="mb-4 animate__animated animate__fadeInDown">
                         <i class="bi bi-star-fill" style="font-size: 3rem; color: gold; text-shadow: 0 0 20px rgba(255,215,0,0.5);"></i>
-                    </div>
+                    </div> -->
                     
                     <!-- عنوان جذاب -->
-                    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
+                 <!--    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
                         {{ image.title or 'أعمال إبداعية' }}
-                    </h1>
+                    </h1> -->
                     
                     <!-- وصف تسويقي -->
-                    <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.3rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.5);">
+                <!--     <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.3rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.5);">
                         {{ image.description or 'تصاميم فريدة تجمع بين الإبداع والاحترافية' }}
-                    </p>
+                    </p> -->
                     
                     <!-- أزرار دعوة للإجراء (Call to Action) -->
-                    <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
+                <!--     <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
                         <a href="#gallery" class="btn btn-light btn-lg px-5 py-3 rounded-pill" style="font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
                             <i class="bi bi-images me-2"></i>شاهد أعمالنا
                         </a>
@@ -705,10 +704,10 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
+        </div> -->
 
         <!-- أزرار التحكم الأنيقة -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev" 
+      <!--   <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev" 
                 style="width: 5%; opacity: 0.8; transition: opacity 0.3s;">
             <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
             <span class="visually-hidden">السابق</span>
@@ -719,7 +718,7 @@
             <span class="visually-hidden">التالي</span>
         </button>
     </div>
-</section>
+</section>  --> 
 
 <!-- ===== شريط الثقة (يضيف مصداقية) ===== -->
 <div class="container my-5">
@@ -832,7 +831,7 @@
     }
 </style>
 {% endif %}
-
+ -->
 
 
 
