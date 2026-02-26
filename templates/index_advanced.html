@@ -620,7 +620,7 @@
     </nav>
 
     <!-- تعويض المساحة -->
-    <div style="height: 70px;"></div>
+    <div style="height: 001px;"></div>
 
     <!-- ===== قسم الترحيب ===== -->
     <section class="hero-section">
@@ -905,6 +905,38 @@
     },
   });
 </script>
+
+
+
+
+
+    <!-- ===== كاروسيل (إذا وجد صور مميزة) ===== -->
+  <!--   {% if featured_images %}
+    <section class="carousel-section">
+
+        
+        <div class="container">
+            <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in featured_images[:5] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ image.title }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+    {% endif %} -->
 
 
 
