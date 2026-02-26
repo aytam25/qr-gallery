@@ -769,26 +769,7 @@
         </div>
     </nav>
 
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-3 reveal">{{ settings.site_title }}</h1>
-            <p class="lead text-muted mb-5 reveal">{{ settings.site_description }}</p>
-
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    {% for image in featured_images %}
-                    <div class="swiper-slide" onclick="openLightbox('{{ image.image_url }}', '{{ image.title }}', '{{ image.description }}')">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
-                        <div class="slide-caption">
-                            <h5>{{ image.title }}</h5>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
-        </div>
-    </section>
+ 
 
     <!-- ===== قسم الترحيب ===== -->
     <section class="hero-section">
