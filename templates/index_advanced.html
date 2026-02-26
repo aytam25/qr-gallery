@@ -636,7 +636,93 @@
             </div>
         </div>
     </section>
+
+
+
+
+
+
+
+
  
+
+<!-- ===== كاروسيل احترافي جذاب (يجذب الزبائن) ===== -->
+<!-- {% if featured_images %} -->
+<!-- <section class="hero-carousel-section position-relative" style="margin-top: 70px;"> 
+    <div id="professionalCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+         المؤشرات (النقاط) الأنيقة -->
+<!--         <div class="carousel-indicators">
+            {% for image in featured_images[:5] %}
+            <button type="button" data-bs-target="#professionalCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                    class="{% if loop.first %}active{% endif %}" 
+                    style="width: 12px; height: 12px; border-radius: 50%; margin: 0 5px; background: rgba(255,255,255,0.5); border: 2px solid transparent; transition: all 0.3s;"
+                    aria-label="Slide {{ loop.index }}"></button>
+            {% endfor %}
+        </div>
+ -->
+        <!-- صور الكاروسيل مع تأثير الزوم البطيء -->
+       <!--  <div class="carousel-inner" style="height: 600px;">
+            {% for image in featured_images[:5] %}
+            <div class="carousel-item {% if loop.first %}active{% endif %} position-relative overflow-hidden"> -->
+                <!-- الصورة مع تأثير التكبير البطيء -->
+<!--                 <div class="zoom-effect" style="width: 100%; height: 100%; animation: zoomInOut 20s infinite alternate;">
+                    <img src="{{ image.image_url }}" 
+                         class="d-block w-100 h-100" 
+                         alt="{{ image.title }}"
+                         style="object-fit: cover;"
+                         onerror="this.src='https://via.placeholder.com/1920x1080?text=صورة+مميزة'">
+                </div> -->
+                
+                <!-- طبقة داكنة شفافة لجعل النص واضحاً -->
+<!--                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
+ -->                
+                <!-- محتوى النص التسويقي (يظهر بحركة أنيقة) -->
+ِ                    <!-- أيقونة أو شعار صغير -->
+             <!--        <div class="mb-4 animate__animated animate__fadeInDown">
+                        <i class="bi bi-star-fill" style="font-size: 3rem; color: gold; text-shadow: 0 0 20px rgba(255,215,0,0.5);"></i>
+                    </div> -->
+                    
+                    <!-- عنوان جذاب -->
+                 <!--    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">
+                        {{ image.title or 'أعمال إبداعية' }}
+                    </h1> -->
+                    
+                    <!-- وصف تسويقي -->
+                <!--     <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s" style="font-size: 1.3rem; text-shadow: 1px 1px 5px rgba(0,0,0,0.5);">
+                        {{ image.description or 'تصاميم فريدة تجمع بين الإبداع والاحترافية' }}
+                    </p> -->
+                    
+                    <!-- أزرار دعوة للإجراء (Call to Action) -->
+                <!--     <div class="d-flex gap-3 justify-content-center animate__animated animate__fadeInUp animate__delay-2s">
+                        <a href="#gallery" class="btn btn-light btn-lg px-5 py-3 rounded-pill" style="font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+                            <i class="bi bi-images me-2"></i>شاهد أعمالنا
+                        </a>
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill" style="font-weight: 600; backdrop-filter: blur(5px);">
+                            <i class="bi bi-eye me-2"></i>تفاصيل
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div> -->
+
+        <!-- أزرار التحكم الأنيقة -->
+      <!--   <button class="carousel-control-prev" type="button" data-bs-target="#professionalCarousel" data-bs-slide="prev" 
+                style="width: 5%; opacity: 0.8; transition: opacity 0.3s;">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+            <span class="visually-hidden">السابق</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#professionalCarousel" data-bs-slide="next"
+                style="width: 5%; opacity: 0.8; transition: opacity 0.3s;">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="width: 3rem; height: 3rem;"></span>
+            <span class="visually-hidden">التالي</span>
+        </button>
+    </div>
+</section>  --> 
+
+<!-- ===== شريط الثقة (يضيف مصداقية) ===== -->
+ 
+
 
 <!-- CSS خاص بالكاروسيل الاحترافي -->
 <style>
@@ -730,158 +816,70 @@
 
 
 
+ 
  <!-- ===== كاروسيل Flip ثلاثي الأبعاد باستخدام Swiper.js ===== -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-<section class="swiper-flip-section" style="margin-top: 70px; height: 500px; width: 100%;">
-    <div class="swiper myFlipSwiper" style="height: 100%; width: 100%;">
-        <div class="swiper-wrapper">
-            {% for image in featured_images[:6] %}
-            <div class="swiper-slide" style="display: flex; align-items: center; justify-content: center;">
-                <div class="flip-slide-content position-relative" style="width: 90%; height: 90%; border-radius: 25px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
-                    <!-- الصورة -->
-                    <img src="{{ image.image_url }}" 
-                         alt="{{ image.title }}" 
-                         onerror="this.src='https://via.placeholder.com/1200x800?text=صورة+مميزة'" 
-                         style="width:100%; height:100%; object-fit: cover;">
-                    
-                    <!-- طبقة داكنة شفافة للنص -->
-                    <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);"></div>
-                    
-                    <!-- النصوص في الأسفل -->
-                    <div style="position: absolute; bottom: 30px; left: 30px; right: 30px; color: white; text-align: right;">
-                        <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 10px;">{{ image.title or 'عمل إبداعي' }}</h3>
-                        <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 15px;">{{ image.description|truncate(100) or 'تصميم احترافي بجودة عالية' }}</p>
-                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-light rounded-pill px-4 py-2" style="font-weight: 600;">
-                            <i class="bi bi-eye me-2"></i>عرض التفاصيل
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+<section class="swiper-flip-section" style="margin-top: 70px;">
+  <div class="swiper myFlipSwiper">
+    <div class="swiper-wrapper">
+      {% for image in featured_images[:6] %}
+      <div class="swiper-slide">
+        <div class="flip-slide-content position-relative">
+          <!-- الصورة -->
+          <img src="{{ image.image_url }}" 
+               alt="{{ image.title }}" 
+               onerror="this.src='https://via.placeholder.com/1920x1080?text=صورة+مميزة'" 
+               style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
+          
+          <!-- طبقة داكنة -->
+          <div class="overlay"></div>
+          
+          <!-- النصوص -->
+          <div class="flip-slide-text text-center text-white">
+            <h2 class="fw-bold animate__animated animate__fadeInDown">{{ image.title or 'أعمال إبداعية' }}</h2>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">
+              {{ image.description or 'تصاميم فريدة تجمع بين الإبداع والاحترافية' }}
+            </p>
+          </div>
         </div>
-
-        <!-- أزرار التنقل -->
-        <div class="swiper-button-next" style="color: white; background: rgba(0,0,0,0.3); width: 50px; height: 50px; border-radius: 50%;"></div>
-        <div class="swiper-button-prev" style="color: white; background: rgba(0,0,0,0.3); width: 50px; height: 50px; border-radius: 50%;"></div>
-
-        <!-- النقاط -->
-        <div class="swiper-pagination" style="bottom: 10px;"></div>
+      </div>
+      {% endfor %}
     </div>
+
+    <!-- أزرار التنقل -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+
+    <!-- النقاط -->
+    <div class="swiper-pagination"></div>
+  </div>
 </section>
 
-<!-- ===== تفعيل Swiper ===== -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-    const swiper = new Swiper('.myFlipSwiper', {
-        loop: true,
-        effect: 'flip',  // تأثير الفليب ثلاثي الأبعاد
-        grabCursor: true,
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
-</script>
-
+<!-- ===== CSS خاص ===== -->
 <style>
-    /* تنسيقات إضافية */
-    .swiper-flip-section {
-        width: 100%;
-        overflow: hidden;
-    }
-    
-    .swiper-slide {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    /* تحسين الموبايل */
-    @media (max-width: 768px) {
-        .swiper-flip-section {
-            height: 400px !important;
-        }
-        
-        .flip-slide-content h3 {
-            font-size: 1.5rem !important;
-        }
-        
-        .flip-slide-content p {
-            font-size: 0.9rem !important;
-            display: none; /* نخفي الوصف على الموبايل الصغير */
-        }
-        
-        .flip-slide-content .btn {
-            padding: 5px 15px !important;
-            font-size: 0.9rem !important;
-        }
-        
-        .flip-slide-content {
-            width: 95% !important;
-            height: 95% !important;
-        }
-        
-        .swiper-button-next,
-        .swiper-button-prev {
-            width: 35px !important;
-            height: 35px !important;
-        }
-        
-        .swiper-button-next:after,
-        .swiper-button-prev:after {
-            font-size: 1rem !important;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .swiper-flip-section {
-            height: 350px !important;
-        }
-        
-        .flip-slide-content h3 {
-            font-size: 1.2rem !important;
-        }
-        
-        .flip-slide-content .btn {
-            padding: 4px 12px !important;
-            font-size: 0.8rem !important;
-        }
-    }
+.swiper-flip-section {
+  width: 100%;
+  height: 600px;
+}
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.overlay {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+  border-radius:20px;
+}
+.flip-slide-text {
+  position: absolute;
+  bottom: 20%;
+  left:50%;
+  transform: translateX(-50%);
+  max-width: 700px;
+}
 </style>
-
-
-
-<!-- ===== شريط الثقة (يضيف مصداقية) ===== -->
-<div class="container my-5">
-    <div class="row text-center text-white">
-        <div class="col-md-4 mb-3">
-            <i class="bi bi-star-fill" style="color: gold; font-size: 2rem;"></i>
-            <h5>+500 مشروع</h5>
-            <p>أنجزناها باحترافية</p>
-        </div>
-        <div class="col-md-4 mb-3">
-            <i class="bi bi-people-fill" style="color: gold; font-size: 2rem;"></i>
-            <h5>+300 عميل</h5>
-            <p>سعداء بخدماتنا</p>
-        </div>
-        <div class="col-md-4 mb-3">
-            <i class="bi bi-award-fill" style="color: gold; font-size: 2rem;"></i>
-            <h5>15 عاماً</h5>
-            <p>من الخبرة</p>
-        </div>
-    </div>
-</div>
-
-
-
-
 
 <!-- ===== استدعاء مكتبة Swiper ===== -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
@@ -905,6 +903,38 @@
     },
   });
 </script>
+
+
+
+
+
+    <!-- ===== كاروسيل (إذا وجد صور مميزة) ===== -->
+    {% if featured_images %}
+    <section class="carousel-section">
+
+        
+        <div class="container">
+            <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in featured_images[:5] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ image.title }}</h5>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+    {% endif %}
 
 
 
