@@ -836,14 +836,93 @@
 
 
 
+ 
+ <!-- ===== كاروسيل Flip ثلاثي الأبعاد باستخدام Swiper.js ===== -->
+<section class="swiper-flip-section" style="margin-top: 70px;">
+  <div class="swiper myFlipSwiper">
+    <div class="swiper-wrapper">
+      {% for image in featured_images[:6] %}
+      <div class="swiper-slide">
+        <div class="flip-slide-content position-relative">
+          <!-- الصورة -->
+          <img src="{{ image.image_url }}" 
+               alt="{{ image.title }}" 
+               onerror="this.src='https://via.placeholder.com/1920x1080?text=صورة+مميزة'" 
+               style="width:100%; height:100%; object-fit:cover; border-radius:20px;">
+          
+          <!-- طبقة داكنة -->
+          <div class="overlay"></div>
+          
+          <!-- النصوص -->
+          <div class="flip-slide-text text-center text-white">
+            <h2 class="fw-bold animate__animated animate__fadeInDown">{{ image.title or 'أعمال إبداعية' }}</h2>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">
+              {{ image.description or 'تصاميم فريدة تجمع بين الإبداع والاحترافية' }}
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
 
+    <!-- أزرار التنقل -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
 
+    <!-- النقاط -->
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
 
+<!-- ===== CSS خاص ===== -->
+<style>
+.swiper-flip-section {
+  width: 100%;
+  height: 600px;
+}
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.overlay {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.2));
+  border-radius:20px;
+}
+.flip-slide-text {
+  position: absolute;
+  bottom: 20%;
+  left:50%;
+  transform: translateX(-50%);
+  max-width: 700px;
+}
+</style>
 
+<!-- ===== استدعاء مكتبة Swiper ===== -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-
-
-
+<script>
+  var flipSwiper = new Swiper(".myFlipSwiper", {
+    effect: "flip",
+    grabCursor: true,
+    autoplay: {
+      delay: 3500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+</script>
 
 
 
