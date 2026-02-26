@@ -607,9 +607,9 @@
     <section id="featured" class="featured-section">
         <div class="container">
             <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-            <div class="featured-grid">
+             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
                 {% for image in featured_images %}
-                <div class="featured-item">
+                <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
                     <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
                         <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
                     </a>
