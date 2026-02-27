@@ -84,57 +84,145 @@
             box-shadow: 0 5px 15px rgba(102,126,234,0.4);
         }
 
-        /* ===== قسم الترحيب ===== */
-        .hero-section {
-            margin-top: 76px;
-            padding: 100px 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95)), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiPjwvcmVjdD4KPC9zdmc+');
-            position: relative;
-            overflow: hidden;
-            color: white;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
-            animation: rotate 40s linear infinite;
-        }
-        @keyframes rotate { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-        .hero-content { position: relative; z-index: 2; }
-        .hero-logo {
-            max-height: 100px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-            animation: fadeInDown 1s;
-        }
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-            animation: fadeInUp 1s;
-        }
-        .hero-description {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            opacity: 0.95;
-            animation: fadeInUp 1s 0.2s both;
-        }
-        .hero-buttons .btn {
-            margin: 0 5px;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
-            animation: fadeInUp 1s 0.4s both;
-        }
-        .hero-buttons .btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    /* ===== قسم الترحيب المحسن ===== */
+.hero-section {
+    margin-top: 76px;
+    padding: 80px 0;
+    background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95)), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiPjwvcmVjdD4KPC9zdmc+');
+    position: relative;
+    overflow: hidden;
+    color: white;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
 
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+    animation: rotate 40s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ===== الشعار الأكبر ===== */
+.hero-logo-wrapper {
+    animation: fadeInDown 1s;
+}
+
+.hero-logo {
+    max-height: 130px; /* أكبر من السابق */
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    transition: transform 0.5s, filter 0.5s;
+}
+
+.hero-logo:hover {
+    transform: scale(1.05) rotate(2deg);
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.5));
+}
+
+/* ===== العنوان اللامع (Glowing Effect) ===== */
+.glowing-text {
+    font-size: 3.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 20px rgba(255,255,255,0.5),
+        0 0 30px rgba(255,255,255,0.3);
+    animation: glow 3s ease-in-out infinite;
+    color: white;
+}
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(255,255,255,0.8),
+            0 0 20px rgba(255,255,255,0.5),
+            0 0 30px rgba(102,126,234,0.5);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px rgba(255,255,255,1),
+            0 0 40px rgba(255,255,255,0.8),
+            0 0 60px rgba(102,126,234,0.8);
+    }
+}
+
+.hero-description {
+    font-size: 1.4rem;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    max-width: 600px;
+    line-height: 1.6;
+    animation: fadeInUp 1s 0.2s both;
+}
+
+.hero-buttons {
+    animation: fadeInUp 1s 0.4s both;
+}
+
+.hero-buttons .btn {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.hero-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.hero-decoration {
+    animation: fadeIn 1.5s;
+}
+
+/* ===== تحسينات الموبايل ===== */
+@media (max-width: 992px) {
+    .hero-section {
+        text-align: center;
+        min-height: auto;
+        padding: 60px 0;
+    }
+    
+    .glowing-text {
+        font-size: 2.8rem;
+    }
+    
+    .hero-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-decoration {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-logo {
+        max-height: 100px;
+    }
+    
+    .glowing-text {
+        font-size: 2.2rem;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+}
         /* ===== كاروسيل Swiper الاحترافي ===== */
         .swiper-flip-section {
             width: 100%;
@@ -717,21 +805,46 @@
 
     <div style="height: 0px;"></div> <!-- تعويض الشريط -->
 
-    <!-- ===== قسم الترحيب السينمائي ===== -->
-    <section class="hero-section">
-        <div class="container hero-content">
-            {% if settings and settings.site_logo %}
-                <img src="{{ settings.site_logo }}" class="hero-logo" alt="شعار">
-            {% endif %}
-            <h1 class="hero-title">{{ settings.site_title }}</h1>
-            <p class="hero-description">{{ settings.site_description or 'نقدم لكم أجمل الأعمال الفنية والإبداعية' }}</p>
-            <div class="hero-buttons">
-                <a href="#gallery" class="btn btn-light btn-lg"><i class="bi bi-images me-2"></i>استعرض الأعمال</a>
-                <a href="#featured" class="btn btn-outline-light btn-lg"><i class="bi bi-star-fill me-2"></i>المميزة</a>
+
+
+<!-- ===== قسم الترحيب المميز مع شعار لامع ===== -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-50">
+            <!-- الجانب الأيمن: الشعار والعنوان (لأن الموقع عربي) -->
+            <div class="col-lg-6 text-lg-end text-center mb-5 mb-lg-0">
+                {% if settings and settings.site_logo %}
+                <div class="hero-logo-wrapper mb-4">
+                    <img src="{{ settings.site_logo }}" alt="شعار الموقع" class="hero-logo">
+                </div>
+                {% endif %}
+                <h1 class="hero-title glowing-text">
+                    {{ settings.site_title or 'معرض الأعمال ابو النور' }}
+                </h1>
+                <p class="hero-description">
+                    {{ settings.site_description or 'إنجازاتنا في صورة - مرحبا بكم في معرض أعمالنا' }}
+                </p>
+                <div class="hero-buttons">
+                    <a href="#gallery" class="btn btn-light btn-lg me-2">
+                        <i class="bi bi-images me-2"></i>استعرض الأعمال
+                    </a>
+                    <a href="#featured" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-star-fill me-2"></i>المميزة
+                    </a>
+                </div>
+            </div>
+            
+            <!-- الجانب الأيسر: يمكن إضافة صورة أو عنصر زخرفي -->
+            <div class="col-lg-6 text-center">
+                <div class="hero-decoration">
+                    <i class="bi bi-camera-fill" style="font-size: 12rem; opacity: 0.2; color: white;"></i>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
+    
    <!-- ===== كاروسيل Swiper ثلاثي الأبعاد ===== -->
     {% if featured_images %}
     <section class="swiper-flip-section">
