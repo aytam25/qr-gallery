@@ -607,26 +607,6 @@
     <section id="featured" class="featured-section">
         <div class="container">
             <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 20px;">
-                {% for image in featured_images %}
-                <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
-                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                    </a>
-                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-
-    <!-- ===== الصور المميزة ===== -->
-    {% if featured_images %}
-    <section id="featured" class="featured-section">
-        <div class="container">
-            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
             <div class="featured-grid">
                 {% for image in featured_images %}
                 <div class="featured-item">
@@ -650,7 +630,7 @@
             <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
                 <div style="position: relative; width: 100%; padding-top: 75%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <!-- padding-top: 75% = نسبة ارتفاع 3:4 (مثالية للصور العمودية والأفقية) -->
-                    <img src="{{ image.thumbnail_url or image.image_url }}" 
+                 <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
                          alt="{{ image.title }}"
                          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a; padding: 5px;"
                          onerror="this.src='https://via.placeholder.com/300x225?text=صورة'"
