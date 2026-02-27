@@ -149,10 +149,7 @@ class ContactMessage(db.Model):
     def __repr__(self):
         return f'<Message {self.name}: {self.subject}>'
 
-from app import app, db
-with app.app_context():
-    db.create_all()
-    print("✅ تم إنشاء جدول الرسائل")        
+       
 # ==================== الدوال المساعدة ====================
 @login_manager.user_loader
 def load_user(user_id):
@@ -603,12 +600,21 @@ def contact():
     
     if request.method == 'POST':
         try:
+            # طباعة البيانات المستلمة للتأكد (في Terminal)
+            print("📩 تم استلام طلب POST")
+            print(f"البيانات: {request.form}")
+            
             # استقبال البيانات من النموذج
             name = request.form.get('name')
             email = request.form.get('email')
             phone = request.form.get('phone')
             subject = request.form.get('subject')
             message = request.form.get('message')
+            
+            # التحقق من الحقول المطلوبة
+            if not name or not email or not subject or not message:
+                flash('❌ جميع الحقول المطلوبة يجب أن تمتلئ', 'danger')
+                return redirect(url_for('contact'))
             
             # حفظ الرسالة في قاعدة البيانات
             new_message = ContactMessage(
@@ -622,17 +628,13 @@ def contact():
             db.session.add(new_message)
             db.session.commit()
             
-            # إرسال إشعار للأدمن عبر البريد (اختياري)
-            try:
-                send_admin_notification(new_message)
-            except:
-                pass  # إذا فشل البريد، نتجاهل
-            
+            print(f"✅ تم حفظ رسالة جديدة من {name}")
             flash('✅ تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.', 'success')
             
         except Exception as e:
-            print(f"خطأ في حفظ الرسالة: {e}")
+            print(f"❌ خطأ في حفظ الرسالة: {e}")
             flash('❌ حدث خطأ في إرسال الرسالة. حاول مرة أخرى.', 'danger')
+            db.session.rollback()
         
         return redirect(url_for('contact'))
     
