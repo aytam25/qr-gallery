@@ -195,6 +195,20 @@
                                 <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
                             </div>
                         </div>
+                    </div>                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                   <a class="nav-link" href="{{ url_for('admin_messages') }}">
+    <i class="bi bi-envelope"></i> الرسائل
+    {% if unread_count > 0 %}
+    <span class="badge bg-danger ms-2">{{ unread_count }}</span>
+    {% endif %}
+</a>
+                                </div>
+                                <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
