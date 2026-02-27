@@ -133,7 +133,26 @@ class ActivityLog(db.Model):
     details = db.Column(db.JSON)
     ip_address = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+class ContactMessage(db.Model):
+    """نموذج رسائل الاتصال"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20))
+    subject = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)  # هل تمت قراءتها؟
+    is_replied = db.Column(db.Boolean, default=False)  # هل تم الرد عليها؟
+    ip_address = db.Column(db.String(50))
+    
+    def __repr__(self):
+        return f'<Message {self.name}: {self.subject}>'
 
+from app import app, db
+with app.app_context():
+    db.create_all()
+    print("✅ تم إنشاء جدول الرسائل")        
 # ==================== الدوال المساعدة ====================
 @login_manager.user_loader
 def load_user(user_id):
@@ -583,22 +602,114 @@ def contact():
     categories = Category.query.all()
     
     if request.method == 'POST':
-        # استقبال البيانات من النموذج
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        subject = request.form.get('subject')
-        message = request.form.get('message')
+        try:
+            # استقبال البيانات من النموذج
+            name = request.form.get('name')
+            email = request.form.get('email')
+            phone = request.form.get('phone')
+            subject = request.form.get('subject')
+            message = request.form.get('message')
+            
+            # حفظ الرسالة في قاعدة البيانات
+            new_message = ContactMessage(
+                name=name,
+                email=email,
+                subject=subject,
+                message=message,
+                phone=phone,
+                ip_address=request.remote_addr
+            )
+            db.session.add(new_message)
+            db.session.commit()
+            
+            # إرسال إشعار للأدمن عبر البريد (اختياري)
+            try:
+                send_admin_notification(new_message)
+            except:
+                pass  # إذا فشل البريد، نتجاهل
+            
+            flash('✅ تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.', 'success')
+            
+        except Exception as e:
+            print(f"خطأ في حفظ الرسالة: {e}")
+            flash('❌ حدث خطأ في إرسال الرسالة. حاول مرة أخرى.', 'danger')
         
-        # هنا يمكنك حفظ الرسالة في قاعدة البيانات أو إرسال بريد إلكتروني
-        
-        # رسالة تأكيد للمستخدم
-        flash('تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.', 'success')
-        
-        # إعادة التوجيه لنفس الصفحة
         return redirect(url_for('contact'))
     
     return render_template('contact.html', settings=settings, categories=categories)
+
+def send_admin_notification(message):
+    """إرسال إشعار بريد إلكتروني للأدمن عند وصول رسالة جديدة"""
+    try:
+        from flask_mail import Mail, Message
+        mail = Mail(app)
+        
+        admin_email = SiteSettings.query.first().contact_email or 'admin@example.com'
+        
+        msg = Message(
+            subject=f"📬 رسالة جديدة من {message.name}",
+            sender=app.config.get('MAIL_USERNAME'),
+            recipients=[admin_email]
+        )
+        msg.body = f"""
+        📬 رسالة جديدة من موقع معرض الأعمال
+        
+        👤 الاسم: {message.name}
+        📧 البريد: {message.email}
+        📞 الهاتف: {message.phone or 'غير متوفر'}
+        📝 الموضوع: {message.subject}
+        
+        💬 الرسالة:
+        {message.message}
+        
+        🕒 التاريخ: {message.created_at.strftime('%Y-%m-%d %H:%M')}
+        """
+        mail.send(msg)
+    except Exception as e:
+        print(f"⚠️ فشل إرسال بريد الإشعار: {e}")
+
+@app.route('/admin/messages')
+@login_required
+def admin_messages():
+    """صفحة إدارة رسائل الاتصال للأدمن"""
+    if current_user.role != 'admin':
+        abort(403)
+    
+    # جلب جميع الرسائل مع الترتيب (الأحدث أولاً)
+    messages = ContactMessage.query.order_by(ContactMessage.created_at.desc()).all()
+    
+    # تحديث عدد الرسائل غير المقروءة
+    unread_count = ContactMessage.query.filter_by(is_read=False).count()
+    
+    return render_template('admin_messages.html', 
+                         messages=messages, 
+                         unread_count=unread_count)
+
+@app.route('/admin/messages/<int:message_id>/read', methods=['POST'])
+@login_required
+def mark_message_read(message_id):
+    """تحديد رسالة كمقروءة"""
+    if current_user.role != 'admin':
+        abort(403)
+    
+    message = ContactMessage.query.get_or_404(message_id)
+    message.is_read = True
+    db.session.commit()
+    
+    return jsonify({'success': True})
+@app.route('/admin/messages/<int:message_id>/delete', methods=['POST'])
+@login_required
+def delete_message(message_id):
+    """حذف رسالة"""
+    if current_user.role != 'admin':
+        abort(403)
+    
+    message = ContactMessage.query.get_or_404(message_id)
+    db.session.delete(message)
+    db.session.commit()
+    
+    flash('✅ تم حذف الرسالة', 'success')
+    return redirect(url_for('admin_messages'))
 
 @app.route('/admin')
 @login_required
@@ -606,7 +717,7 @@ def admin_dashboard():
     """لوحة التحكم الرئيسية"""
     if current_user.role not in ['admin', 'editor']:
         abort(403)
-    
+
     today = datetime.utcnow().date()
     stats = {
         'total_images': Image.query.count(),
@@ -636,12 +747,13 @@ def admin_dashboard():
     
     site_url = request.host_url
     qr_base64 = generate_qr_code(site_url)
-    
+    unread_messages_count = ContactMessage.query.filter_by(is_read=False).count()
     return render_template('admin_dashboard_advanced.html',
-                         stats=stats,
-                         chart_data=json.dumps(chart_data),
-                         qr_code=qr_base64,
-                         site_url=site_url)
+                     stats=stats,
+                     chart_data=json.dumps(chart_data),
+                     qr_code=qr_base64,
+                     site_url=site_url,
+                     unread_messages_count=unread_messages_count)  # هذا السطر الجديد
 
 @app.route('/admin/images')
 @login_required
@@ -1050,45 +1162,63 @@ def upload_logo():
 @login_required
 def analytics():
     """صفحة التحليلات"""
-    period = request.args.get('period', 'week')
-    
-    if period == 'week':
-        days = 7
-    elif period == 'month':
-        days = 30
-    else:
-        days = 365
-    
-    start_date = datetime.utcnow() - timedelta(days=days)
-    
-    views_over_time = db.session.query(
-        func.date(ActivityLog.timestamp).label('date'),
-        func.count().label('count')
-    ).filter(
-        ActivityLog.action == 'view_image',
-        ActivityLog.timestamp >= start_date
-    ).group_by('date').all()
-    
-    popular_images = Image.query.order_by(Image.views.desc()).limit(10).all()
-    
-    active_users = db.session.query(
-        User.username,
-        func.count(ActivityLog.id).label('activity_count')
-    ).join(ActivityLog).group_by(User.id).order_by(func.count(ActivityLog.id).desc()).limit(5).all()
-    
-    stats = {
-        'total_views': db.session.query(func.sum(Image.views)).scalar() or 0,
-        'total_downloads': db.session.query(func.sum(Image.downloads)).scalar() or 0,
-        'total_images': Image.query.count(),
-        'total_users': User.query.count()
-    }
-    
-    return render_template('analytics.html',
-                         period=period,
-                         views_over_time=views_over_time,
-                         popular_images=popular_images,
-                         active_users=active_users,
-                         stats=stats)
+    try:
+        period = request.args.get('period', 'week')
+        
+        # تحديد الفترة
+        if period == 'week':
+            days = 7
+        elif period == 'month':
+            days = 30
+        else:
+            days = 365
+        
+        start_date = datetime.utcnow() - timedelta(days=days)
+        
+        # المشاهدات عبر الزمن (مع التأكد من وجود بيانات)
+        views_over_time = []
+        try:
+            views_over_time = db.session.query(
+                func.date(ActivityLog.timestamp).label('date'),
+                func.count().label('count')
+            ).filter(
+                ActivityLog.action == 'view_image',
+                ActivityLog.timestamp >= start_date
+            ).group_by('date').all()
+        except:
+            views_over_time = []
+        
+        # أكثر الصور مشاهدة
+        popular_images = Image.query.order_by(Image.views.desc()).limit(10).all()
+        
+        # أكثر المستخدمين نشاطاً
+        active_users = []
+        try:
+            active_users = db.session.query(
+                User.username,
+                func.count(ActivityLog.id).label('activity_count')
+            ).join(ActivityLog, isouter=True).group_by(User.id).order_by(func.count(ActivityLog.id).desc()).limit(5).all()
+        except:
+            active_users = []
+        
+        # إحصائيات سريعة
+        stats = {
+            'total_views': db.session.query(func.sum(Image.views)).scalar() or 0,
+            'total_downloads': db.session.query(func.sum(Image.downloads)).scalar() or 0,
+            'total_images': Image.query.count(),
+            'total_users': User.query.count()
+        }
+        
+        return render_template('analytics.html',
+                             period=period,
+                             views_over_time=views_over_time,
+                             popular_images=popular_images,
+                             active_users=active_users,
+                             stats=stats)
+    except Exception as e:
+        print(f"⚠️ خطأ في التحليلات: {e}")
+        flash('حدث خطأ في تحميل التحليلات', 'danger')
+        return redirect(url_for('admin_dashboard'))
 
 # ==================== النسخ الاحتياطي ====================
 @app.route('/admin/backup')
