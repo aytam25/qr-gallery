@@ -22,6 +22,18 @@ from PIL import Image as PILImage
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 
+from flask_mail import Mail, Message
+
+# إعدادات البريد
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'your-email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your-app-password'
+mail = Mail(app)
+
+ 
+    
 # ==================== إعدادات المجلدات (يجب أن تكون قبل استخدامها) ====================
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['QR_FOLDER'] = 'static/qrcodes'
@@ -564,17 +576,29 @@ def about():
         print(f"خطأ في صفحة about: {e}")
         return render_template('500.html'), 500
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    """صفحة اتصل بنا"""
-    try:
-        settings = SiteSettings.query.first()
-        categories = Category.query.all()
-        return render_template('contact.html', settings=settings, categories=categories)
-    except Exception as e:
-        print(f"خطأ في صفحة contact: {e}")
-        return render_template('500.html'), 500
- 
+    """صفحة اتصل بنا - تستقبل الرسائل"""
+    settings = SiteSettings.query.first()
+    categories = Category.query.all()
+    
+    if request.method == 'POST':
+        # استقبال البيانات من النموذج
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
+        
+        # هنا يمكنك حفظ الرسالة في قاعدة البيانات أو إرسال بريد إلكتروني
+        
+        # رسالة تأكيد للمستخدم
+        flash('تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.', 'success')
+        
+        # إعادة التوجيه لنفس الصفحة
+        return redirect(url_for('contact'))
+    
+    return render_template('contact.html', settings=settings, categories=categories)
 
 @app.route('/admin')
 @login_required
