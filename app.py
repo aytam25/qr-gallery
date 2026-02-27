@@ -546,7 +546,36 @@ def edit_profile():
     
     return render_template('edit_profile.html', user=current_user)
 
+
+
+
+
+
 # ==================== لوحة التحكم ====================
+
+@app.route('/about')
+def about():
+    """صفحة من نحن"""
+    try:
+        settings = SiteSettings.query.first()
+        categories = Category.query.all()
+        return render_template('about.html', settings=settings, categories=categories)
+    except Exception as e:
+        print(f"خطأ في صفحة about: {e}")
+        return render_template('500.html'), 500
+
+@app.route('/contact')
+def contact():
+    """صفحة اتصل بنا"""
+    try:
+        settings = SiteSettings.query.first()
+        categories = Category.query.all()
+        return render_template('contact.html', settings=settings, categories=categories)
+    except Exception as e:
+        print(f"خطأ في صفحة contact: {e}")
+        return render_template('500.html'), 500
+ 
+
 @app.route('/admin')
 @login_required
 def admin_dashboard():
@@ -1140,7 +1169,7 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-# ==================== تهيئة قاعدة البيانات ====================
+
 def init_db():
     """تهيئة قاعدة البيانات"""
     with app.app_context():
