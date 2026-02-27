@@ -789,27 +789,6 @@
     </section>
     {% endif %}
 
-    <!-- ===== الصور المميزة ===== -->
-    {% if featured_images %}
-    <section id="featured" class="featured-section">
-        <div class="container">
-            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-            <div class="featured-grid">
-                {% for image in featured_images %}
-                <div class="featured-item">
-                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                    </a>
-                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-
-
 
 <!-- ===== الصور المميزة مع زر التحميل ===== -->
 {% if featured_images %}
@@ -829,6 +808,9 @@
                             <i class="bi bi-download"></i>
                         </a>
                     </div>
+                    <span class="featured-badge">
+                        <i class="bi bi-star-fill"></i> مميزة
+                    </span>
                 </div>
             </div>
             {% endfor %}
@@ -839,30 +821,6 @@
 
 
 
-    
-<!-- ===== الصور المميزة بإطار ثابت وصورة كاملة ===== -->
-<section id="featured" class="featured-section">
-    <div class="container">
-        <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-        <div class="featured-grid">
-            {% for image in featured_images %}
-            <div class="featured-card">
-                <div class="featured-image-wrapper">
-                    <img src="{{ image.thumbnail_url or image.image_url }}" 
-                         alt="{{ image.title }}"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=صورة'"
-                         loading="lazy">
-                    <span class="featured-badge">
-                        <i class="bi bi-star-fill"></i> مميزة
-                    </span>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-    
     <!-- ===== المعرض الرئيسي ===== -->
     <section id="gallery" class="gallery-section">
         <div class="container">
