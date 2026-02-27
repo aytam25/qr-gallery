@@ -107,6 +107,14 @@
                     <a class="nav-link" href="{{ url_for('manage_images') }}"><i class="bi bi-images"></i> إدارة الصور</a>
                     <a class="nav-link" href="{{ url_for('upload_images') }}"><i class="bi bi-cloud-upload"></i> رفع صور</a>
                     <a class="nav-link" href="{{ url_for('manage_categories') }}"><i class="bi bi-tags"></i> التصنيفات</a>
+                        <!-- رابط الرسائل هنا -->
+    <a class="nav-link" href="{{ url_for('admin_messages') }}">
+        <i class="bi bi-envelope"></i> الرسائل
+        {% if unread_messages_count and unread_messages_count > 0 %}
+        <span class="badge bg-danger ms-2">{{ unread_messages_count }}</span>
+        {% endif %}
+    </a>
+    
                    <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
                    <!-- في الشريط الجانبي - بعد إعدادات وقبل عرض الموقع -->
  
@@ -191,20 +199,6 @@
                                 <div>
                                     <div class="stat-number">{{ stats.images_today }}</div>
                                     <div class="text-muted">صور اليوم</div>
-                                </div>
-                                <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
-                            </div>
-                        </div>
-                    </div>                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                   <a class="nav-link" href="{{ url_for('admin_messages') }}">
-    <i class="bi bi-envelope"></i> الرسائل
-    {% if unread_count > 0 %}
-    <span class="badge bg-danger ms-2">{{ unread_count }}</span>
-    {% endif %}
-</a>
                                 </div>
                                 <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
                             </div>
