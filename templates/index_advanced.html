@@ -467,6 +467,90 @@
             .flip-slide-text p { display: none; }
             .flip-slide-text h3 { font-size: 1.2rem; }
         }
+
+
+
+
+        /* ===== الصور المميزة بتصميم موحد ===== */
+.featured-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 60px 0;
+    margin: 40px 0;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 0 20px;
+}
+
+.featured-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.featured-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.featured-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3; /* نسبة 4:3 (عرض 4، ارتفاع 3) - يمكن تغييرها */
+    overflow: hidden;
+    background: #1a1a1a;
+}
+
+.featured-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* الصورة تغطي الإطار بالكامل (قد تقص الأطراف) */
+    transition: transform 0.5s;
+}
+
+.featured-card:hover .featured-image-wrapper img {
+    transform: scale(1.1);
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: gold;
+    color: #333;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+        
  </style>
 </head>
 <body>
@@ -621,24 +705,20 @@
     </section>
     {% endif %}
 
-<!-- ===== الصور المميزة بمعادلات ذكية ===== -->
+<!-- ===== الصور المميزة بإطار ثابت وصورة كاملة ===== -->
 <section id="featured" class="featured-section">
     <div class="container">
         <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        <div class="featured-grid">
             {% for image in featured_images %}
-            <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
-                <div style="position: relative; width: 100%; padding-top: 75%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <!-- padding-top: 75% = نسبة ارتفاع 3:4 (مثالية للصور العمودية والأفقية) -->
-                 <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+            <div class="featured-card">
+                <div class="featured-image-wrapper">
+                    <img src="{{ image.thumbnail_url or image.image_url }}" 
                          alt="{{ image.title }}"
-                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #1a1a1a; padding: 5px;"
-                         onerror="this.src='https://via.placeholder.com/300x225?text=صورة'"
+                         onerror="this.src='https://via.placeholder.com/400x300?text=صورة'"
                          loading="lazy">
-                    
-                    <!-- شارة مميزة -->
-                    <span style="position: absolute; top: 10px; right: 10px; background: gold; color: #333; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 10;">
-                        <i class="bi bi-star-fill"></i>
+                    <span class="featured-badge">
+                        <i class="bi bi-star-fill"></i> مميزة
                     </span>
                 </div>
             </div>
@@ -646,8 +726,6 @@
         </div>
     </div>
 </section>
-
-
 
     
     <!-- ===== المعرض الرئيسي ===== -->
