@@ -528,7 +528,7 @@
         </div>
     </nav>
 
-    <div style="height: 76px;"></div> <!-- تعويض الشريط -->
+    <div style="height: 0px;"></div> <!-- تعويض الشريط -->
 
     <!-- ===== قسم الترحيب السينمائي ===== -->
     <section class="hero-section">
@@ -548,7 +548,7 @@
    <!-- ===== كاروسيل Swiper ثلاثي الأبعاد ===== -->
     {% if featured_images %}
     <section class="swiper-flip-section">
-        <div class="swiper mySwiper" style="height:100%; width:100%;">
+        <div class="swiper mySwiper" style="height:120%; width:100%;">
             <div class="swiper-wrapper">
                 {% for image in featured_images[:6] %}
                 <div class="swiper-slide">
@@ -607,7 +607,7 @@
     <section id="featured" class="featured-section">
         <div class="container">
             <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 20px;">
                 {% for image in featured_images %}
                 <div style="border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s;">
                     <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
@@ -622,7 +622,24 @@
     {% endif %}
 
 
-
+    <!-- ===== الصور المميزة ===== -->
+    {% if featured_images %}
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
+            <div class="featured-grid">
+                {% for image in featured_images %}
+                <div class="featured-item">
+                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
+                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                    </a>
+                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
 
 <!-- ===== الصور المميزة بمعادلات ذكية ===== -->
 <section id="featured" class="featured-section">
