@@ -1532,6 +1532,68 @@ const categoriesSwiper = new Swiper('.categories-swiper', {
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeLightbox();
         });
+
+        // ===== سلايدر الصور (مستوحى من التصميم) =====
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slider-section .slide');
+const dots = document.querySelectorAll('.slider-section .dot');
+const prevBtn = document.querySelector('.slider-prev');
+const nextBtn = document.querySelector('.slider-next');
+let slideInterval;
+
+function showSlide(index) {
+    if (!slides.length) return;
+    
+    if (index >= slides.length) index = 0;
+    if (index < 0) index = slides.length - 1;
+    
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+    
+    currentSlide = index;
+}
+
+function changeSlide(direction) {
+    showSlide(currentSlide + direction);
+    resetInterval();
+}
+
+function goToSlide(index) {
+    showSlide(index);
+    resetInterval();
+}
+
+function resetInterval() {
+    clearInterval(slideInterval);
+    startAutoSlide();
+}
+
+function startAutoSlide() {
+    if (slides.length > 1) {
+        slideInterval = setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+    }
+}
+
+// تشغيل السلايدر
+if (slides.length > 0) {
+    startAutoSlide();
+}
+
+// ربط الأزرار
+if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => changeSlide(-1));
+    nextBtn.addEventListener('click', () => changeSlide(1));
+    
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => goToSlide(i));
+    });
+}
+
     </script>
 </body>
 </html>
