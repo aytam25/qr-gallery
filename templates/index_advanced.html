@@ -683,7 +683,312 @@
     }
 }
 
+/* ===== قسم التصنيفات المتطور ===== */
+.categories-section {
+    background: linear-gradient(to bottom, #ffffff, #f8fafc);
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
 
+/* خلفية زخرفية خفيفة */
+.categories-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(102,126,234,0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* تنسيق رأس القسم */
+.section-header {
+    position: relative;
+    z-index: 2;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+
+.title-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+}
+
+.title-text {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.title-badge {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.view-all-btn {
+    background: white;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.view-all-btn:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102,126,234,0.3);
+}
+
+/* سلايدر التصنيفات */
+.categories-slider-wrapper {
+    padding: 20px 0 10px;
+    position: relative;
+    z-index: 2;
+}
+
+/* أزرار التنقل */
+.swiper-nav-buttons {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.category-nav-btn {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-nav-btn::after {
+    display: none; /* إخفاء أيقونات Swiper الافتراضية */
+}
+
+.category-nav-btn i {
+    font-size: 1.2rem;
+    color: var(--primary);
+    transition: all 0.3s;
+}
+
+.category-nav-btn:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    transform: scale(1.1);
+}
+
+.category-nav-btn:hover i {
+    color: white;
+}
+
+.swiper-button-prev {
+    left: -20px;
+}
+
+.swiper-button-next {
+    right: -20px;
+}
+
+/* بطاقة التصنيف */
+.category-card {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border-radius: 20px;
+    padding: 25px 15px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(102,126,234,0.15);
+    border-color: transparent;
+}
+
+.category-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* حاوية الصورة/الأيقونة */
+.category-image-wrapper {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
+}
+
+.category-card:hover .category-image-wrapper {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%);
+}
+
+.category-icon i {
+    font-size: 3rem;
+    color: var(--primary);
+    transition: all 0.3s;
+}
+
+.category-card:hover .category-icon i {
+    transform: scale(1.1);
+    color: var(--secondary);
+}
+
+/* معلومات التصنيف */
+.category-info {
+    position: relative;
+    z-index: 2;
+}
+
+.category-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.category-card:hover .category-name {
+    color: var(--primary);
+}
+
+.category-count {
+    font-size: 0.85rem;
+    color: var(--gray);
+    background: #f0f3f8;
+    padding: 3px 12px;
+    border-radius: 50px;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.category-card:hover .category-count {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+}
+
+/* مؤشرات الصفحات (Pagination) */
+.categories-pagination {
+    position: relative;
+    margin-top: 30px;
+}
+
+.categories-pagination .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #ddd;
+    opacity: 1;
+    transition: all 0.3s;
+}
+
+.categories-pagination .swiper-pagination-bullet-active {
+    width: 30px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+/* تحسينات الموبايل */
+@media (max-width: 768px) {
+    .title-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .title-text {
+        font-size: 1.5rem;
+    }
+    
+    .title-badge {
+        font-size: 0.8rem;
+        padding: 3px 10px;
+    }
+    
+    .view-all-btn {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .category-image-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .category-icon i {
+        font-size: 2.2rem;
+    }
+    
+    .category-name {
+        font-size: 0.95rem;
+    }
+    
+    .category-nav-btn {
+        display: none; /* إخفاء الأزرار على الموبايل */
+    }
+}
     </style>
 </head>
 <body>
@@ -835,6 +1140,74 @@
         </div>
     </section>
     {% endif %}
+
+
+    <!-- ===== أقسام التصنيفات المتطورة ===== -->
+{% if categories %}
+<section class="categories-section py-5">
+    <div class="container">
+        <!-- رأس القسم بشكل أكثر جاذبية -->
+        <div class="section-header mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="section-title">
+                        <span class="title-icon"><i class="fas fa-th-large"></i></span>
+                        <span class="title-text">تصفح الأقسام</span>
+                        <span class="title-badge">{{ categories|length }} قسم</span>
+                    </h2>
+                    <p class="text-muted mb-0">اكتشف مجموعاتنا المتنوعة من الصور الفنية</p>
+                </div>
+                <a href="#" class="view-all-btn">
+                    <span>عرض الكل</span>
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- سلايدر التصنيفات المحسّن -->
+        <div class="position-relative categories-slider-wrapper">
+            <!-- أزرار التنقل (ستظهر عند التحويم) -->
+            <div class="swiper-nav-buttons">
+                <div class="swiper-button-prev category-nav-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="swiper-button-next category-nav-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+
+            <!-- سلايدر التصنيفات -->
+            <div class="swiper categories-swiper">
+                <div class="swiper-wrapper">
+                    {% for category, count in categories %}
+                    <div class="swiper-slide">
+                        <a href="{{ url_for('index') }}?category={{ category.id }}" class="category-card">
+                            <div class="category-image-wrapper">
+                                {% if category.image %}
+                                    <img src="{{ category.image }}" alt="{{ category.name }}" class="category-image">
+                                {% else %}
+                                    <div class="category-icon">
+                                        <i class="fas fa-folder"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="category-info">
+                                <h4 class="category-name">{{ category.name }}</h4>
+                                <span class="category-count">{{ count }} صورة</span>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- مؤشرات الصفحات (Pagination Dots) -->
+                <div class="swiper-pagination categories-pagination"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 
     <!-- ===== الصور المميزة (مستوحاة من قسم المنتجات) ===== -->
     {% if featured_images %}
@@ -1102,7 +1475,43 @@
                 1024: { slidesPerView: 6 }
             }
         });
-
+// ===== تفعيل سلايدر التصنيفات المحسّن =====
+const categoriesSwiper = new Swiper('.categories-swiper', {
+    slidesPerView: 2,
+    spaceBetween: 15,
+    loop: true,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+    },
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+    },
+    breakpoints: {
+        480: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+        },
+        640: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+        },
+        768: {
+            slidesPerView: 5,
+            spaceBetween: 25,
+        },
+        1024: {
+            slidesPerView: 6,
+            spaceBetween: 25,
+        },
+    },
+});
         // ===== Lightbox =====
         function openLightbox(src, id) {
             document.getElementById('lightbox').style.display = 'flex';
