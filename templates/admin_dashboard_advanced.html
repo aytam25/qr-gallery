@@ -9,6 +9,80 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+function markAsRead(messageId, element) {
+    // إرسال طلب لتحديد الرسالة كمقروءة
+    fetch(`/admin/messages/${messageId}/read`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // إخفاء الرسالة مباشرة من الصفحة
+            const messageCard = document.getElementById(`message-${messageId}`);
+            if (messageCard) {
+                messageCard.style.transition = 'opacity 0.5s';
+                messageCard.style.opacity = '0';
+                setTimeout(() => {
+                    messageCard.remove();
+                    updateUnreadCount();
+                }, 500);
+            }
+            
+            // إظهار رسالة نجاح
+            showToast('✅ تم تحديد الرسالة كمقروءة', 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('❌ حدث خطأ', 'danger');
+    });
+}
+
+function showToast(message, type = 'success') {
+    // إنشاء عنصر toast
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    toast.style.zIndex = '9999';
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    // حذف العنصر بعد الإخفاء
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function updateUnreadCount() {
+    // تحديث عداد الرسائل غير المقروءة
+    fetch('/api/unread-count')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.querySelector('.unread-badge');
+            if (badge) {
+                if (data.count > 0) {
+                    badge.textContent = `غير مقروء: ${data.count}`;
+                } else {
+                    badge.textContent = 'غير مقروء: 0';
+                }
+            }
+        });
+}
+</script>
     <style>
         :root {
             --primary-color: #667eea;
@@ -114,7 +188,7 @@
         <span class="badge bg-danger ms-2">{{ unread_messages_count }}</span>
         {% endif %}
     </a>
-    
+
                    <a class="nav-link" href="{{ url_for('site_settings') }}"><i class="bi bi-gear"></i> الإعدادات</a>
                    <!-- في الشريط الجانبي - بعد إعدادات وقبل عرض الموقع -->
  

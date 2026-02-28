@@ -713,6 +713,13 @@ def delete_message(message_id):
     flash('✅ تم حذف الرسالة', 'success')
     return redirect(url_for('admin_messages'))
 
+@app.route('/api/unread-count')
+@login_required
+def api_unread_count():
+    """API للحصول على عدد الرسائل غير المقروءة"""
+    count = ContactMessage.query.filter_by(is_read=False).count()
+    return jsonify({'count': count})
+
 @app.route('/admin')
 @login_required
 def admin_dashboard():
