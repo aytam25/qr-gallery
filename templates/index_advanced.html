@@ -3,919 +3,633 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ settings.site_title }} – معرض الأعمال الفنية</title>
+    <title>{{ settings.site_title }} | معرض فني</title>
 
-    <!-- === مكتبات CSS الأساسية === -->
+    <!-- SEO -->
+    <meta name="description" content="{{ settings.site_description or 'معرض أعمال فني احترافي' }}">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap & Lightbox -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 
     <style>
-        /* ===== متغيرات الألوان الأساسية ===== */
+        /* ===== المتغيرات الرئيسية ===== */
         :root {
-            --primary: {{ settings.theme_color or '#667eea' }};
-            --primary-gradient: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
-            --dark-bg: #1a1a1a;
-            --glass: rgba(255, 255, 255, 0.95);
-            --shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.25);
-            --text-light: #f8f9fa;
-            --text-dark: #333;
+            --primary: {{ settings.theme_color or '#0ea5e9' }};
+            --primary-dark: #0284c7;
+            --primary-light: #38bdf8;
+            --secondary: #06b6d4;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --dark-secondary: #1e293b;
+            --light: #f1f5f9;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #3b82f6 100%);
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-gradient);
-            min-height: 100vh;
-            color: var(--text-dark);
+            font-family: 'Cairo', sans-serif;
+            background: var(--light);
+            color: var(--dark);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* ===== شريط التنقل الزجاجي ===== */
-        .navbar {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            padding: 0.8rem 0;
-            transition: all 0.3s;
+        /* ===== توب بار (Header Top) ===== */
+        .header-top {
+            background: var(--dark-secondary);
+            color: var(--light);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .navbar-brand img {
-            max-height: 45px;
-            border-radius: 8px;
-            transition: transform 0.3s;
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .navbar-brand img:hover { transform: scale(1.05); }
-        .nav-link {
-            color: var(--text-dark);
-            font-weight: 500;
-            padding: 0.5rem 1rem !important;
+        .header-top-info {
+            display: flex;
+            gap: 20px;
+        }
+        .header-top-info span i {
+            margin-left: 6px;
+            color: var(--primary-light);
+        }
+        .header-social a {
+            color: var(--light);
+            margin-right: 12px;
+            transition: var(--transition);
+        }
+        .header-social a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* ===== الهيدر الرئيسي ===== */
+        .header-main {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 0;
+        }
+        .header-main .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo img {
+            max-height: 55px;
+            transition: var(--transition);
+        }
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
             position: relative;
-            transition: color 0.3s;
+            padding: 5px 0;
+            transition: var(--transition);
         }
-        .nav-link::after {
+        .nav-menu a::after {
             content: '';
             position: absolute;
             bottom: 0;
-            right: 50%;
+            right: 0;
             width: 0;
             height: 2px;
-            background: var(--primary);
-            transition: all 0.3s;
-            transform: translateX(50%);
+            background: var(--gradient);
+            transition: width 0.3s;
         }
-        .nav-link:hover::after { width: 80%; }
-        .nav-link:hover { color: var(--primary); }
-        .btn-qr {
-            background: var(--primary-gradient);
-            color: white;
-            width: 38px;
-            height: 38px;
-            border: none;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        .btn-qr:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
-        }
-
-/* ===== قسم الترحيب المبسط ===== */
-.hero-section {
-    margin-top: 70px; /* مسافة تحت الشريط العلوي */
-    padding: 40px 0; /* تقليل الارتفاع بشكل كبير */
-    background: linear-gradient(135deg, var(--primary-color) 0%, #764ba2 100%);
-    color: Green;
-    min-height: auto; /* إلغاء الارتفاع القسري */
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-
-  .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
-            animation: rotate 30s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-
-
-        
-/* ===== قسم الترحيب مع حركة الخطوط ===== */
-.hero-section {
-    margin-top: 70px;
-    padding: 60px 0; /* تم تقليل الارتفاع قليلاً */
-    background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%);
-    position: relative;
-    overflow: hidden;
-    color: white;
-    text-align: center;
-}
-
-/* حركة الخطوط الدائرية (محفوظة) */
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
-    animation: rotate 30s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-/* ===== الشاعر والعنوان معاً ===== */
-.hero-logo-wrapper {
-    flex-shrink: 0;
-}
-
-.hero-logo {
-    max-height: 80px; /* حجم مناسب للشعار */
-    width: auto;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.hero-title {
-    font-size: 3.2rem; /* تم تقليل الحجم قليلاً للتناسق */
-    font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    margin-bottom: 0; /* إزالة المسافة السفلية */
-}
-
-.hero-description {
-    font-size: 1.3rem;
-    max-width: 700px;
-    margin: 1rem auto 1.5rem; /* تعديل المسافات */
-    opacity: 0.9;
-}
-
-.hero-buttons .btn {
-    margin: 0 5px;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: transform 0.3s;
-}
-
-.hero-buttons .btn:hover {
-    transform: translateY(-3px);
-}
-
-/* ===== تحسينات الموبايل ===== */
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 40px 0;
-    }
-    
-    .hero-logo {
-        max-height: 60px;
-    }
-    
-    .hero-title {
-        font-size: 2.2rem;
-    }
-    
-    .hero-description {
-        font-size: 1rem;
-    }
-    
-    /* في الموبايل، الشعار فوق العنوان */
-    .d-flex {
-        flex-direction: column;
-        gap: 10px !important;
-    }
-}
-/* ===== تحسينات الموبايل ===== */
-@media (max-width: 992px) {
-    .hero-section {
-        text-align: center;
-        min-height: auto;
-        padding: 60px 0;
-    }
-    
-    .glowing-text {
-        font-size: 2.8rem;
-    }
-    
-    .hero-description {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .hero-decoration {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-logo {
-        max-height: 100px;
-    }
-    
-    .glowing-text {
-        font-size: 2.2rem;
-    }
-    
-    .hero-description {
-        font-size: 1.1rem;
-    }
-}
-        /* ===== كاروسيل Swiper الاحترافي ===== */
-        .swiper-flip-section {
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
             width: 100%;
-            height: 550px;
-            margin: 40px 0;
-            padding: 0 20px;
         }
-        .swiper-slide {
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-search {
+            position: relative;
+        }
+        .header-search input {
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 40px 8px 20px;
+            width: 200px;
+            transition: var(--transition);
+        }
+        .header-search input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+        .header-search button {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+        }
+
+        .header-cart {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: transparent;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
-        .flip-slide-content {
-            width: 95%;
-            height: 95%;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: var(--shadow-hover);
+        .header-cart:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        /* ===== سلايدر رئيسي (كاروسيل) ===== */
+        .hero-slider {
             position: relative;
-            background: var(--dark-bg);
+            height: 85vh;
+            min-height: 600px;
+            overflow: hidden;
+            background: var(--dark);
         }
-        .flip-slide-content img {
+        .slides-container {
+            position: relative;
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: Fill;/* cover; */
-            transition: transform 8s;
+            opacity: 0;
+            transition: opacity 0.8s ease;
         }
-        .swiper-slide-active .flip-slide-content img { transform: scale(1.1); }
-        .flip-slide-content .overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%);
+        .slide.active {
+            opacity: 1;
         }
-        .flip-slide-text {
+        .slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slider-nav {
             position: absolute;
             bottom: 30px;
-            right: 30px;
-            left: 30px;
-            color: white;
-            text-align: right;
-            z-index: 2;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
         }
-        .flip-slide-text h3 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .flip-slide-text p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            max-width: 70%;
-        }
-        .flip-slide-text .btn {
+        .slider-dot.active {
             background: white;
-            color: var(--primary);
-            border-radius: 50px;
-            padding: 10px 30px;
-            font-weight: 600;
-            border: none;
-            transition: all 0.3s;
+            transform: scale(1.3);
         }
-        .flip-slide-text .btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        .slider-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 10;
         }
-        .swiper-button-next, .swiper-button-prev {
-            color: white;
-            background: rgba(0,0,0,0.3);
+        .slider-arrow {
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
             backdrop-filter: blur(4px);
-            transition: all 0.3s;
         }
-        .swiper-button-next:hover, .swiper-button-prev:hover { background: rgba(0,0,0,0.6); }
-        .swiper-pagination-bullet {
-            background: white;
-            opacity: 0.6;
-            width: 12px;
-            height: 12px;
+        .slider-arrow:hover {
+            background: var(--gradient);
+            border-color: transparent;
         }
-        .swiper-pagination-bullet-active { background: gold; opacity: 1; transform: scale(1.2); }
 
-        /* ===== أقسام مشتركة ===== */
+        /* ===== الأقسام العامة ===== */
         .section-title {
-            color: white;
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+        .section-title h2 {
+            font-size: 2.2rem;
             font-weight: 700;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .section-title p {
+            color: var(--gray);
+            font-size: 1.1rem;
         }
 
-        /* ===== البحث ===== */
-        .search-box {
-            max-width: 600px;
-            margin: 30px auto;
+        /* ===== بطاقات الأقسام (Categories) ===== */
+        .categories {
+            padding: 80px 0;
         }
-        .search-box .input-group {
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border-radius: 50px;
-            overflow: hidden;
-        }
-        .search-box input {
-            border: none;
-            padding: 15px 25px;
-        }
-        .search-box button {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-weight: 600;
-        }
-
-        /* ===== التصنيفات ===== */
-        .category-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .category-pill {
-            background: white;
-            color: var(--text-dark);
-            padding: 10px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        .category-pill:hover, .category-pill.active {
-            background: var(--primary-gradient);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102,126,234,0.4);
-        }
-
-        /* ===== الصور المميزة ===== */
-        .featured-section {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 90px 0; /*   60px 0; */
-            margin: 60px 0;  /* 40px 0; */
-        }
-        .featured-grid {
+        .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            padding: 0 20px;
         }
-        .featured-item {
-            position: relative;
-            border-radius: 20px;
+        .category-card {
+            background: white;
+            border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: all 0.3s;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 1px solid var(--border);
         }
-        .featured-item:hover { transform: translateY(-10px) scale(1.02); }
-        .featured-item img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
-        .featured-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: gold;
-            color: var(--text-dark);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        .category-card .category-content {
+            padding: 30px;
+            text-align: center;
+        }
+        .category-card .category-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        .category-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .category-card p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        .category-link {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+        .category-link i {
+            transition: var(--transition);
+        }
+        .category-card:hover .category-link i {
+            transform: translateX(-5px);
         }
 
-        /* ===== المعرض الرئيسي (صور كاملة بدون قص) ===== */
-        .gallery-section { padding: 60px 0; }
+        /* ===== شبكة الصور (Gallery Grid) ===== */
+        .gallery-section {
+            padding: 60px 0;
+            background: white;
+        }
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
-            padding: 20px;
         }
         .gallery-item {
-            background: var(--primary-gradient);
-            border-radius: 20px;
+            border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: all 0.3s;
+            transition: var(--transition);
             cursor: pointer;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1/1;
             position: relative;
+            border: 1px solid var(--border);
         }
-        .gallery-item:hover { transform: translateY(-10px) scale(1.02); box-shadow: var(--shadow-hover); }
-        .gallery-item .image-frame {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: var(--dark-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
         .gallery-item img {
-            max-width: 92%;
-            max-height: 92%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.5s;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
         }
-        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
         .gallery-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
             color: white;
             padding: 20px;
             transform: translateY(100%);
-            transition: transform 0.3s;
+            transition: var(--transition);
         }
-        .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
         .gallery-stats {
             display: flex;
-            gap: 20px;
-            font-size: 0.95rem;
+            gap: 15px;
+            font-size: 0.9rem;
         }
-        .gallery-stats i { margin-left: 5px; }
 
-        /* ===== التصفح ===== */
-        .pagination { justify-content: center; margin: 40px 0; }
-        .page-link {
-            color: var(--primary);
-            border: none;
-            margin: 0 5px;
-            border-radius: 10px;
-            padding: 10px 18px;
-            font-weight: 500;
-        }
-        .page-item.active .page-link {
-            background: var(--primary-gradient);
+        /* ===== CTA Section ===== */
+        .cta {
+            background: var(--gradient);
             color: white;
-            border: none;
-        }
-
-        /* ===== نافذة QR ===== */
-        .qr-modal .modal-content { border-radius: 20px; overflow: hidden; }
-        .qr-modal .modal-header { background: var(--primary-gradient); color: white; border: none; }
-        .qr-modal .btn-close { filter: invert(1); }
-
-        /* ===== Lightbox المخصص ===== */
-        .lightbox-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox-modal span {
-            position: absolute;
-            top: 20px; right: 30px;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .lightbox-modal span:hover { transform: scale(1.2); }
-        .lightbox-modal img {
-            max-width: 90%;
-            max-height: 85%;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        /* ===== زر العودة للأعلى ===== */
-        .floating-btn {
-            position: fixed;
-            bottom: 20px; right: 20px;
-            background: var(--primary-gradient);
-            color: white;
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        .floating-btn:hover { transform: scale(1.1); color: white; }
-
-        /* ===== تذييل الصفحة ===== */
-        .footer {
-            background: rgba(0,0,0,0.3);
-            color: white;
+            padding: 80px 0;
             text-align: center;
-            padding: 30px 0;
-            margin-top: 60px;
+        }
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        .cta .btn {
+            background: white;
+            color: var(--primary);
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            border: 2px solid transparent;
+        }
+        .cta .btn:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            transform: translateY(-3px);
         }
 
-        /* ===== تحسينات الموبايل ===== */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2.2rem; }
-            .hero-description { font-size: 1rem; }
-            .swiper-flip-section { height: 400px; }
-            .flip-slide-text h3 { font-size: 1.5rem; }
-            .flip-slide-text p { font-size: 0.9rem; max-width: 100%; }
-            .flip-slide-text .btn { padding: 6px 20px; }
-            .section-title { font-size: 2rem; }
-            .gallery-grid { grid-template-columns: 1fr; }
-            .featured-grid { grid-template-columns: repeat(2, 1fr); }
+        /* ===== Footer ===== */
+        .footer {
+            background: var(--dark-secondary);
+            color: var(--light);
+            padding-top: 60px;
         }
-        @media (max-width: 480px) {
-            .featured-grid { grid-template-columns: 1fr; }
-            .flip-slide-text p { display: none; }
-            .flip-slide-text h3 { font-size: 1.2rem; }
+        .footer-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
-
-
-
-
-        /* ===== الصور المميزة بتصميم موحد ===== */
-.featured-section {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 60px 0;
-    margin: 40px 0;
-}
-
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-    padding: 0 20px;
-}
-
-.featured-card {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.featured-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.featured-image-wrapper {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3; /* نسبة 4:3 (عرض 4، ارتفاع 3) - يمكن تغييرها */
-    overflow: hidden;
-    background: #1a1a1a;
-}
-
-.featured-image-wrapper img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* الصورة تغطي الإطار بالكامل (قد تقص الأطراف) */
-    transition: transform 0.5s;
-}
-
-.featured-card:hover .featured-image-wrapper img {
-    transform: scale(1.1);
-}
-
-.featured-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: gold;
-    color: #333;
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 2;
-}
-
-/* للموبايل */
-@media (max-width: 768px) {
-    .featured-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .featured-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ===== الصور المميزة ===== */
-.featured-section {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 60px 0;
-    margin: 40px 0;
-}
-
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 25px;
-    padding: 0 20px;
-}
-
-.featured-item {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.featured-item:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.featured-image-wrapper {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: #1a1a1a;
-}
-
-.featured-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
-}
-
-.featured-item:hover .featured-image-wrapper img {
-    transform: scale(1.1);
-}
-
-.featured-actions {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.featured-item:hover .featured-actions {
-    opacity: 1;
-}
-
-.featured-badge {
-    background: gold;
-    color: #333;
-    padding: 5px 10px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.featured-download {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s;
-}
-
-.featured-download:hover {
-    background: var(--primary-gradient);
-    transform: scale(1.1);
-    color: white;
-}
-
-/* للموبايل: إظهار الأزرار دائمًا */
-@media (max-width: 768px) {
-    .featured-actions {
-        opacity: 1;
-        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    }
-}
-        
- </style>
+        .footer-about .logo {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .footer-about p {
+            line-height: 1.8;
+            color: #94a3b8;
+        }
+        .footer-social {
+            margin-top: 20px;
+        }
+        .footer-social a {
+            color: var(--light);
+            margin-left: 15px;
+            transition: var(--transition);
+        }
+        .footer-social a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--gradient);
+        }
+        .footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer ul li {
+            margin-bottom: 12px;
+        }
+        .footer ul li a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .footer ul li a:hover {
+            color: white;
+            padding-right: 5px;
+        }
+        .footer ul li i {
+            margin-left: 8px;
+            color: var(--primary);
+            width: 20px;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 0;
+            text-align: center;
+            color: #94a3b8;
+        }
+    </style>
 </head>
 <body>
-
-    <!-- ===== شريط التنقل الزجاجي ===== -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <!-- ===== توب بار ===== -->
+    <div class="header-top">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                {% if settings and settings.site_logo %}
-                    <img src="{{ settings.site_logo }}" alt="شعار">
-                {% else %}
-                    <span style="color: var(--primary); font-weight: 700; font-size: 1.5rem;">
-                        <i class="bi bi-camera-fill"></i> {{ settings.site_title }}
-                    </span>
-                {% endif %}
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('about') }}">من نحن</a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ url_for('contact') }}">اتصل بنا</a>
-</li>
-                    <li class="nav-item"><a class="nav-link" href="#gallery">المعرض</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#featured">مميزة</a></li>
-                    {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">التصنيفات</a>
-                        <ul class="dropdown-menu">
-                            {% for category, count in categories %}
-                            <li><a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">{{ category.name }} ({{ count }})</a></li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    {% endif %}
-                </ul>
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal"><i class="bi bi-qr-code-scan"></i></button>
-                    <form class="d-flex" action="{{ url_for('search') }}" method="GET">
-                        <input class="form-control form-control-sm" type="search" name="q" placeholder="بحث..." style="width:130px; border-radius:20px;">
-                        <button class="btn btn-sm btn-outline-primary ms-1" type="submit"><i class="bi bi-search"></i></button>
-                    </form>
-                    {% if current_user.is_authenticated %}
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
-                            {% if current_user.role in ['admin', 'editor'] %}<li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>{% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
-                        </ul>
-                    </div>
-                    {% else %}
-                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}">دخول</a>
-                    <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}">تسجيل</a>
-                    {% endif %}
-                </div>
+            <div class="header-top-info">
+                <span><i class="fas fa-phone-alt"></i> +972 59 978 7656</span>
+                <span><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</span>
+                <span><i class="fas fa-clock"></i> السبت - الخميس: 9 صباحاً - 10 مساءً</span>
             </div>
-        </div>
-    </nav>
-
-    <div style="height: 0px;"></div> <!-- تعويض الشريط -->
-
-
-
-<!-- ===== قسم الترحيب المميز مع شعار لامع ===== -->
-<!-- ===== قسم الترحيب مع حركة الخطوط ===== -->
-<section class="hero-section">
-    <div class="container">
-        <div class="hero-content d-flex flex-column align-items-center">
-            <!-- الشعار والعنوان معاً في سطر واحد -->
-            <div class="d-flex align-items-center justify-content-center flex-wrap gap-4 mb-3">
-                {% if settings and settings.site_logo %}
-                <div class="hero-logo-wrapper">
-                    <img src="{{ settings.site_logo }}" alt="شعار الموقع" class="hero-logo">
-                </div>
-                {% endif %}
-                
-                <h1 class="hero-title">
-                    {{ settings.site_title }}
-                </h1>
-            </div>
-            
-            <p class="hero-description">{{ settings.site_description }}</p>
-            
-            <div class="hero-buttons">
-                <a href="#gallery" class="btn btn-light"><i class="bi bi-images me-2"></i>استعرض الأعمال</a>
-                <a href="#featured" class="btn btn-outline-light"><i class="bi bi-star-fill me-2"></i>المميزة</a>
+            <div class="header-social">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
     </div>
-</section>    
-   <!-- ===== كاروسيل Swiper ثلاثي الأبعاد ===== -->
-    {% if featured_images %}
-    <section class="swiper-flip-section">
-        <div class="swiper mySwiper" style="height:120%; width:100%;">
-            <div class="swiper-wrapper">
-                {% for image in featured_images[:6] %}
-                <div class="swiper-slide">
-                    <div class="flip-slide-content">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}" onerror="this.src='https://via.placeholder.com/1200x600?text=صورة'">
-                        <div class="overlay"></div>
-                        <div class="flip-slide-text">
-                            <h3>{{ image.title or 'عمل إبداعي' }}</h3>
-                            <p>{{ image.description|truncate(100) or 'تصميم احترافي بجودة عالية' }}</p>
-                            <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn"><i class="bi bi-eye me-2"></i>عرض التفاصيل</a>
-                        </div>
-                    </div>
+
+    <!-- ===== الهيدر الرئيسي ===== -->
+    <header class="header-main">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="logo">
+                {% if settings and settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}">
+                {% else %}
+                    <span style="font-size: 1.8rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        <i class="fas fa-camera-retro"></i> {{ settings.site_title }}
+                    </span>
+                {% endif %}
+            </a>
+
+            <nav class="nav-menu">
+                <a href="{{ url_for('index') }}" class="active">الرئيسية</a>
+                <a href="{{ url_for('index') }}#gallery">المعرض</a>
+                <a href="{{ url_for('index') }}#featured">مميزة</a>
+                {% if categories %}
+                <a href="#">التصنيفات</a>
+                {% endif %}
+                <a href="{{ url_for('about') }}">من نحن</a>
+                <a href="{{ url_for('contact') }}">اتصل بنا</a>
+            </nav>
+
+            <div class="header-actions">
+                <form class="header-search" action="{{ url_for('search') }}" method="GET">
+                    <input type="text" name="q" placeholder="ابحث عن صور..." value="{{ search_query }}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('profile') }}" class="header-cart" title="الملف الشخصي">
+                    <i class="fas fa-user"></i>
+                </a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="header-cart" title="دخول">
+                    <i class="fas fa-sign-in-alt"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== سلايدر رئيسي (كاروسيل) ===== تم وضعه هنا بشكل صحيح داخل <body> ===== -->
+    <section class="hero-slider">
+        <div class="slides-container">
+            {% if featured_images %}
+                {% for image in featured_images[:3] %}
+                <div class="slide {% if loop.first %}active{% endif %}">
+                    <img src="{{ image.image_url }}" alt="{{ image.title }}" class="slide-img">
                 </div>
                 {% endfor %}
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
+            {% else %}
+                <!-- صور افتراضية إذا لم توجد صور مميزة -->
+                <div class="slide active">
+                    <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم+في+المعرض" class="slide-img">
+                </div>
+                <div class="slide">
+                    <img src="https://via.placeholder.com/1920x800?text=أعمال+فنية+رائعة" class="slide-img">
+                </div>
+                <div class="slide">
+                    <img src="https://via.placeholder.com/1920x800?text=اكتشف+الإبداع" class="slide-img">
+                </div>
+            {% endif %}
         </div>
-    </section>
-    {% endif %}
-  <!-- تعويض مساحة الشريط -->
-    <div style="height: 000px;"></div>
-    <!-- ===== البحث ===== -->
-    <section class="search-section">
-        <div class="container">
-            <div class="search-box">
-                <form action="{{ url_for('search') }}" method="GET">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="q" placeholder="ابحث عن صور..." value="{{ search_query }}">
-                        <button class="btn" type="submit"><i class="bi bi-search me-2"></i>بحث</button>
-                    </div>
-                </form>
-            </div>
+
+        <!-- Slider Navigation Dots -->
+        <div class="slider-nav">
+            {% if featured_images %}
+                {% for image in featured_images[:3] %}
+                <div class="slider-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
+                {% endfor %}
+            {% else %}
+                <div class="slider-dot active" data-slide="0"></div>
+                <div class="slider-dot" data-slide="1"></div>
+                <div class="slider-dot" data-slide="2"></div>
+            {% endif %}
+        </div>
+
+        <!-- Arrow Navigation -->
+        <div class="slider-arrows">
+            <button class="slider-arrow slider-prev" aria-label="السابق">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="slider-arrow slider-next" aria-label="التالي">
+                <i class="fas fa-chevron-left"></i>
+            </button>
         </div>
     </section>
 
-    <!-- ===== التصنيفات ===== -->
+    <!-- ===== قسم الأقسام (Categories Pills) ===== -->
     {% if categories %}
-    <section class="categories-section">
+    <section class="categories">
         <div class="container">
-            <div class="category-pills">
-                <a href="{{ url_for('index') }}" class="category-pill {% if not current_category %}active{% endif %}">الكل</a>
+            <div class="section-title">
+                <h2>تصفح الأقسام</h2>
+                <p>اكتشف مجموعاتنا المتنوعة من الصور الفنية</p>
+            </div>
+            <div class="categories-grid">
                 {% for category, count in categories %}
-                <a href="{{ url_for('index') }}?category={{ category.id }}" class="category-pill {% if current_category == category.id %}active{% endif %}">
-                    {{ category.name }} ({{ count }})
+                <a href="{{ url_for('index') }}?category={{ category.id }}" class="category-card">
+                    <div class="category-content">
+                        <div class="category-icon"><i class="fas fa-folder"></i></div>
+                        <h3>{{ category.name }}</h3>
+                        <p>{{ count }} صورة</p>
+                        <span class="category-link">
+                            عرض الألبوم <i class="fas fa-arrow-left"></i>
+                        </span>
+                    </div>
                 </a>
                 {% endfor %}
             </div>
@@ -923,167 +637,184 @@
     </section>
     {% endif %}
 
-
-<!-- ===== الصور المميزة مع زر التحميل ===== -->
-{% if featured_images %}
-<section id="featured" class="featured-section">
-    <div class="container">
-        <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
-        <div class="featured-grid">
-            {% for image in featured_images %}
-            <div class="featured-item">
-                <div class="featured-image-wrapper">
-                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                    </a>
-                    <div class="featured-actions">
-                        <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
-                        <a href="{{ image.image_url }}" download class="featured-download" title="تحميل الصورة">
-                            <i class="bi bi-download"></i>
-                        </a>
-                    </div>
-                    <span class="featured-badge">
-                        <i class="bi bi-star-fill"></i> مميزة
-                    </span>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-
-
     <!-- ===== المعرض الرئيسي ===== -->
     <section id="gallery" class="gallery-section">
         <div class="container">
-            <h2 class="section-title"><i class="bi bi-images me-2"></i>جميع الصور</h2>
+            <div class="section-title">
+                <h2>جميع الصور</h2>
+                <p>مجموعة من أجمل الأعمال الفنية</p>
+            </div>
+
             {% if images and images.items %}
             <div class="gallery-grid">
                 {% for image in images.items %}
                 <div class="gallery-item" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
-                    <div class="image-frame">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}" onerror="this.src='https://via.placeholder.com/300x300?text=صورة'">
-                    </div>
+                    <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
                     <div class="gallery-overlay">
                         <div class="gallery-stats">
-                            <span><i class="bi bi-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
-                            <span><i class="bi bi-download"></i> {{ image.downloads }}</span>
-                            {% if image.category %}<span><i class="bi bi-tag"></i> {{ image.category.name }}</span>{% endif %}
+                            <span><i class="fas fa-eye"></i> <span class="view-count-{{ image.id }}">{{ image.views }}</span></span>
+                            <span><i class="fas fa-download"></i> {{ image.downloads }}</span>
+                            {% if image.category %}<span><i class="fas fa-tag"></i> {{ image.category.name }}</span>{% endif %}
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
 
-            <!-- التصفح -->
+            <!-- التصفح بين الصفحات -->
             {% if images.pages > 1 %}
             <nav>
-                <ul class="pagination">
-                    {% if images.has_prev %}<li class="page-item"><a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}"><i class="bi bi-chevron-right"></i> السابق</a></li>{% endif %}
+                <ul class="pagination justify-content-center mt-5">
+                    {% if images.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('index', page=images.prev_num, category=current_category, q=search_query) }}">
+                            <i class="fas fa-chevron-right"></i> السابق
+                        </a>
+                    </li>
+                    {% endif %}
                     {% for page_num in images.iter_pages() %}
-                        {% if page_num %}<li class="page-item {% if page_num == images.page %}active{% endif %}"><a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">{{ page_num }}</a></li>{% endif %}
+                        {% if page_num %}
+                        <li class="page-item {% if page_num == images.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('index', page=page_num, category=current_category, q=search_query) }}">{{ page_num }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
                     {% endfor %}
-                    {% if images.has_next %}<li class="page-item"><a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">التالي <i class="bi bi-chevron-left"></i></a></li>{% endif %}
+                    {% if images.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('index', page=images.next_num, category=current_category, q=search_query) }}">
+                            التالي <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
             {% endif %}
+
             {% else %}
-            <div class="empty-state text-center py-5">
-                <i class="bi bi-images" style="font-size:4rem; color:rgba(255,255,255,0.5);"></i>
-                <h3 class="text-white mt-3">لا توجد صور بعد</h3>
-                <p class="text-white-50">ابدأ بإضافة صور رائعة إلى المعرض</p>
-                {% if current_user.is_authenticated %}<a href="{{ url_for('upload_images') }}" class="btn btn-light mt-3"><i class="bi bi-cloud-upload"></i> أضف أول صورة</a>{% endif %}
+            <div class="text-center py-5">
+                <i class="fas fa-images" style="font-size: 4rem; color: var(--gray);"></i>
+                <h3 class="mt-3">لا توجد صور بعد</h3>
+                <p class="text-muted">ابدأ بإضافة صور رائعة إلى المعرض</p>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('upload_images') }}" class="btn btn-primary mt-3">أضف أول صورة</a>
+                {% endif %}
             </div>
             {% endif %}
         </div>
     </section>
 
-    <!-- ===== تذييل الصفحة ===== -->
+    <!-- ===== قسم CTA (دعوي) ===== -->
+    <section class="cta">
+        <div class="container">
+            <h2>هل تبحث عن عمل فني مميز؟</h2>
+            <p>نحن هنا لمساعدتك في اختيار أفضل الصور والأعمال الفنية التي تناسب ذوقك</p>
+            <a href="{{ url_for('contact') }}" class="btn">تواصل معنا الآن</a>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
     <footer class="footer">
         <div class="container">
-            <p>{{ settings.site_title }} &copy; {{ now.year if now else '2026' }} – جميع الحقوق محفوظة</p>
+            <div class="footer-main">
+                <div class="footer-about">
+                    <a href="{{ url_for('index') }}" class="logo">
+                        {% if settings and settings.site_logo %}
+                            <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}" style="max-height: 60px;">
+                        {% else %}
+                            <h3>{{ settings.site_title }}</h3>
+                        {% endif %}
+                    </a>
+                    <p>{{ settings.site_description or 'معرض فني يضم مجموعة رائعة من الصور والأعمال الإبداعية.' }}</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-title">روابط سريعة</h4>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
+                        <li><a href="{{ url_for('index') }}#gallery"><i class="fas fa-chevron-left"></i> المعرض</a></li>
+                        <li><a href="{{ url_for('index') }}#featured"><i class="fas fa-chevron-left"></i> صور مميزة</a></li>
+                        <li><a href="{{ url_for('about') }}"><i class="fas fa-chevron-left"></i> من نحن</a></li>
+                        <li><a href="{{ url_for('contact') }}"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4 class="footer-title">تواصل معنا</h4>
+                    <ul>
+                        <li><i class="fas fa-phone-alt"></i> +972 59 978 7656</li>
+                        <li><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</li>
+                        <li><i class="fas fa-map-marker-alt"></i> فلسطين</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 {{ settings.site_title }}. جميع الحقوق محفوظة</p>
+            </div>
         </div>
     </footer>
 
-    <!-- ===== زر العودة للأعلى ===== -->
-    <a href="#" class="floating-btn" title="العودة للأعلى"><i class="bi bi-arrow-up"></i></a>
-
-    <!-- ===== نافذة QR Code ===== -->
-    <div class="modal fade qr-modal" id="qrModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title"><i class="bi bi-qr-code-scan me-2"></i>QR Code</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center p-4">
-                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="img-fluid mb-3" style="max-width:180px;">
-                    <p class="text-muted small">امسح الكود لزيارة الموقع</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <a href="data:image/png;base64,{{ qr_code }}" download="qr-code.png" class="btn btn-sm btn-primary"><i class="bi bi-download"></i> تحميل</a>
-                        <button class="btn btn-sm btn-success" onclick="copyUrl()"><i class="bi bi-clipboard"></i> نسخ</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- ===== Lightbox ===== -->
+    <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; justify-content:center; align-items:center;">
+        <span onclick="closeLightbox()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
+        <img id="lightbox-img" style="max-width:90%; max-height:80%;">
     </div>
 
-    <!-- ===== Lightbox المخصص ===== -->
-    <div class="lightbox-modal" id="lightboxModal">
-        <span onclick="closeLightbox()">&times;</span>
-        <img id="lightboxImg" src="" alt="">
-    </div>
-
-    <!-- ===== السكربتات ===== -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <script>
-        // ===== تفعيل Swiper =====
-        const swiper = new Swiper('.mySwiper', {
-            loop: true,
-            effect: 'flip',
-            grabCursor: true,
-            autoplay: { delay: 4500, disableOnInteraction: false },
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-        });
+        // ===== سلايدر بسيط =====
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.querySelector('.slider-prev');
+        const nextBtn = document.querySelector('.slider-next');
 
-        // ===== Lightbox وزيادة المشاهدات =====
-        function openLightbox(imgSrc, imageId) {
-            document.getElementById('lightboxModal').style.display = 'flex';
-            document.getElementById('lightboxImg').src = imgSrc;
-            if (imageId) {
-                fetch(`/api/view/${imageId}`, { method: 'POST' })
-                    .then(r => r.json())
-                    .then(d => {
-                        if (d.success) {
-                            const viewEl = document.querySelector(`.view-count-${imageId}`);
-                            if (viewEl) viewEl.textContent = d.views;
-                        }
-                    }).catch(e => console.error('خطأ:', e));
-            }
-        }
-        function closeLightbox() { document.getElementById('lightboxModal').style.display = 'none'; }
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-
-        // ===== نسخ رابط الموقع =====
-        function copyUrl() {
-            const url = "{{ request.host_url }}";
-            navigator.clipboard.writeText(url).then(() => alert('✅ تم نسخ الرابط')).catch(() => alert('❌ فشل النسخ'));
+        function showSlide(index) {
+            if (!slides.length) return;
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
         }
 
-        // ===== تجانس التمرير =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => showSlide(i));
             });
-        });
+        }
+
+        // تشغيل تلقائي كل 5 ثواني
+        setInterval(() => showSlide(currentSlide + 1), 5000);
+
+        // ===== Lightbox =====
+        function openLightbox(src, id) {
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightbox-img').src = src;
+            fetch(`/api/view/${id}`, {method:'POST'})
+                .then(r=>r.json())
+                .then(d=>{
+                    if(d.success) {
+                        let el = document.querySelector(`.view-count-${id}`);
+                        if(el) el.textContent = d.views;
+                    }
+                })
+                .catch(e=>console.log(e));
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+        document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
     </script>
 </body>
 </html>
