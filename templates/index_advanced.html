@@ -989,6 +989,185 @@
         display: none; /* إخفاء الأزرار على الموبايل */
     }
 }
+
+/* ===== السلايدر الرئيسي ===== */
+.slider-section {
+    padding: 20px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 45%; /* نسبة العرض إلى الارتفاع (16:9 تقريباً) */
+    background: #000;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.slide.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ★★★ السر هنا ★★★ */
+    object-position: center;
+    display: block;
+}
+
+/* عنوان الصورة (اختياري) */
+.slide-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: white;
+    padding: 30px 20px 20px;
+    text-align: right;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.slide:hover .slide-caption {
+    transform: translateY(0);
+}
+
+.slide-caption h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.slide-caption p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+/* أزرار التنقل */
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.slider-nav:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-color: transparent;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-prev {
+    right: 20px;
+}
+
+.slider-next {
+    left: 20px;
+}
+
+/* النقاط (Dots) */
+.slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.dot.active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.dot:hover {
+    background: var(--primary);
+}
+
+/* تحسينات الموبايل */
+@media (max-width: 768px) {
+    .slider-wrapper {
+        padding-bottom: 60%; /* نسبة أعرض للموبايل */
+    }
+    
+    .slider-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .slider-prev {
+        right: 10px;
+    }
+    
+    .slider-next {
+        left: 10px;
+    }
+    
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .slide-caption h3 {
+        font-size: 1.2rem;
+    }
+    
+    .slide-caption p {
+        font-size: 0.8rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
     </style>
 </head>
 <body>
@@ -1107,6 +1286,68 @@
             </button>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===== السلايدر الرئيسي (مستوحى من التصميم) ===== -->
+<section class="slider-section">
+    <div class="container">
+        <div class="slider-container">
+            <div class="slider-wrapper">
+                {% if featured_images %}
+                    {% for image in featured_images[:5] %}
+                    <div class="slide {% if loop.first %}active{% endif %}">
+                        <img src="{{ image.image_url }}" alt="{{ image.title }}" class="slide-img">
+                        <!-- يمكن إضافة عنوان الصورة (اختياري) -->
+                        <div class="slide-caption">
+                            <h3>{{ image.title }}</h3>
+                            <p>{{ image.description|truncate(80) }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="slide active">
+                        <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم" class="slide-img">
+                    </div>
+                    <div class="slide">
+                        <img src="https://via.placeholder.com/1920x800?text=أعمال+فنية" class="slide-img">
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="slider-nav slider-prev" onclick="changeSlide(-1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="slider-nav slider-next" onclick="changeSlide(1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- Dots -->
+            <div class="slider-dots">
+                {% if featured_images %}
+                    {% for image in featured_images[:5] %}
+                    <span class="dot {% if loop.first %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></span>
+                    {% endfor %}
+                {% else %}
+                    <span class="dot active" onclick="goToSlide(0)"></span>
+                    <span class="dot" onclick="goToSlide(1)"></span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 
     <!-- ===== أقسام التصنيفات (Categories Slider) ===== -->
     {% if categories %}
@@ -1425,7 +1666,7 @@
         const nextBtn = document.querySelector('.slider-next');
         const progressBar = document.querySelector('.slider-progress-bar');
         let slideInterval;
-
+ 
         function showSlide(index) {
             if (index >= slides.length) index = 0;
             if (index < 0) index = slides.length - 1;
@@ -1476,6 +1717,7 @@
             }
         });
 // ===== تفعيل سلايدر التصنيفات المحسّن =====
+
 const categoriesSwiper = new Swiper('.categories-swiper', {
     slidesPerView: 2,
     spaceBetween: 15,
@@ -1512,34 +1754,9 @@ const categoriesSwiper = new Swiper('.categories-swiper', {
         },
     },
 });
-        // ===== Lightbox =====
-        function openLightbox(src, id) {
-            document.getElementById('lightbox').style.display = 'flex';
-            document.getElementById('lightbox-img').src = src;
-            fetch(`/api/view/${id}`, { method: 'POST' })
-                .then(r => r.json())
-                .then(d => {
-                    if (d.success) {
-                        let el = document.querySelector(`.view-count-${id}`);
-                        if (el) el.textContent = d.views;
-                    }
-                })
-                .catch(e => console.log(e));
-        }
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeLightbox();
-        });
 
-        // ===== سلايدر الصور (مستوحى من التصميم) =====
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slider-section .slide');
-const dots = document.querySelectorAll('.slider-section .dot');
-const prevBtn = document.querySelector('.slider-prev');
-const nextBtn = document.querySelector('.slider-next');
-let slideInterval;
+// ===== سلايدر الصور (مستوحى من التصميم) =====
+
 
 function showSlide(index) {
     if (!slides.length) return;
@@ -1593,7 +1810,28 @@ if (prevBtn && nextBtn) {
         dot.addEventListener('click', () => goToSlide(i));
     });
 }
+        // ===== Lightbox =====
+        function openLightbox(src, id) {
+            document.getElementById('lightbox').style.display = 'flex';
+            document.getElementById('lightbox-img').src = src;
+            fetch(`/api/view/${id}`, { method: 'POST' })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        let el = document.querySelector(`.view-count-${id}`);
+                        if (el) el.textContent = d.views;
+                    }
+                })
+                .catch(e => console.log(e));
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
 
+        
     </script>
 </body>
 </html>
