@@ -16,26 +16,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 
+    <!-- Swiper CSS (للسلايدرات) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <style>
-        /* ===== المتغيرات الرئيسية ===== */
+        /* ===== متغيرات الألوان ===== */
         :root {
-            --primary: {{ settings.theme_color or '#0ea5e9' }};
-            --primary-dark: #0284c7;
-            --primary-light: #38bdf8;
-            --secondary: #06b6d4;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --dark: #0f172a;
-            --dark-secondary: #1e293b;
-            --light: #f1f5f9;
+            --primary: {{ settings.theme_color or '#667eea' }};
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --dark: #1a1a1a;
+            --light: #f8fafc;
             --gray: #64748b;
-            --border: #e2e8f0;
-            --gradient: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #3b82f6 100%);
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.12);
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --radius: 16px;
+            --shadow: 0 5px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
+            --transition: all 0.3s ease;
+            --radius: 12px;
         }
 
         * {
@@ -46,51 +43,45 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--light);
-            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* ===== توب بار (Header Top) ===== */
-        .header-top {
-            background: var(--dark-secondary);
+        /* ===== توب بار ===== */
+        .top-bar {
+            background: var(--dark);
             color: var(--light);
             padding: 8px 0;
             font-size: 0.9rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .header-top .container {
+        .top-bar .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .header-top-info {
-            display: flex;
-            gap: 20px;
-        }
-        .header-top-info span i {
-            margin-left: 6px;
-            color: var(--primary-light);
-        }
-        .header-social a {
+        .top-bar a {
             color: var(--light);
-            margin-right: 12px;
+            text-decoration: none;
+            margin-right: 20px;
             transition: var(--transition);
         }
-        .header-social a:hover {
+        .top-bar a:hover {
             color: var(--primary);
-            transform: translateY(-2px);
+        }
+        .top-bar i {
+            margin-left: 6px;
+            color: var(--primary);
         }
 
         /* ===== الهيدر الرئيسي ===== */
         .header-main {
             background: white;
             box-shadow: var(--shadow);
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 12px 0;
         }
         .header-main .container {
             display: flex;
@@ -98,7 +89,7 @@
             justify-content: space-between;
         }
         .logo img {
-            max-height: 55px;
+            max-height: 60px;
             transition: var(--transition);
         }
         .logo img:hover {
@@ -110,30 +101,13 @@
         }
         .nav-menu a {
             text-decoration: none;
-            color: var(--dark);
+            color: #333;
             font-weight: 600;
-            position: relative;
-            padding: 5px 0;
             transition: var(--transition);
-        }
-        .nav-menu a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient);
-            transition: width 0.3s;
-        }
-        .nav-menu a:hover::after,
-        .nav-menu a.active::after {
-            width: 100%;
         }
         .nav-menu a:hover {
             color: var(--primary);
         }
-
         .header-actions {
             display: flex;
             align-items: center;
@@ -143,17 +117,10 @@
             position: relative;
         }
         .header-search input {
-            border: 1px solid var(--border);
+            border: 1px solid #e0e0e0;
             border-radius: 50px;
             padding: 8px 40px 8px 20px;
             width: 200px;
-            transition: var(--transition);
-        }
-        .header-search input:focus {
-            width: 250px;
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
         .header-search button {
             position: absolute;
@@ -164,8 +131,7 @@
             border: none;
             color: var(--gray);
         }
-
-        .header-cart {
+        .cart-icon {
             background: var(--gradient);
             color: white;
             width: 40px;
@@ -175,21 +141,13 @@
             justify-content: center;
             border-radius: 50%;
             text-decoration: none;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-        }
-        .header-cart:hover {
-            transform: scale(1.1);
-            color: white;
         }
 
-        /* ===== سلايدر رئيسي ===== */
+        /* ===== السلايدر الأول (Hero Slider) ===== */
         .hero-slider {
             position: relative;
-            height: 85vh;
-            min-height: 600px;
+            height: 600px;
             overflow: hidden;
-            background: var(--dark);
         }
         .slides-container {
             position: relative;
@@ -260,113 +218,251 @@
             background: var(--gradient);
             border-color: transparent;
         }
-
-        /* ===== الأقسام العامة ===== */
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
+        .slider-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            z-index: 10;
         }
-        .section-title h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
+        .slider-progress-bar {
+            height: 100%;
             background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        .section-title p {
-            color: var(--gray);
-            font-size: 1.1rem;
+            width: 0;
+            transition: width 5s linear;
         }
 
-        /* ===== بطاقات الأقسام (Categories) ===== */
-        .categories {
-            padding: 80px 0;
+        /* ===== السلايدر الثاني (Carousel) ===== */
+        .main-carousel {
+            margin: 30px 0;
         }
-        .categories-grid {
+        .carousel-inner {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            height: 400px;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .carousel:hover .carousel-control-prev,
+        .carousel:hover .carousel-control-next {
+            opacity: 1;
+        }
+
+        /* ===== أقسام المنتجات (مستوحاة من التصميم) ===== */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        .section-header h2 i {
+            color: var(--primary);
+        }
+        .view-all-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .view-all-btn:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* ===== سلايدر التصنيفات (Categories Slider) ===== */
+        .categories-section {
+            padding: 60px 0;
+        }
+        .category-container {
+            position: relative;
+            padding: 0 30px;
+        }
+        .category-swiper {
+            overflow: hidden;
+        }
+        .category-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+        }
+        .category-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        .category-image-wrapper {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            border: 3px solid var(--primary);
+            padding: 5px;
+        }
+        .category-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0;
+            color: #333;
+        }
+        .category-nav-btn {
+            color: var(--primary);
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+        }
+        .category-nav-btn:after {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* ===== بطاقات الصور المميزة (مستوحاة من قسم المنتجات) ===== */
+        .featured-section {
+            padding: 60px 0;
+            background: #f8fafc;
+        }
+        .featured-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 25px;
         }
-        .category-card {
+        .featured-card {
             background: white;
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            border: 1px solid var(--border);
         }
-        .category-card:hover {
+        .featured-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
         }
-        .category-card .category-content {
-            padding: 30px;
-            text-align: center;
+        .featured-image {
+            position: relative;
+            aspect-ratio: 1/1;
+            overflow: hidden;
         }
-        .category-card .category-icon {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
         }
-        .category-card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .featured-card:hover .featured-image img {
+            transform: scale(1.1);
+        }
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, gold, #ffc107);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+        .featured-info {
+            padding: 20px;
+        }
+        .featured-info h3 {
+            font-size: 1.2rem;
             margin-bottom: 10px;
-        }
-        .category-card p {
-            color: var(--gray);
-            margin-bottom: 20px;
-        }
-        .category-link {
-            color: var(--primary);
             font-weight: 600;
-            display: inline-flex;
+        }
+        .featured-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .featured-stats {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 5px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        .featured-stats i {
+            color: var(--primary);
+            margin-left: 5px;
+        }
+        .featured-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
             transition: var(--transition);
         }
-        .category-link i {
-            transition: var(--transition);
-        }
-        .category-card:hover .category-link i {
-            transform: translateX(-5px);
+        .featured-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
         }
 
-        /* ===== شبكة الصور (Gallery Grid) ===== */
+        /* ===== المعرض الرئيسي ===== */
         .gallery-section {
             padding: 60px 0;
-            background: white;
         }
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
         .gallery-item {
+            position: relative;
             border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
             cursor: pointer;
             aspect-ratio: 1/1;
-            position: relative;
-            border: 1px solid var(--border);
-        }
-        .gallery-item:hover {
-            transform: scale(1.03);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
+            box-shadow: var(--shadow);
         }
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: var(--transition);
+            transition: transform 0.5s;
         }
         .gallery-item:hover img {
             transform: scale(1.1);
@@ -380,7 +476,7 @@
             color: white;
             padding: 20px;
             transform: translateY(100%);
-            transition: var(--transition);
+            transition: transform 0.3s;
         }
         .gallery-item:hover .gallery-overlay {
             transform: translateY(0);
@@ -391,132 +487,217 @@
             font-size: 0.9rem;
         }
 
-        /* ===== CTA Section ===== */
-        .cta {
-            background: var(--gradient);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
-        }
-        .cta h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        .cta p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            opacity: 0.9;
-        }
-        .cta .btn {
-            background: white;
-            color: var(--primary);
-            padding: 12px 40px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-block;
-            border: 2px solid transparent;
-        }
-        .cta .btn:hover {
-            background: transparent;
-            color: white;
-            border-color: white;
-            transform: translateY(-3px);
-        }
-
         /* ===== Footer ===== */
         .footer {
-            background: var(--dark-secondary);
-            color: var(--light);
-            padding-top: 60px;
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
         }
-        .footer-main {
+        .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 40px;
             margin-bottom: 40px;
         }
-        .footer-about .logo {
+        .footer-col h4 {
             margin-bottom: 20px;
-            display: inline-block;
-        }
-        .footer-about p {
-            line-height: 1.8;
-            color: #94a3b8;
-        }
-        .footer-social {
-            margin-top: 20px;
-        }
-        .footer-social a {
-            color: var(--light);
-            margin-left: 15px;
-            transition: var(--transition);
-        }
-        .footer-social a:hover {
-            color: var(--primary);
-            transform: translateY(-3px);
-        }
-        .footer-title {
             font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            position: relative;
         }
-        .footer-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 0;
-            width: 50px;
-            height: 2px;
-            background: var(--gradient);
-        }
-        .footer ul {
+        .footer-links {
             list-style: none;
             padding: 0;
         }
-        .footer ul li {
-            margin-bottom: 12px;
+        .footer-links li {
+            margin-bottom: 10px;
         }
-        .footer ul li a {
-            color: #94a3b8;
+        .footer-links a {
+            color: #aaa;
             text-decoration: none;
             transition: var(--transition);
         }
-        .footer ul li a:hover {
+        .footer-links a:hover {
             color: white;
             padding-right: 5px;
         }
-        .footer ul li i {
-            margin-left: 8px;
-            color: var(--primary);
-            width: 20px;
+        .footer-social a {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            color: white;
+            margin-left: 10px;
+            transition: var(--transition);
+        }
+        .footer-social a:hover {
+            background: var(--gradient);
+            transform: translateY(-3px);
         }
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 20px 0;
+            padding-top: 20px;
             text-align: center;
-            color: #94a3b8;
+            color: #aaa;
         }
+
+        /* ===== Lightbox ===== */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        #lightbox span {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        /* ===== استجابة للموبايل ===== */
+        @media (max-width: 768px) {
+            .hero-slider { height: 400px; }
+            .carousel-inner { height: 300px; }
+            .featured-grid { grid-template-columns: repeat(2, 1fr); }
+            .category-image-wrapper { width: 80px; height: 80px; }
+        }
+        @media (max-width: 480px) {
+            .featured-grid { grid-template-columns: 1fr; }
+        }
+
+
+        /* ===== قسم الصور المميزة (مستوحى من التصميم) ===== */
+.featured-products-section {
+    background-color: #f8f9fa;
+}
+
+.featured-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.featured-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+
+.featured-card .card-img-container {
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.featured-card .card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.featured-card:hover .card-img-container img {
+    transform: scale(1.05);
+}
+
+.featured-card .card-body {
+    padding: 15px;
+}
+
+.featured-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.featured-card .card-text {
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.featured-card .badge.bg-warning {
+    background: linear-gradient(135deg, #ffc107, #ff9800) !important;
+    color: #333;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    box-shadow: 0 2px 5px rgba(255,193,7,0.3);
+}
+
+.featured-card .btn-warning {
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    border: none;
+    color: #333;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.featured-card .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,193,7,0.4);
+    color: #000;
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+    .featured-card .card-img-container {
+        height: 180px;
+    }
+    
+    .featured-card .card-title {
+        font-size: 0.9rem;
+    }
+    
+    .featured-card .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .featured-card .card-img-container {
+        height: 160px;
+    }
+}
+
+
     </style>
 </head>
 <body>
     <!-- ===== توب بار ===== -->
-    <div class="header-top">
+    <div class="top-bar">
         <div class="container">
-            <div class="header-top-info">
-                <span><i class="fas fa-phone-alt"></i> +972 59 978 7656</span>
-                <span><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</span>
-                <span><i class="fas fa-clock"></i> السبت - الخميس: 9 صباحاً - 10 مساءً</span>
+            <div>
+                <a href="tel:+970123456789"><i class="fas fa-phone-alt"></i> +970 59 978 7656</a>
+                <a href="mailto:info@gallery.ps"><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</a>
             </div>
-            <div class="header-social">
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <div>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
     </div>
@@ -528,84 +709,160 @@
                 {% if settings and settings.site_logo %}
                     <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}">
                 {% else %}
-                    <span style="font-size: 1.8rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
                         <i class="fas fa-camera-retro"></i> {{ settings.site_title }}
                     </span>
                 {% endif %}
             </a>
 
             <nav class="nav-menu">
-                <a href="{{ url_for('index') }}" class="active">الرئيسية</a>
-                <a href="{{ url_for('index') }}#gallery">المعرض</a>
-                <a href="{{ url_for('index') }}#featured">مميزة</a>
-                {% if categories %}
-                <a href="#">التصنيفات</a>
-                {% endif %}
+                <a href="{{ url_for('index') }}">الرئيسية</a>
+                <a href="#featured">مميزة</a>
+                <a href="#gallery">المعرض</a>
                 <a href="{{ url_for('about') }}">من نحن</a>
                 <a href="{{ url_for('contact') }}">اتصل بنا</a>
             </nav>
 
             <div class="header-actions">
                 <form class="header-search" action="{{ url_for('search') }}" method="GET">
-                    <input type="text" name="q" placeholder="ابحث عن صور..." value="{{ search_query }}">
+                    <input type="text" name="q" placeholder="بحث...">
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
-
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('profile') }}" class="header-cart" title="الملف الشخصي">
-                    <i class="fas fa-user"></i>
-                </a>
+                <a href="{{ url_for('profile') }}" class="cart-icon"><i class="fas fa-user"></i></a>
                 {% else %}
-                <a href="{{ url_for('login') }}" class="header-cart" title="دخول">
-                    <i class="fas fa-sign-in-alt"></i>
-                </a>
+                <a href="{{ url_for('login') }}" class="cart-icon"><i class="fas fa-sign-in-alt"></i></a>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <!-- ===== سلايدر رئيسي (من التصميم المستلهم) ===== -->
-    {% if featured_images %}
+    <!-- ===== السلايدر الأول (Hero Slider) ===== -->
     <section class="hero-slider">
         <div class="slides-container">
-            {% for image in featured_images[:4] %}
-            <div class="slide {% if loop.first %}active{% endif %}">
-                <img src="{{ image.image_url }}" alt="{{ image.title }}" class="slide-img">
-            </div>
-            {% endfor %}
+            {% if featured_images %}
+                {% for image in featured_images[:3] %}
+                <div class="slide {% if loop.first %}active{% endif %}">
+                    <img src="{{ image.image_url }}" alt="{{ image.title }}" class="slide-img">
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="slide active">
+                    <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم" class="slide-img">
+                </div>
+                <div class="slide">
+                    <img src="https://via.placeholder.com/1920x800?text=أعمال+فنية" class="slide-img">
+                </div>
+                <div class="slide">
+                    <img src="https://via.placeholder.com/1920x800?text=إبداع+لا+محدود" class="slide-img">
+                </div>
+            {% endif %}
         </div>
         <div class="slider-nav">
-            {% for image in featured_images[:4] %}
-            <div class="slider-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
-            {% endfor %}
+            <div class="slider-dot active" data-slide="0"></div>
+            <div class="slider-dot" data-slide="1"></div>
+            <div class="slider-dot" data-slide="2"></div>
         </div>
         <div class="slider-arrows">
             <button class="slider-arrow slider-prev"><i class="fas fa-chevron-right"></i></button>
             <button class="slider-arrow slider-next"><i class="fas fa-chevron-left"></i></button>
         </div>
+        <div class="slider-progress">
+            <div class="slider-progress-bar" style="width: 100%;"></div>
+        </div>
+    </section>
+
+    <!-- ===== السلايدر الثاني (Carousel) ===== -->
+    <div class="container main-carousel">
+        <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% if featured_images %}
+                    {% for image in featured_images[:4] %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ image.image_url }}" class="d-block w-100" alt="{{ image.title }}">
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/1200x400?text=صورة+1" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://via.placeholder.com/1200x400?text=صورة+2" class="d-block w-100">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://via.placeholder.com/1200x400?text=صورة+3" class="d-block w-100">
+                    </div>
+                {% endif %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== أقسام التصنيفات (Categories Slider) ===== -->
+    {% if categories %}
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-folder-open me-2"></i> تصفح الأقسام</h2>
+                <a href="#" class="view-all-btn">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+            <div class="position-relative category-container">
+                <div class="swiper category-swiper">
+                    <div class="swiper-wrapper">
+                        {% for category, count in categories %}
+                        <div class="swiper-slide">
+                            <a href="{{ url_for('index') }}?category={{ category.id }}" class="text-decoration-none">
+                                <div class="category-item">
+                                    <div class="category-image-wrapper">
+                                        <img src="https://via.placeholder.com/120x120?text={{ category.name[0] }}" alt="{{ category.name }}">
+                                    </div>
+                                    <h5 class="category-title">{{ category.name }}</h5>
+                                    <small class="text-muted">{{ count }} صورة</small>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="swiper-button-prev category-nav-btn"></div>
+                <div class="swiper-button-next category-nav-btn"></div>
+            </div>
+        </div>
     </section>
     {% endif %}
 
-    <!-- ===== قسم الأقسام (Categories Pills) ===== -->
-    {% if categories %}
-    <section class="categories">
+    <!-- ===== الصور المميزة (مستوحاة من قسم المنتجات) ===== -->
+    {% if featured_images %}
+    <section id="featured" class="featured-section">
         <div class="container">
-            <div class="section-title">
-                <h2>تصفح الأقسام</h2>
-                <p>اكتشف مجموعاتنا المتنوعة من الصور الفنية</p>
+            <div class="section-header">
+                <h2><i class="fas fa-star me-2"></i> صور مميزة</h2>
+                <a href="#" class="view-all-btn">عرض الكل <i class="fas fa-arrow-left"></i></a>
             </div>
-            <div class="categories-grid">
-                {% for category, count in categories %}
-                <a href="{{ url_for('index') }}?category={{ category.id }}" class="category-card">
-                    <div class="category-content">
-                        <div class="category-icon"><i class="fas fa-folder"></i></div>
-                        <h3>{{ category.name }}</h3>
-                        <p>{{ count }} صورة</p>
-                        <span class="category-link">
-                            عرض الألبوم <i class="fas fa-arrow-left"></i>
-                        </span>
+            <div class="featured-grid">
+                {% for image in featured_images %}
+                <div class="featured-card">
+                    <div class="featured-image">
+                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
+                        <span class="featured-badge"><i class="fas fa-star"></i> مميزة</span>
                     </div>
-                </a>
+                    <div class="featured-info">
+                        <h3>{{ image.title }}</h3>
+                        <p>{{ image.description|truncate(50) }}</p>
+                        <div class="featured-stats">
+                            <span><i class="fas fa-eye"></i> {{ image.views }}</span>
+                            <span><i class="fas fa-download"></i> {{ image.downloads }}</span>
+                        </div>
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="featured-btn">
+                            <i class="fas fa-info-circle"></i> عرض التفاصيل
+                        </a>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -615,140 +872,67 @@
 
 
 
-<!-- ===== قسم الصور المميزة - شبكة احترافية ===== -->
-{% if featured_images %}
-<section id="featured" class="featured-section py-5">
-    <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2 class="display-4 fw-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <i class="fas fa-star"></i> صور مميزة
-            </h2>
-            <p class="lead text-white-50">أبرز الأعمال الفنية التي نالت إعجاب الجميع</p>
-        </div>
-        
-        <div class="row g-4">
-            {% for image in featured_images %}
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="featured-card h-100">
-                    <div class="featured-image-wrapper position-relative">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" 
-                             alt="{{ image.title }}"
-                             class="img-fluid rounded-3"
-                             style="width:100%; height:200px; object-fit:cover;">
-                        <span class="featured-badge position-absolute top-0 end-0 m-2">
-                            <i class="fas fa-star text-warning"></i>
-                        </span>
-                    </div>
-                    <div class="featured-body p-3 text-center">
-                        <h5 class="card-title mb-2">{{ image.title }}</h5>
-                        <p class="text-muted small">{{ image.description|truncate(50) }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-primary"><i class="fas fa-eye"></i> {{ image.views }}</span>
-                            <span class="text-success"><i class="fas fa-download"></i> {{ image.downloads }}</span>
-                        </div>
-                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-outline-primary w-100 mt-3">
-                            <i class="fas fa-info-circle"></i> عرض التفاصيل
-                        </a>
-                    </div>
-                </div>
+
+    <!-- ===== الصور المميزة (مستوحاة من قسم أحدث المنتجات) ===== -->
+    {% if featured_images %}
+    <section id="featured" class="featured-products-section py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fs-3 mb-0">
+                    <i class="fas fa-star text-warning me-2"></i> صور مميزة
+                    <span class="badge bg-warning ms-2">مميزة</span>
+                </h2>
+                <a href="#" class="btn btn-sm btn-outline-warning">عرض الكل <i class="fas fa-arrow-left ms-1"></i></a>
             </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-
-
-
-<!-- ===== قسم الصور المميزة - سلايدر ===== -->
-{% if featured_images %}
-<section id="featured" class="featured-slider-section py-5">
-    <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2 class="display-4 fw-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <i class="fas fa-star"></i> صور مميزة
-            </h2>
-            <p class="lead text-white-50">اكتشف مجموعة من الصور التي نالت إعجاب الجمهور</p>
-        </div>
-    </div>
-    
-    <div class="container-fluid px-4">
-        <div class="swiper featuredSwiper">
-            <div class="swiper-wrapper">
+            
+            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
                 {% for image in featured_images %}
-                <div class="swiper-slide">
-                    <div class="featured-slide-card">
-                        <img src="{{ image.image_url }}" 
-                             alt="{{ image.title }}"
-                             class="img-fluid rounded-3"
-                             style="width:100%; height:300px; object-fit:cover;">
-                        <div class="featured-slide-overlay">
-                            <h4>{{ image.title }}</h4>
-                            <p>{{ image.description|truncate(80) }}</p>
-                            <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-light btn-sm">
-                                <i class="fas fa-eye"></i> عرض
+                <div class="col">
+                    <div class="card h-100 product-card featured-card">
+                        <!-- شارة مميزة -->
+                        <div class="position-absolute top-0 end-0 m-2" style="z-index: 10;">
+                            <span class="badge bg-warning"><i class="fas fa-star"></i> مميزة</span>
+                        </div>
+                        
+                        <!-- صورة المنتج -->
+                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="text-decoration-none">
+                            <div class="card-img-container">
+                                <img src="{{ image.thumbnail_url or image.image_url }}" class="card-img-top" alt="{{ image.title }}">
+                            </div>
+                        </a>
+                        
+                        <!-- معلومات الصورة -->
+                        <div class="card-body">
+                            <h5 class="card-title">{{ image.title|truncate(30) }}</h5>
+                            <p class="card-text small text-muted">{{ image.description|truncate(40) }}</p>
+                            
+                            <!-- الإحصائيات (مشاهدات وتحميلات) -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-primary"><i class="fas fa-eye"></i> {{ image.views }}</span>
+                                <span class="text-success"><i class="fas fa-download"></i> {{ image.downloads }}</span>
+                            </div>
+                            
+                            <!-- زر عرض التفاصيل (يحاكي زر إضافة للسلة) -->
+                            <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-sm btn-warning w-100">
+                                <i class="fas fa-info-circle me-1"></i> عرض التفاصيل
                             </a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
         </div>
-    </div>
-</section>
-{% endif %}
+    </section>
+    {% endif %}
 
 
-<!-- ===== قسم الصور المميزة - بطاقات متطورة ===== -->
-{% if featured_images %}
-<section id="featured" class="featured-advanced-section py-5">
-    <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2 class="display-4 fw-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <i class="fas fa-star"></i> صور مميزة
-            </h2>
-            <p class="lead text-white-50">مجموعة مختارة من أفضل الأعمال</p>
-        </div>
-        
-        <div class="row g-4">
-            {% for image in featured_images %}
-            <div class="col-md-6 col-lg-3">
-                <div class="featured-advanced-card">
-                    <div class="card-media">
-                        <img src="{{ image.image_url }}" alt="{{ image.title }}">
-                        <div class="card-overlay">
-                            <span class="badge bg-warning"><i class="fas fa-star"></i> مميزة</span>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">{{ image.title }}</h3>
-                        <p class="card-description">{{ image.description|truncate(60) }}</p>
-                        <div class="card-stats">
-                            <div><i class="fas fa-eye"></i> {{ image.views }}</div>
-                            <div><i class="fas fa-download"></i> {{ image.downloads }}</div>
-                        </div>
-                        <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-gradient w-100">
-                            <i class="fas fa-arrow-left"></i> عرض التفاصيل
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
+
 
     <!-- ===== المعرض الرئيسي ===== -->
     <section id="gallery" class="gallery-section">
         <div class="container">
-            <div class="section-title">
-                <h2>جميع الصور</h2>
-                <p>مجموعة من أجمل الأعمال الفنية</p>
+            <div class="section-header">
+                <h2><i class="fas fa-images me-2"></i> جميع الصور</h2>
             </div>
 
             {% if images and images.items %}
@@ -800,9 +984,9 @@
 
             {% else %}
             <div class="text-center py-5">
-                <i class="fas fa-images" style="font-size: 4rem; color: var(--gray);"></i>
+                <i class="fas fa-images" style="font-size: 4rem; color: #ccc;"></i>
                 <h3 class="mt-3">لا توجد صور بعد</h3>
-                <p class="text-muted">ابدأ بإضافة صور رائعة إلى المعرض</p>
+                <p>ابدأ بإضافة صور رائعة إلى المعرض</p>
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('upload_images') }}" class="btn btn-primary mt-3">أضف أول صورة</a>
                 {% endif %}
@@ -811,51 +995,35 @@
         </div>
     </section>
 
-    <!-- ===== قسم CTA (دعوي) ===== -->
-    <section class="cta">
-        <div class="container">
-            <h2>هل تبحث عن عمل فني مميز؟</h2>
-            <p>نحن هنا لمساعدتك في اختيار أفضل الصور والأعمال الفنية التي تناسب ذوقك</p>
-            <a href="{{ url_for('contact') }}" class="btn">تواصل معنا الآن</a>
-        </div>
-    </section>
-
     <!-- ===== Footer ===== -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-main">
-                <div class="footer-about">
-                    <a href="{{ url_for('index') }}" class="logo">
-                        {% if settings and settings.site_logo %}
-                            <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}" style="max-height: 60px;">
-                        {% else %}
-                            <h3>{{ settings.site_title }}</h3>
-                        {% endif %}
-                    </a>
-                    <p>{{ settings.site_description or 'معرض فني يضم مجموعة رائعة من الصور والأعمال الإبداعية.' }}</p>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>{{ settings.site_title }}</h4>
+                    <p>{{ settings.site_description|truncate(100) }}</p>
                     <div class="footer-social">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
-                <div class="footer-links">
-                    <h4 class="footer-title">روابط سريعة</h4>
-                    <ul>
-                        <li><a href="{{ url_for('index') }}"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
-                        <li><a href="{{ url_for('index') }}#gallery"><i class="fas fa-chevron-left"></i> المعرض</a></li>
-                        <li><a href="{{ url_for('index') }}#featured"><i class="fas fa-chevron-left"></i> صور مميزة</a></li>
-                        <li><a href="{{ url_for('about') }}"><i class="fas fa-chevron-left"></i> من نحن</a></li>
-                        <li><a href="{{ url_for('contact') }}"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('index') }}">الرئيسية</a></li>
+                        <li><a href="#featured">صور مميزة</a></li>
+                        <li><a href="#gallery">جميع الصور</a></li>
+                        <li><a href="{{ url_for('about') }}">من نحن</a></li>
+                        <li><a href="{{ url_for('contact') }}">اتصل بنا</a></li>
                     </ul>
                 </div>
-                <div class="footer-contact">
-                    <h4 class="footer-title">تواصل معنا</h4>
-                    <ul>
-                        <li><i class="fas fa-phone-alt"></i> +972 59 978 7656</li>
-                        <li><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</li>
-                        <li><i class="fas fa-map-marker-alt"></i> فلسطين</li>
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone-alt me-2"></i> +970 59 978 7656</li>
+                        <li><i class="fas fa-envelope me-2"></i> {{ settings.contact_email or 'info@gallery.ps' }}</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> فلسطين</li>
                     </ul>
                 </div>
             </div>
@@ -866,20 +1034,24 @@
     </footer>
 
     <!-- ===== Lightbox ===== -->
-    <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:9999; justify-content:center; align-items:center;">
-        <span onclick="closeLightbox()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
-        <img id="lightbox-img" style="max-width:90%; max-height:80%;">
+    <div id="lightbox">
+        <span onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="">
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
-        // ===== سلايدر بسيط =====
+        // ===== السلايدر الأول =====
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.slider-dot');
+        const slides = document.querySelectorAll('.hero-slider .slide');
+        const dots = document.querySelectorAll('.hero-slider .slider-dot');
         const prevBtn = document.querySelector('.slider-prev');
         const nextBtn = document.querySelector('.slider-next');
+        const progressBar = document.querySelector('.slider-progress-bar');
+        let slideInterval;
 
         function showSlide(index) {
             if (index >= slides.length) index = 0;
@@ -889,6 +1061,22 @@
             slides[index].classList.add('active');
             dots[index].classList.add('active');
             currentSlide = index;
+            resetProgress();
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function resetProgress() {
+            if (progressBar) {
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '0';
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 5s linear';
+                    progressBar.style.width = '100%';
+                }, 50);
+            }
         }
 
         if (prevBtn && nextBtn) {
@@ -897,23 +1085,44 @@
             dots.forEach((dot, i) => {
                 dot.addEventListener('click', () => showSlide(i));
             });
+            slideInterval = setInterval(nextSlide, 5000);
+            resetProgress();
         }
+
+        // ===== تفعيل Swiper للتصنيفات =====
+        const categorySwiper = new Swiper('.category-swiper', {
+            slidesPerView: 2,
+            spaceBetween: 15,
+            loop: true,
+            autoplay: { delay: 3000 },
+            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            breakpoints: {
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 6 }
+            }
+        });
 
         // ===== Lightbox =====
         function openLightbox(src, id) {
             document.getElementById('lightbox').style.display = 'flex';
             document.getElementById('lightbox-img').src = src;
-            fetch(`/api/view/${id}`, {method:'POST'}).then(r=>r.json()).then(d=>{
-                if(d.success) {
-                    let el = document.querySelector(`.view-count-${id}`);
-                    if(el) el.textContent = d.views;
-                }
-            }).catch(e=>console.log(e));
+            fetch(`/api/view/${id}`, { method: 'POST' })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        let el = document.querySelector(`.view-count-${id}`);
+                        if (el) el.textContent = d.views;
+                    }
+                })
+                .catch(e => console.log(e));
         }
         function closeLightbox() {
             document.getElementById('lightbox').style.display = 'none';
         }
-        document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
     </script>
 </body>
 </html>
