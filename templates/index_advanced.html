@@ -887,6 +887,426 @@
 </section>
 
 
+
+<!-- ===== الكاروسيل الرئيسي مع عنوان الموقع ووصفه ===== -->
+<section class="hero-carousel">
+    <!-- عنوان الموقع المتحرك (يظهر فوق الكاروسيل) -->
+    <div class="hero-header">
+        <div class="container">
+            <div class="hero-content animate-rotate">
+                {% if settings and settings.site_logo %}
+                <div class="hero-logo-wrapper">
+                    <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}" class="hero-logo">
+                </div>
+                {% endif %}
+                <h1 class="hero-title">{{ settings.site_title or 'معرض الأعمال' }}</h1>
+                <p class="hero-description">{{ settings.site_description or 'إنجازاتنا في صورة - مرحباً بكم في معرض أعمالنا' }}</p>
+                <div class="hero-buttons">
+                    <a href="#gallery" class="btn btn-primary"><i class="fas fa-images me-2"></i>استعرض الأعمال</a>
+                    <a href="#featured" class="btn btn-outline-light"><i class="fas fa-star me-2"></i>المميزة</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الكاروسيل المتحرك (خلفية) -->
+    <div class="carousel-container">
+        <div class="carousel-slides">
+            {% if carousel_images %}
+                {% for image in carousel_images %}
+                <div class="carousel-slide {% if loop.first %}active{% endif %}">
+                    <img src="{{ image.image_url }}" alt="{{ image.title }}" class="carousel-image">
+                    <!-- عنوان ووصف الصورة (يظهر عند التحويم أو كبديل) -->
+                    <div class="carousel-caption">
+                        <h3>{{ image.title }}</h3>
+                        <p>{{ image.description|truncate(80) }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- صور افتراضية إذا لم توجد صور -->
+                <div class="carousel-slide active">
+                    <img src="https://via.placeholder.com/1920x600?text=مرحباً+بكم" class="carousel-image">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://via.placeholder.com/1920x600?text=أعمال+فنية+رائعة" class="carousel-image">
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://via.placeholder.com/1920x600?text=إبداع+لا+محدود" class="carousel-image">
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- أزرار التنقل -->
+        <button class="carousel-control carousel-prev"><i class="fas fa-chevron-right"></i></button>
+        <button class="carousel-control carousel-next"><i class="fas fa-chevron-left"></i></button>
+
+        <!-- مؤشرات الصفحات -->
+        <div class="carousel-indicators">
+            {% if carousel_images %}
+                {% for image in carousel_images %}
+                <span class="indicator {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></span>
+                {% endfor %}
+            {% else %}
+                <span class="indicator active" data-slide="0"></span>
+                <span class="indicator" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<style>
+    /* ===== الكاروسيل الرئيسي مع عنوان متحرك ===== */
+.hero-carousel {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+    margin-top: 70px; /* مسافة تحت الشريط العلوي */
+}
+
+/* عنوان الموقع المتحرك */
+.hero-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    padding: 40px 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 800px;
+    color: white;
+    text-align: center;
+    margin: 0 auto;
+    pointer-events: auto;
+}
+
+/* حركة دورانية للعنوان */
+.animate-rotate {
+    animation: rotateIn 1.5s ease;
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-10deg) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(0) scale(1);
+    }
+}
+
+.hero-logo-wrapper {
+    margin-bottom: 20px;
+}
+
+.hero-logo {
+    max-height: 80px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.hero-description {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.hero-buttons .btn {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin: 0 5px;
+    border: none;
+}
+
+.hero-buttons .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+}
+
+.hero-buttons .btn-outline-light {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.hero-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* الكاروسيل */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.carousel-slide:hover .carousel-caption {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-caption h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.carousel-caption p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* أزرار التنقل */
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+}
+
+.carousel-control:hover {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-color: transparent;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev {
+    right: 30px;
+}
+
+.carousel-next {
+    left: 30px;
+}
+
+/* مؤشرات الصفحات */
+.carousel-indicators {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 30;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.indicator.active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* تحسينات الموبايل */
+@media (max-width: 768px) {
+    .hero-carousel {
+        height: 500px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-buttons .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-prev {
+        right: 15px;
+    }
+    
+    .carousel-next {
+        left: 15px;
+    }
+    
+    .carousel-caption h3 {
+        font-size: 1.5rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-carousel {
+        height: 400px;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-description {
+        font-size: 0.9rem;
+    }
+    
+    .carousel-caption {
+        bottom: 60px;
+    }
+}
+</style>
+
+<script>
+
+    // ===== تشغيل الكاروسيل =====
+ 
+let slideInterval;
+
+function showSlide(index) {
+    if (!slides.length) return;
+    if (index >= slides.length) index = 0;
+    if (index < 0) index = slides.length - 1;
+    
+    slides.forEach(s => s.classList.remove('active'));
+    indicators.forEach(i => i.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+    currentSlide = index;
+}
+
+function nextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    showSlide(currentSlide - 1);
+}
+
+function startAutoSlide() {
+    if (slides.length > 1) {
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+}
+
+if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        clearInterval(slideInterval);
+        startAutoSlide();
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        clearInterval(slideInterval);
+        startAutoSlide();
+    });
+    
+    indicators.forEach((indicator, i) => {
+        indicator.addEventListener('click', () => {
+            showSlide(i);
+            clearInterval(slideInterval);
+            startAutoSlide();
+        });
+    });
+}
+
+if (slides.length > 0) {
+    startAutoSlide();
+}
+</script>
+
+
 <!-- ===== لوحة الترحيب / الكاروسيل مع نصوص ديناميكية ===== -->
 <section class="hero">
     <div class="hero-slides">
