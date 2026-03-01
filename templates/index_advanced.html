@@ -887,9 +887,250 @@
 </section>
 
 
+<!-- ===== لوحة الترحيب / الكاروسيل مع نصوص ديناميكية ===== -->
+<section class="hero">
+    <div class="hero-slides">
+        {% if carousel_images %}
+            {% for image in carousel_images %}
+            <div class="hero-slide {% if loop.first %}active{% endif %}">
+                <img src="{{ image.image_url }}" alt="{{ image.title }}">
+                
+                <!-- طبقة النص فوق الصورة - قابلة للتخصيص -->
+                <div class="hero-text-overlay text-position-center"> <!-- غير class لتغيير الموقع -->
+                    <div class="hero-text-container">
+                        <!-- الشعار (يظهر فقط في أول صورة أو حسب رغبتك) -->
+                        {% if settings and settings.site_logo and loop.first %}
+                        <div class="hero-logo-badge">
+                            <img src="{{ settings.site_logo }}" alt="شعار" class="hero-logo-small">
+                        </div>
+                        {% endif %}
+                        
+                        <!-- عنوان ديناميكي من إعدادات الموقع -->
+                        <h2 class="hero-slide-title">{{ settings.site_title or 'معرض الأعمال' }}</h2>
+                        
+                        <!-- وصف ديناميكي من إعدادات الموقع -->
+                        <p class="hero-slide-description">{{ settings.site_description or 'إنجازاتنا في صورة - مرحباً بكم في معرض أعمالنا' }}</p>
+                        
+                        <!-- أزرار إضافية -->
+                        <div class="hero-slide-buttons">
+                            <a href="#gallery" class="btn btn-light btn-sm">استعرض المعرض</a>
+                            <a href="{{ url_for('view_image', image_id=image.id) }}" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-info-circle"></i> تفاصيل
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- صور افتراضية مع نصوص ديناميكية -->
+            <div class="hero-slide active">
+                <img src="https://via.placeholder.com/1920x800?text={{ settings.site_title|urlencode }}" alt="{{ settings.site_title }}">
+                <div class="hero-text-overlay text-position-center">
+                    <div class="hero-text-container">
+                        {% if settings and settings.site_logo %}
+                        <div class="hero-logo-badge">
+                            <img src="{{ settings.site_logo }}" alt="شعار" class="hero-logo-small">
+                        </div>
+                        {% endif %}
+                        <h2 class="hero-slide-title">{{ settings.site_title or 'معرض الأعمال' }}</h2>
+                        <p class="hero-slide-description">{{ settings.site_description or 'إنجازاتنا في صورة - مرحباً بكم في معرض أعمالنا' }}</p>
+                        <div class="hero-slide-buttons">
+                            <a href="#gallery" class="btn btn-light btn-sm">استعرض المعرض</a>
+                            <a href="#featured" class="btn btn-outline-light btn-sm">صور مميزة</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- النقاط (dots) -->
+    <div class="hero-nav">
+        {% if carousel_images %}
+            {% for image in carousel_images %}
+            <div class="hero-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
+            {% endfor %}
+        {% else %}
+            <div class="hero-dot active" data-slide="0"></div>
+        {% endif %}
+    </div>
+
+    <!-- أسهم التنقل -->
+    <div class="hero-arrows">
+        <div class="hero-arrow hero-prev"><i class="fas fa-chevron-right"></i></div>
+        <div class="hero-arrow hero-next"><i class="fas fa-chevron-left"></i></div>
+    </div>
+</section>
+<!-- ===== لوحة الترحيب / الكاروسيل مع نصوص ديناميكية ===== -->
+
+    <style>
 
 
+/* ===== نصوص الكاروسيل الديناميكية مع التحكم في الموقع ===== */
+.hero-text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 100%);
+    display: flex;
+    padding: 0 10%;
+    z-index: 5;
+}
 
+/* التحكم في الموقع - استخدم class المناسب */
+
+/* النص في الأعلى */
+.text-position-top {
+    align-items: flex-start;
+    padding-top: 80px;
+}
+
+/* النص في الوسط */
+.text-position-center {
+    align-items: center;
+}
+
+/* النص في الأسفل */
+.text-position-bottom {
+    align-items: flex-end;
+    padding-bottom: 80px;
+}
+
+/* التحكم في المحاذاة الأفقية */
+.text-align-right {
+    justify-content: flex-start;
+}
+
+.text-align-center {
+    justify-content: center;
+    text-align: center;
+}
+
+.text-align-left {
+    justify-content: flex-end;
+    text-align: left;
+}
+
+.hero-text-container {
+    max-width: 700px;
+    color: white;
+    animation: fadeInUp 1s ease;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* باقي التنسيقات كما هي */
+.hero-logo-badge {
+    margin-bottom: 20px;
+}
+
+.hero-logo-small {
+    max-height: 60px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background: white;
+    padding: 5px;
+}
+
+.hero-slide-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: -0.5px;
+}
+
+.hero-slide-description {
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    opacity: 0.95;
+    max-width: 600px;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero-slide-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.hero-slide-buttons .btn {
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+}
+
+.hero-slide-buttons .btn-light {
+    background: white;
+    color: var(--dark);
+}
+
+.hero-slide-buttons .btn-outline-light {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.hero-slide-buttons .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+    .hero-text-overlay {
+        padding: 0 5%;
+    }
+    
+    .text-position-top {
+        padding-top: 40px;
+    }
+    
+    .text-position-bottom {
+        padding-bottom: 40px;
+    }
+    
+    .hero-text-container {
+        max-width: 100%;
+    }
+    
+    .hero-slide-title {
+        font-size: 2.2rem;
+    }
+    
+    .hero-slide-description {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+    
+    .hero-slide-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .hero-slide-buttons .btn {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-slide-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-logo-small {
+        max-height: 40px;
+    }
+}
+    </style>
 <!-- ===== لوحة الترحيب / الكاروسيل مع نصوص بارزة ===== -->
 <section class="hero">
     <div class="hero-slides">
