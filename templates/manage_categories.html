@@ -217,6 +217,7 @@
             border-top: 2px solid #f0f0f0;
             position: relative;
             z-index: 10;
+            flex-wrap: wrap;
         }
         .btn-edit, .btn-save {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -281,6 +282,21 @@
         .btn-cancel:hover {
             background: #5a6268;
         }
+        .btn-upload-image {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        .btn-upload-image:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
         .edit-mode {
             display: none;
         }
@@ -300,16 +316,6 @@
             margin-bottom: 10px;
             min-height: 80px;
             resize: vertical;
-        }
-        .view-all-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-        .view-all-link:hover {
-            text-decoration: underline;
         }
         .empty-state {
             text-align: center;
@@ -384,12 +390,6 @@
                             <input type="text" name="description" class="form-control" placeholder="وصف مختصر للتصنيف">
                         </div>
                     </div>
-                          <button class="btn btn-sm btn-info" onclick="showUploadModal('{{ category.id }}')">
-                          <i class="bi bi-cloud-upload"></i> رفع صورة
-                           </button>
-                           <button class="btn btn-sm btn-info upload-category-btn" data-category-id="{{ category.id }}">
-    <i class="bi bi-cloud-upload"></i> رفع صورة
-</button>
                     <div class="col-md-2">
                         <div class="mb-3">
                             <label class="form-label">&nbsp;</label>
@@ -407,12 +407,17 @@
         <div class="categories-grid">
             {% for category in categories %}
             <div class="category-card" id="category-{{ category.id }}">
-                <!-- رابط عرض التصنيف (يتم فتحه عند الضغط على البطاقة) -->
+                <!-- رابط عرض التصنيف -->
                 <a href="{{ url_for('view_category', category_id=category.id) }}" class="stretched-link" target="_blank"></a>
                 
                 <div class="category-header">
+                    <!-- صورة التصنيف أو الأيقونة -->
                     <div class="category-icon">
-                        <i class="bi bi-folder"></i>
+                        {% if category.image_url %}
+                            <img src="{{ category.image_url }}" alt="{{ category.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;">
+                        {% else %}
+                            <i class="bi bi-folder"></i>
+                        {% endif %}
                     </div>
                     <div class="category-info">
                         <!-- وضع العرض -->
@@ -421,7 +426,7 @@
                             <div class="category-slug">{{ category.slug }}</div>
                         </div>
                         
-                        <!-- وضع التعديل (مخفي افتراضياً) -->
+                        <!-- وضع التعديل -->
                         <div class="edit-mode" id="edit-{{ category.id }}" style="display: none;">
                             <form method="POST" action="{{ url_for('edit_category', category_id=category.id) }}" id="edit-form-{{ category.id }}">
                                 <input type="text" name="name" class="edit-input" value="{{ category.name }}" placeholder="اسم التصنيف" required>
@@ -431,12 +436,12 @@
                     </div>
                 </div>
                 
-                <!-- وصف التصنيف (وضع العرض) -->
+                <!-- وصف التصنيف -->
                 <div class="category-description view-mode" id="desc-{{ category.id }}">
                     <i class="bi bi-quote"></i> {{ category.description or 'لا يوجد وصف' }}
                 </div>
                 
-                <!-- معاينة الصور -->
+                <!-- معاينة الصور التابعة للتصنيف -->
                 {% if category.images %}
                 <div class="preview-images">
                     {% for image in category.images[:4] %}
@@ -456,15 +461,18 @@
                     <span><i class="bi bi-calendar"></i> {{ category.created_at.strftime('%Y-%m-%d') }}</span>
                 </div>
                 
-                <!-- أزرار التحكم (تظهر فوق الرابط) -->
+                <!-- أزرار التحكم -->
                 <div class="category-actions" onclick="event.preventDefault(); event.stopPropagation();">
                     <!-- أزرار وضع العرض -->
                     <div class="view-mode" id="view-actions-{{ category.id }}">
                         <button class="btn-view" onclick="event.preventDefault(); window.open('{{ url_for('view_category', category_id=category.id) }}', '_blank')">
                             <i class="bi bi-eye"></i> عرض
                         </button>
-                        <button class="btn-edit" onclick="event.preventDefault(); editCategory({{ category.id }})">
+                        <button class="btn-edit" onclick="event.preventDefault(); editCategory('{{ category.id }}')">
                             <i class="bi bi-pencil"></i> تعديل
+                        </button>
+                        <button class="btn-upload-image" onclick="event.preventDefault(); showUploadModal('{{ category.id }}')">
+                            <i class="bi bi-cloud-upload"></i> رفع صورة
                         </button>
                         <a href="{{ url_for('delete_category', category_id=category.id) }}" 
                            class="btn-delete"
@@ -473,12 +481,12 @@
                         </a>
                     </div>
                     
-                    <!-- أزرار وضع التعديل (مخفية افتراضياً) -->
+                    <!-- أزرار وضع التعديل -->
                     <div class="edit-mode" id="edit-actions-{{ category.id }}" style="display: none;">
-                        <button class="btn-save" onclick="event.preventDefault(); saveCategory({{ category.id }})">
+                        <button class="btn-save" onclick="event.preventDefault(); saveCategory('{{ category.id }}')">
                             <i class="bi bi-check-circle"></i> حفظ
                         </button>
-                        <button class="btn-cancel" onclick="event.preventDefault(); cancelEdit({{ category.id }})">
+                        <button class="btn-cancel" onclick="event.preventDefault(); cancelEdit('{{ category.id }}')">
                             <i class="bi bi-x-circle"></i> إلغاء
                         </button>
                     </div>
@@ -495,74 +503,67 @@
         {% endif %}
     </div>
     
-<script>
-function editCategory(id) {
-    // إخفاء عناصر العرض
-    document.getElementById('view-' + id).style.display = 'none';
-    document.getElementById('desc-' + id).style.display = 'none';
-    document.getElementById('view-actions-' + id).style.display = 'none';
-    
-    // إظهار عناصر التعديل
-    document.getElementById('edit-' + id).style.display = 'block';
-    document.getElementById('edit-actions-' + id).style.display = 'flex';
-}
-
-function saveCategory(id) {
-    // إرسال النموذج
-    document.getElementById('edit-form-' + id).submit();
-}
-
-function cancelEdit(id) {
-    // إخفاء عناصر التعديل
-    document.getElementById('edit-' + id).style.display = 'none';
-    document.getElementById('edit-actions-' + id).style.display = 'none';
-    
-    // إظهار عناصر العرض
-    document.getElementById('view-' + id).style.display = 'block';
-    document.getElementById('desc-' + id).style.display = 'block';
-    document.getElementById('view-actions-' + id).style.display = 'flex';
-}
-
-function showUploadModal(categoryId) {
-    document.getElementById('uploadCategoryId').value = categoryId;
-    document.getElementById('uploadCategoryImageForm').action = '/admin/categories/upload-image/' + categoryId;
-    new bootstrap.Modal(document.getElementById('uploadImageModal')).show();
-}
-</script>
-    <!-- Modal لرفع الصورة (أضفه في نهاية الصفحة) -->
-<div class="modal fade" id="uploadImageModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-image"></i> رفع صورة للتصنيف</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form method="POST" enctype="multipart/form-data" id="uploadCategoryImageForm">
-                <div class="modal-body">
-                    <input type="hidden" name="category_id" id="uploadCategoryId">
-                    <div class="mb-3">
-                        <label class="form-label">اختر صورة</label>
-                        <input type="file" name="image" class="form-control" accept="image/*" required>
-                        <small class="text-muted">أفضل مقاس: 100×100 بكسل (صورة مربعة)</small>
+    <!-- Modal لرفع الصورة -->
+    <div class="modal fade" id="uploadImageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-image"></i> رفع صورة للتصنيف</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" enctype="multipart/form-data" id="uploadCategoryImageForm">
+                    <div class="modal-body">
+                        <input type="hidden" name="category_id" id="uploadCategoryId">
+                        <div class="mb-3">
+                            <label class="form-label">اختر صورة</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" required>
+                            <small class="text-muted">أفضل مقاس: 100×100 بكسل (صورة مربعة)</small>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="submit" class="btn btn-primary">رفع الصورة</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">رفع الصورة</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-<script>
-function showUploadModal(categoryId) {
-    document.getElementById('uploadCategoryId').value = categoryId;
-    document.getElementById('uploadCategoryImageForm').action = '/admin/categories/upload-image/' + categoryId;
-    new bootstrap.Modal(document.getElementById('uploadImageModal')).show();
-}
- 
-</script>
+    
+    <script>
+        function editCategory(id) {
+            // إخفاء عناصر العرض
+            document.getElementById('view-' + id).style.display = 'none';
+            document.getElementById('desc-' + id).style.display = 'none';
+            document.getElementById('view-actions-' + id).style.display = 'none';
+            
+            // إظهار عناصر التعديل
+            document.getElementById('edit-' + id).style.display = 'block';
+            document.getElementById('edit-actions-' + id).style.display = 'flex';
+        }
+        
+        function saveCategory(id) {
+            // إرسال النموذج
+            document.getElementById('edit-form-' + id).submit();
+        }
+        
+        function cancelEdit(id) {
+            // إخفاء عناصر التعديل
+            document.getElementById('edit-' + id).style.display = 'none';
+            document.getElementById('edit-actions-' + id).style.display = 'none';
+            
+            // إظهار عناصر العرض
+            document.getElementById('view-' + id).style.display = 'block';
+            document.getElementById('desc-' + id).style.display = 'block';
+            document.getElementById('view-actions-' + id).style.display = 'flex';
+        }
+        
+        function showUploadModal(categoryId) {
+            document.getElementById('uploadCategoryId').value = categoryId;
+            // تحديث action الفورم ليشمل معرف التصنيف
+            document.getElementById('uploadCategoryImageForm').action = '/admin/categories/upload-image/' + categoryId;
+            new bootstrap.Modal(document.getElementById('uploadImageModal')).show();
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
