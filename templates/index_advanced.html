@@ -147,12 +147,14 @@
     }
 
     /* ===== الكاروسيل الرئيسي الموحد ===== */
-    .hero-carousel {
-        position: relative;
-        height: 600px;
-        overflow: hidden;
-        margin-top: 70px;
-    }
+.hero-carousel {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+    margin-top: 0; /* إلغاء الهامش العلوي */
+    padding-top: 70px; /* تعويض المساحة تحت الشريط */
+    box-sizing: border-box; /* مهم: يجعل الـ padding جزءاً من الارتفاع */
+}
 
     /* عنوان الموقع المتحرك */
     .hero-header {
