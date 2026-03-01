@@ -195,6 +195,18 @@
                             </div>
                         </div>
                         
+
+                           <!-- أضف هذا -->
+    <div class="col-md-4">
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="show_in_carousel" id="show_in_carousel" {% if image.show_in_carousel %}checked{% endif %}>
+            <label class="form-check-label" for="show_in_carousel">
+                <i class="bi bi-collection-play text-info"></i> عرض في الكاروسيل
+            </label>
+        </div>
+    </div>
+
+    
                         <div class="col-md-4">
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" name="is_published" id="is_published" {% if image.is_published %}checked{% endif %}>

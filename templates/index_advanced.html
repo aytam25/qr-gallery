@@ -586,43 +586,68 @@
     </nav>
 
     <!-- ===== لوحة الترحيب ===== -->
-    <section class="hero">
-        <div class="hero-slides">
-            {% if featured_images %}
-                {% for image in featured_images[:3] %}
-                <div class="hero-slide {% if loop.first %}active{% endif %}">
-                    <img src="{{ image.image_url }}" alt="{{ image.title }}">
-                </div>
-                {% endfor %}
-            {% else %}
-                <div class="hero-slide active">
-                    <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم">
-                </div>
-            {% endif %}
-        </div>
+<!-- ===== لوحة الترحيب / الكاروسيل ===== -->
+<section class="hero">
+    <div class="hero-slides">
+        {% if carousel_images %}
+            {% for image in carousel_images %}
+            <div class="hero-slide {% if loop.first %}active{% endif %}">
+                <img src="{{ image.image_url }}" alt="{{ image.title }}">
+            </div>
+            {% endfor %}
+        {% elif featured_images %}
+            <!-- إذا لم توجد صور في الكاروسيل، نعرض الصور المميزة كبديل -->
+            {% for image in featured_images[:3] %}
+            <div class="hero-slide {% if loop.first %}active{% endif %}">
+                <img src="{{ image.image_url }}" alt="{{ image.title }}">
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- صور افتراضية إذا لم توجد أي صور -->
+            <div class="hero-slide active">
+                <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم+في+المعرض" alt="مرحباً بكم">
+            </div>
+            <div class="hero-slide">
+                <img src="https://via.placeholder.com/1920x800?text=أعمال+فنية+رائعة" alt="أعمال فنية">
+            </div>
+            <div class="hero-slide">
+                <img src="https://via.placeholder.com/1920x800?text=إبداع+لا+محدود" alt="إبداع">
+            </div>
+        {% endif %}
+    </div>
 
-        <div class="hero-overlay">
-            <div class="hero-content">
-                <h1>{{ settings.site_title }}</h1>
-                <p>{{ settings.site_description or 'معرض فني يضم أجمل الأعمال' }}</p>
-                <div class="hero-buttons">
-                    <a href="#gallery" class="btn btn-primary">استعرض الصور</a>
-                    <a href="#featured" class="btn btn-outline-light">صور مميزة</a>
-                </div>
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <h1>{{ settings.site_title }}</h1>
+            <p>{{ settings.site_description or 'معرض فني يضم أجمل الأعمال والإبداعات' }}</p>
+            <div class="hero-buttons">
+                <a href="#gallery" class="btn btn-primary">استعرض الصور</a>
+                <a href="#featured" class="btn btn-outline-light">صور مميزة</a>
             </div>
         </div>
+    </div>
 
-        <div class="hero-nav">
-            <div class="hero-dot active"></div>
-            <div class="hero-dot"></div>
-            <div class="hero-dot"></div>
-        </div>
+    <div class="hero-nav">
+        {% if carousel_images %}
+            {% for image in carousel_images %}
+            <div class="hero-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
+            {% endfor %}
+        {% elif featured_images %}
+            {% for image in featured_images[:3] %}
+            <div class="hero-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
+            {% endfor %}
+        {% else %}
+            <div class="hero-dot active" data-slide="0"></div>
+            <div class="hero-dot" data-slide="1"></div>
+            <div class="hero-dot" data-slide="2"></div>
+        {% endif %}
+    </div>
 
-        <div class="hero-arrows">
-            <div class="hero-arrow hero-prev"><i class="fas fa-chevron-right"></i></div>
-            <div class="hero-arrow hero-next"><i class="fas fa-chevron-left"></i></div>
-        </div>
-    </section>
+    <div class="hero-arrows">
+        <div class="hero-arrow hero-prev"><i class="fas fa-chevron-right"></i></div>
+        <div class="hero-arrow hero-next"><i class="fas fa-chevron-left"></i></div>
+    </div>
+</section>
 
     <!-- ===== قسم التصنيفات المطور (بالصور) ===== -->
     {% if categories %}

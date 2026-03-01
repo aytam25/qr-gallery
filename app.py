@@ -109,6 +109,7 @@ class Image(db.Model):
     sort_order = db.Column(db.Integer, default=0)
     is_featured = db.Column(db.Boolean, default=False)
     is_published = db.Column(db.Boolean, default=True)
+    show_in_carousel = db.Column(db.Boolean, default=False)  # ← حقل جديد للكاروسيل
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
     uploaded_by = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -346,6 +347,7 @@ def index():
     featured_only = request.args.get('featured', type=bool)
     search_query = request.args.get('q', '')
     
+    # الاستعلام الأساسي للصور
     query = Image.query.filter_by(is_published=True)
     
     if category_id:
@@ -362,29 +364,42 @@ def index():
             )
         )
     
+    # الصور للصفحة الرئيسية (مع pagination)
     images = query.order_by(Image.sort_order.desc(), Image.created_at.desc())\
                   .paginate(page=page, per_page=per_page, error_out=False)
     
+    # صور الكاروسيل (جديد) - نأخذ أول 6 صور
+    carousel_images = Image.query.filter_by(
+        show_in_carousel=True, 
+        is_published=True
+    ).order_by(Image.sort_order.asc(), Image.created_at.desc()).limit(6).all()
+    
+    # الصور المميزة
+    featured_images = Image.query.filter_by(
+        is_featured=True, 
+        is_published=True
+    ).order_by(Image.created_at.desc()).limit(6).all()
+    
+    # التصنيفات
     categories = db.session.query(
         Category, func.count(Image.id).label('image_count')
     ).outerjoin(Image).group_by(Category.id).all()
     
+    # إعدادات الموقع
     settings = SiteSettings.query.first()
     if not settings:
         settings = SiteSettings()
         db.session.add(settings)
         db.session.commit()
     
-    featured_images = Image.query.filter_by(is_featured=True, is_published=True)\
-                                 .order_by(Image.created_at.desc())\
-                                 .limit(6).all()
-    
+    # QR Code
     current_url = request.host_url
     qr_code = generate_qr_code(current_url)
     
     return render_template('index_advanced.html',
                          images=images,
                          categories=categories,
+                         carousel_images=carousel_images,  # ← متغير جديد للكاروسيل
                          featured_images=featured_images,
                          settings=settings,
                          qr_code=qr_code,
@@ -876,12 +891,16 @@ def add_image():
 @app.route('/admin/upload', methods=['GET', 'POST'])
 @login_required
 def upload_images():
-    """رفع صور متعدد إلى Azure"""
+    """رفع صور متعدد مع خيارات متقدمة"""
     if request.method == 'POST':
         files = request.files.getlist('images')
         category_id = request.form.get('category_id', type=int)
         is_featured = 'is_featured' in request.form
+        show_in_carousel = 'show_in_carousel' in request.form  # جديد
+        carousel_order = request.form.get('carousel_order', 0, type=int)  # جديد
         is_published = 'is_published' in request.form
+        default_title = request.form.get('title', '')
+        default_description = request.form.get('description', '')
         
         uploaded = 0
         failed = 0
@@ -894,21 +913,37 @@ def upload_images():
                     unique_id = uuid.uuid4().hex[:8]
                     new_filename = f"{unique_id}_{timestamp}_{filename}"
                     
+                    # حفظ مؤقتاً
                     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
                     file.save(temp_path)
                     
+                    # إنشاء صورة مصغرة
+                    thumb_path = create_thumbnail(temp_path)
+                    thumb_filename = os.path.basename(thumb_path)
+                    
+                    # رفع إلى Azure
                     azure_url = upload_to_azure(temp_path, new_filename)
                     
                     if azure_url:
-                        os.remove(temp_path)
+                        # رفع الصورة المصغرة
+                        thumb_azure_url = upload_to_azure(thumb_path, thumb_filename)
                         
+                        # حذف الملفات المؤقتة
+                        os.remove(temp_path)
+                        if os.path.exists(thumb_path):
+                            os.remove(thumb_path)
+                        
+                        # حفظ في قاعدة البيانات مع الخيارات الجديدة
                         new_image = Image(
-                            title=request.form.get('title', filename),
-                            description=request.form.get('description', ''),
+                            title=default_title or filename,
+                            description=default_description,
                             filename=new_filename,
                             image_url=azure_url,
+                            thumbnail_url=thumb_azure_url or azure_url,
                             category_id=category_id,
                             is_featured=is_featured,
+                            show_in_carousel=show_in_carousel,  # ← جديد
+                            sort_order=carousel_order,  # ← جديد (نستخدم sort_order لترتيب الكاروسيل)
                             is_published=is_published,
                             uploaded_by=current_user.id
                         )
@@ -919,7 +954,7 @@ def upload_images():
                         
                 except Exception as e:
                     failed += 1
-                    print(f"خطأ: {e}")
+                    print(f"خطأ في رفع الصورة: {e}")
         
         db.session.commit()
         flash(f'✅ تم رفع {uploaded} صورة بنجاح', 'success')
@@ -929,7 +964,8 @@ def upload_images():
         return redirect(url_for('manage_images'))
     
     categories = Category.query.all()
-    return render_template('upload_images.html', categories=categories)
+    return render_template('upload_images.html', categories=categories) 
+
 
 @app.route('/admin/edit/<int:image_id>', methods=['GET', 'POST'])
 @login_required
@@ -943,6 +979,7 @@ def edit_image(image_id):
         image.description = request.form['description']
         image.category_id = request.form.get('category_id', type=int) or None
         image.is_featured = 'is_featured' in request.form
+        image.show_in_carousel = 'show_in_carousel' in request.form  # ← جديد
         image.is_published = 'is_published' in request.form
         image.sort_order = request.form.get('sort_order', 0, type=int)
         

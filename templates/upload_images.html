@@ -93,21 +93,45 @@
             </div>
             
             <!-- خيارات العرض -->
-            <div class="form-section">
-                <h5><i class="bi bi-eye"></i> خيارات العرض</h5>
-                <div class="form-check mb-2">
-                    <input class="form-check-input" type="checkbox" name="is_featured" id="isFeatured">
-                    <label class="form-check-label" for="isFeatured">
-                        <i class="bi bi-star-fill text-warning"></i> صور مميزة
-                    </label>
-                </div>
-                <div class="form-check mb-2">
-                    <input class="form-check-input" type="checkbox" name="is_published" id="isPublished" checked>
-                    <label class="form-check-label" for="isPublished">
-                        <i class="bi bi-globe"></i> منشورة مباشرة
-                    </label>
-                </div>
+ 
+<div class="form-section">
+    <h5><i class="bi bi-eye"></i> خيارات العرض</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="is_featured" id="isFeatured">
+                <label class="form-check-label" for="isFeatured">
+                    <i class="bi bi-star-fill text-warning"></i> صورة مميزة
+                </label>
             </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="show_in_carousel" id="showInCarousel">
+                <label class="form-check-label" for="showInCarousel">
+                    <i class="bi bi-collection-play text-info"></i> عرض في الكاروسيل الرئيسي
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="is_published" id="isPublished" checked>
+                <label class="form-check-label" for="isPublished">
+                    <i class="bi bi-globe"></i> منشورة
+                </label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">ترتيب الكاروسيل</label>
+                <input type="number" name="carousel_order" class="form-control" value="0" min="0" max="999">
+                <small class="text-muted">الأرقام الأصغر تظهر أولاً</small>
+            </div>
+        </div>
+    </div>
+</div>
             
             <button type="submit" class="btn-upload">
                 <i class="bi bi-cloud-upload"></i> رفع الصور
