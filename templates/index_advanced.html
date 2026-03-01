@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <style>
-        /* ===== المتغيرات الأساسية ===== */
         :root {
             --primary: {{ settings.theme_color or '#667eea' }};
             --primary-dark: #5a67d8;
@@ -33,7 +32,6 @@
             --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.2);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --radius: 16px;
-            --radius-lg: 24px;
         }
 
         * {
@@ -47,19 +45,17 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             color: var(--dark);
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* ===== شريط التنقل الزجاجي ===== */
+        /* ===== شريط التنقل ===== */
         .navbar {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             padding: 12px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .navbar .container {
@@ -76,21 +72,11 @@
             color: var(--dark);
             font-weight: 700;
             font-size: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .logo:hover {
-            color: var(--primary);
         }
 
         .logo img {
             max-height: 50px;
             border-radius: 10px;
-            transition: transform 0.3s;
-        }
-
-        .logo img:hover {
-            transform: scale(1.05);
         }
 
         .nav-menu {
@@ -104,7 +90,6 @@
             font-weight: 600;
             position: relative;
             padding: 5px 0;
-            transition: var(--transition);
         }
 
         .nav-menu a::after {
@@ -118,13 +103,8 @@
             transition: width 0.3s;
         }
 
-        .nav-menu a:hover::after,
-        .nav-menu a.active::after {
+        .nav-menu a:hover::after {
             width: 100%;
-        }
-
-        .nav-menu a:hover {
-            color: var(--primary);
         }
 
         .header-actions {
@@ -142,16 +122,6 @@
             border-radius: 50px;
             padding: 8px 40px 8px 20px;
             width: 200px;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .search-form input:focus {
-            width: 250px;
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            background: white;
         }
 
         .search-form button {
@@ -174,24 +144,9 @@
             justify-content: center;
             border-radius: 50%;
             text-decoration: none;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
         }
 
-        .header-icon:hover {
-            transform: scale(1.1);
-            color: white;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-        }
-
-        /* ===== لوحة الترحيب المتحركة ===== */
+        /* ===== لوحة الترحيب ===== */
         .hero {
             position: relative;
             height: 500px;
@@ -238,55 +193,19 @@
             justify-content: center;
             text-align: center;
             color: white;
-            padding: 20px;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            animation: fadeInUp 1s ease;
         }
 
         .hero-content h1 {
             font-size: 4rem;
             font-weight: 800;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-content p {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
         }
 
         .hero-buttons .btn {
             padding: 12px 40px;
             border-radius: 50px;
             font-weight: 600;
-            transition: var(--transition);
-            border: none;
-        }
-
-        .hero-buttons .btn-primary {
-            background: var(--gradient);
-            color: white;
-        }
-
-        .hero-buttons .btn-outline-light {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        .hero-buttons .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            margin: 0 5px;
         }
 
         .hero-nav {
@@ -296,7 +215,6 @@
             transform: translateX(-50%);
             display: flex;
             gap: 10px;
-            z-index: 10;
         }
 
         .hero-dot {
@@ -305,13 +223,11 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: var(--transition);
         }
 
         .hero-dot.active {
             background: white;
             transform: scale(1.3);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .hero-arrows {
@@ -323,7 +239,6 @@
             display: flex;
             justify-content: space-between;
             padding: 0 30px;
-            z-index: 10;
         }
 
         .hero-arrow {
@@ -333,19 +248,10 @@
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: var(--transition);
-            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .hero-arrow:hover {
-            background: var(--gradient);
-            border-color: transparent;
-            transform: scale(1.1);
+            cursor: pointer;
         }
 
         /* ===== عناوين الأقسام ===== */
@@ -359,25 +265,11 @@
         .section-title {
             font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 0;
-            position: relative;
-            display: inline-block;
         }
 
         .section-title i {
             color: var(--primary);
             margin-left: 10px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 0;
-            width: 60px;
-            height: 3px;
-            background: var(--gradient);
-            border-radius: 3px;
         }
 
         .view-all {
@@ -388,19 +280,14 @@
             border-radius: 50px;
             text-decoration: none;
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .view-all:hover {
             background: var(--gradient);
             color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
         }
 
-        /* ===== سلايدر التصنيفات ===== */
+        /* ===== قسم التصنيفات المطور (بالصور) ===== */
         .categories-section {
             padding: 60px 0;
             background: white;
@@ -430,11 +317,11 @@
         .category-image {
             width: 100px;
             height: 100px;
-            border-radius: 50%;
             margin: 0 auto 20px;
+            border-radius: 50%;
             overflow: hidden;
             border: 3px solid var(--primary);
-            padding: 5px;
+            padding: 3px;
             background: white;
         }
 
@@ -443,19 +330,11 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+            transition: transform 0.5s;
         }
 
-        .category-icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
+        .category-card:hover .category-image img {
+            transform: scale(1.1);
         }
 
         .category-card h4 {
@@ -470,7 +349,7 @@
             margin-bottom: 0;
         }
 
-        /* ===== الصور المميزة (Featured) ===== */
+        /* ===== الصور المميزة ===== */
         .featured-section {
             padding: 60px 0;
             background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
@@ -488,13 +367,11 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .featured-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
         }
 
         .featured-image {
@@ -518,13 +395,12 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: linear-gradient(135deg, gold, #ffc107);
+            background: gold;
             color: #333;
             padding: 5px 12px;
             border-radius: 50px;
             font-size: 0.8rem;
             font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             z-index: 2;
         }
 
@@ -547,14 +423,8 @@
         .featured-stats {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 15px;
             font-size: 0.9rem;
-        }
-
-        .featured-stats i {
-            color: var(--primary);
-            margin-left: 5px;
         }
 
         .featured-btn {
@@ -568,83 +438,12 @@
             width: 100%;
             text-align: center;
             transition: var(--transition);
-            font-weight: 600;
         }
 
-        .featured-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-            color: white;
-        }
-
-        /* ===== الصور الحديثة (Recent) ===== */
-        .recent-section {
-            padding: 60px 0;
-            background: white;
-        }
-
-        .recent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .recent-card {
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .recent-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-
-        .recent-image {
-            position: relative;
-            height: 150px;
-            overflow: hidden;
-        }
-
-        .recent-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .recent-card:hover .recent-image img {
-            transform: scale(1.1);
-        }
-
-        .recent-info {
-            padding: 15px;
-            text-align: center;
-        }
-
-        .recent-info h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .recent-info .views {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-
-        .recent-info .views i {
-            color: var(--primary);
-            margin-left: 3px;
-        }
-
-        /* ===== جميع الصور (All Images) ===== */
+        /* ===== جميع الصور ===== */
         .gallery-section {
             padding: 60px 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: white;
         }
 
         .gallery-grid {
@@ -695,10 +494,6 @@
             font-size: 0.9rem;
         }
 
-        .gallery-stats i {
-            margin-left: 5px;
-        }
-
         /* ===== Lightbox ===== */
         #lightbox {
             display: none;
@@ -720,11 +515,6 @@
             color: white;
             font-size: 40px;
             cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        #lightbox span:hover {
-            transform: scale(1.2);
         }
 
         #lightbox img {
@@ -734,109 +524,33 @@
         }
 
         /* ===== تحسينات الموبايل ===== */
-        @media (max-width: 992px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .search-form input {
-                width: 150px;
-            }
-
-            .search-form input:focus {
-                width: 180px;
-            }
-
-            .hero-content h1 {
-                font-size: 3rem;
-            }
-        }
-
         @media (max-width: 768px) {
             .hero {
                 height: 400px;
             }
-
+            
             .hero-content h1 {
                 font-size: 2.2rem;
             }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .hero-arrows {
+            
+            .nav-menu {
                 display: none;
             }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-
+            
             .featured-grid,
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
-
-            .recent-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                height: 300px;
-            }
-
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero-buttons .btn {
-                padding: 8px 20px;
-            }
-
-            .recent-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header-actions {
-                gap: 10px;
-            }
-
-            .search-form input {
-                width: 120px;
-            }
-
-            .search-form input:focus {
-                width: 140px;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            
+            .category-image {
+                width: 80px;
+                height: 80px;
             }
         }
     </style>
 </head>
 <body>
-
-    <!-- ===== شريط التنقل الزجاجي ===== -->
+    <!-- ===== شريط التنقل ===== -->
     <nav class="navbar">
         <div class="container">
             <a href="{{ url_for('index') }}" class="logo">
@@ -849,9 +563,8 @@
             </a>
 
             <div class="nav-menu">
-                <a href="{{ url_for('index') }}" class="active">الرئيسية</a>
+                <a href="{{ url_for('index') }}">الرئيسية</a>
                 <a href="#featured">مميزة</a>
-                <a href="#recent">حديثة</a>
                 <a href="#gallery">جميع الصور</a>
                 <a href="{{ url_for('about') }}">من نحن</a>
                 <a href="{{ url_for('contact') }}">اتصل بنا</a>
@@ -868,15 +581,11 @@
                 {% else %}
                 <a href="{{ url_for('login') }}" class="header-icon"><i class="fas fa-sign-in-alt"></i></a>
                 {% endif %}
-
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
     </nav>
 
-    <!-- ===== لوحة الترحيب المتحركة ===== -->
+    <!-- ===== لوحة الترحيب ===== -->
     <section class="hero">
         <div class="hero-slides">
             {% if featured_images %}
@@ -887,13 +596,7 @@
                 {% endfor %}
             {% else %}
                 <div class="hero-slide active">
-                    <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم+في+المعرض">
-                </div>
-                <div class="hero-slide">
-                    <img src="https://via.placeholder.com/1920x800?text=أعمال+فنية+رائعة">
-                </div>
-                <div class="hero-slide">
-                    <img src="https://via.placeholder.com/1920x800?text=إبداع+لا+محدود">
+                    <img src="https://via.placeholder.com/1920x800?text=مرحباً+بكم">
                 </div>
             {% endif %}
         </div>
@@ -901,7 +604,7 @@
         <div class="hero-overlay">
             <div class="hero-content">
                 <h1>{{ settings.site_title }}</h1>
-                <p>{{ settings.site_description or 'معرض فني يضم أجمل الأعمال والإبداعات' }}</p>
+                <p>{{ settings.site_description or 'معرض فني يضم أجمل الأعمال' }}</p>
                 <div class="hero-buttons">
                     <a href="#gallery" class="btn btn-primary">استعرض الصور</a>
                     <a href="#featured" class="btn btn-outline-light">صور مميزة</a>
@@ -910,15 +613,9 @@
         </div>
 
         <div class="hero-nav">
-            {% if featured_images %}
-                {% for image in featured_images[:3] %}
-                <div class="hero-dot {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}"></div>
-                {% endfor %}
-            {% else %}
-                <div class="hero-dot active" data-slide="0"></div>
-                <div class="hero-dot" data-slide="1"></div>
-                <div class="hero-dot" data-slide="2"></div>
-            {% endif %}
+            <div class="hero-dot active"></div>
+            <div class="hero-dot"></div>
+            <div class="hero-dot"></div>
         </div>
 
         <div class="hero-arrows">
@@ -927,7 +624,7 @@
         </div>
     </section>
 
-    <!-- ===== أقسام التصنيفات ===== -->
+    <!-- ===== قسم التصنيفات المطور (بالصور) ===== -->
     {% if categories %}
     <section class="categories-section">
         <div class="container">
@@ -943,7 +640,11 @@
                         <a href="{{ url_for('index') }}?category={{ category.id }}" class="text-decoration-none">
                             <div class="category-card">
                                 <div class="category-image">
-                                    <img src="https://via.placeholder.com/100x100?text={{ category.name[0] }}" alt="{{ category.name }}">
+                                    {% if category.image_url %}
+                                        <img src="{{ category.image_url }}" alt="{{ category.name }}">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/100x100?text={{ category.name[0] }}" alt="{{ category.name }}">
+                                    {% endif %}
                                 </div>
                                 <h4>{{ category.name }}</h4>
                                 <p>{{ count }} صورة</p>
@@ -986,32 +687,6 @@
                         <a href="{{ url_for('view_image', image_id=image.id) }}" class="featured-btn">
                             <i class="fas fa-info-circle"></i> عرض التفاصيل
                         </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-
-    <!-- ===== الصور الحديثة ===== -->
-    {% if images and images.items %}
-    <section id="recent" class="recent-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title"><i class="fas fa-clock"></i> أحدث الصور</h2>
-                <a href="#" class="view-all">عرض الكل <i class="fas fa-arrow-left"></i></a>
-            </div>
-
-            <div class="recent-grid">
-                {% for image in images.items[:8] %}
-                <div class="recent-card" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
-                    <div class="recent-image">
-                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
-                    </div>
-                    <div class="recent-info">
-                        <h4>{{ image.title|truncate(20) }}</h4>
-                        <div class="views"><i class="fas fa-eye"></i> {{ image.views }}</div>
                     </div>
                 </div>
                 {% endfor %}
@@ -1099,64 +774,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        // ===== لوحة الترحيب المتحركة =====
-        let currentHeroSlide = 0;
-        const heroSlides = document.querySelectorAll('.hero-slide');
-        const heroDots = document.querySelectorAll('.hero-dot');
-        const heroPrev = document.querySelector('.hero-prev');
-        const heroNext = document.querySelector('.hero-next');
-        let heroInterval;
-
-        function showHeroSlide(index) {
-            if (!heroSlides.length) return;
-            if (index >= heroSlides.length) index = 0;
-            if (index < 0) index = heroSlides.length - 1;
-            heroSlides.forEach(s => s.classList.remove('active'));
-            heroDots.forEach(d => d.classList.remove('active'));
-            heroSlides[index].classList.add('active');
-            heroDots[index].classList.add('active');
-            currentHeroSlide = index;
-        }
-
-        function nextHeroSlide() {
-            showHeroSlide(currentHeroSlide + 1);
-        }
-
-        function prevHeroSlide() {
-            showHeroSlide(currentHeroSlide - 1);
-        }
-
-        function startHeroAutoSlide() {
-            if (heroSlides.length > 1) {
-                heroInterval = setInterval(nextHeroSlide, 5000);
-            }
-        }
-
-        if (heroPrev && heroNext) {
-            heroPrev.addEventListener('click', () => {
-                prevHeroSlide();
-                clearInterval(heroInterval);
-                startHeroAutoSlide();
-            });
-            heroNext.addEventListener('click', () => {
-                nextHeroSlide();
-                clearInterval(heroInterval);
-                startHeroAutoSlide();
-            });
-            heroDots.forEach((dot, i) => {
-                dot.addEventListener('click', () => {
-                    showHeroSlide(i);
-                    clearInterval(heroInterval);
-                    startHeroAutoSlide();
-                });
-            });
-        }
-
-        if (heroSlides.length > 0) {
-            startHeroAutoSlide();
-        }
-
-        // ===== سلايدر التصنيفات =====
+        // ===== تفعيل سلايدر التصنيفات =====
         new Swiper('.categories-swiper', {
             slidesPerView: 2,
             spaceBetween: 15,
@@ -1181,6 +799,35 @@
             },
         });
 
+        // ===== لوحة الترحيب =====
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.hero-dot');
+        const prevBtn = document.querySelector('.hero-prev');
+        const nextBtn = document.querySelector('.hero-next');
+
+        function showSlide(index) {
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            dots.forEach((dot, i) => {
+                dot.addEventListener('click', () => showSlide(i));
+            });
+        }
+
+        setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, 5000);
+
         // ===== Lightbox =====
         function openLightbox(src, id) {
             document.getElementById('lightbox').style.display = 'flex';
@@ -1192,8 +839,7 @@
                         let el = document.querySelector(`.view-count-${id}`);
                         if (el) el.textContent = d.views;
                     }
-                })
-                .catch(e => console.log(e));
+                });
         }
 
         function closeLightbox() {
@@ -1202,11 +848,6 @@
 
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeLightbox();
-        });
-
-        // ===== قائمة الموبايل =====
-        document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
-            alert('سيتم إضافة قائمة الموبايل هنا');
         });
     </script>
 </body>

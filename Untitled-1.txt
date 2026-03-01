@@ -1,3 +1,144 @@
 git add templates/index_advanced.html
 git commit -m "حفظ الاعدادات"
 git push origin main
+
+
+
+
+cd C:\Users\User\Desktop\‏‏qr-gallery1
+git status
+git add templates/index_advanced.html
+git add templates/settings_advanced.html
+git add .
+git status
+git commit -m "إتحسين الاندكس"
+git push origin main
+
+
+
+
+
+from app import app, db
+with app.app_context():
+    from sqlalchemy import text
+    try:
+        db.session.execute(text("ALTER TABLE category ADD COLUMN image_url VARCHAR(500)"))
+        db.session.commit()
+        print("✅ تم إضافة عمود image_url")
+    except Exception as e:
+        print(f"العمود موجود مسبقاً أو خطأ: {e}")
+
+
+        function showSlide(index) {
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+            resetProgress();
+        }
+
+
+    <!-- ===== شريط التنقل (نسخة واحدة) ===== -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                {% if settings and settings.site_logo %}
+                    <img src="{{ settings.site_logo }}" alt="شعار">
+                {% else %}
+                    <span style="color: var(--primary-color); font-weight: 700; font-size: 1.5rem;">
+                        <i class="bi bi-camera-fill"></i> {{ settings.site_title }}
+                    </span>
+                {% endif %}
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="#gallery">المعرض</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#featured">مميزة</a></li>
+                    {% if categories %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">التصنيفات</a>
+                        <ul class="dropdown-menu">
+                            {% for category, count in categories %}
+                            <li><a class="dropdown-item" href="{{ url_for('view_category', category_id=category.id) }}">{{ category.name }} ({{ count }})</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <!-- زر QR -->
+                    <button class="btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
+                        <i class="bi bi-qr-code-scan"></i>
+                    </button>
+
+                    <!-- نموذج البحث -->
+                    <form class="search-form" action="{{ url_for('search') }}" method="GET">
+                        <input class="form-control" type="search" name="q" placeholder="بحث..." value="{{ search_query }}">
+                        <button type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+
+                    <!-- حساب المستخدم -->
+                    {% if current_user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                            {% if current_user.role in ['admin', 'editor'] %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">لوحة التحكم</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">تسجيل خروج</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('login') }}">دخول</a>
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('register') }}">تسجيل</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+
+
+    <!-- ===== الصور المميزة ===== -->
+    {% if featured_images %}
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <h2 class="section-title"><i class="bi bi-star-fill me-2"></i>صور مميزة</h2>
+            <div class="featured-grid">
+                {% for image in featured_images %}
+                <div class="featured-item">
+                    <a href="{{ image.image_url }}" data-lightbox="featured" data-title="{{ image.title }}">
+                        <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                    </a>
+                    <span class="featured-badge"><i class="bi bi-star-fill"></i> مميزة</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+
+
+
+
+
+
+

@@ -92,7 +92,8 @@ class Category(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     images = db.relationship('Image', backref='category', lazy=True)
-
+    image_url = db.Column(db.String(500))  # ← هذا السطر الجديد
+    
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
@@ -580,6 +581,52 @@ def edit_profile():
 
 
 # ==================== لوحة التحكم ====================
+
+@app.route('/admin/categories/upload-image/<int:category_id>', methods=['POST'])
+@login_required
+def upload_category_image(category_id):
+    """رفع صورة للتصنيف"""
+    category = Category.query.get_or_404(category_id)
+    
+    if 'image' not in request.files:
+        flash('❌ لم يتم اختيار صورة', 'danger')
+        return redirect(url_for('manage_categories'))
+    
+    file = request.files['image']
+    if file.filename == '':
+        flash('❌ لم يتم اختيار صورة', 'danger')
+        return redirect(url_for('manage_categories'))
+    
+    if file and allowed_file(file.filename):
+        # اسم آمن للملف
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        unique_id = uuid.uuid4().hex[:8]
+        new_filename = f"category_{unique_id}_{timestamp}_{filename}"
+        
+        # حفظ مؤقتاً
+        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
+        file.save(temp_path)
+        
+        # رفع إلى Azure (إذا كنت تستخدم Azure)
+        image_url = upload_to_azure(temp_path, new_filename)
+        
+        if image_url:
+            # حذف الملف المؤقت
+            os.remove(temp_path)
+            
+            # تحديث التصنيف
+            category.image_url = image_url
+            db.session.commit()
+            
+            flash('✅ تم رفع صورة التصنيف بنجاح', 'success')
+        else:
+            flash('❌ فشل رفع الصورة', 'danger')
+    else:
+        flash('❌ نوع الملف غير مسموح به', 'danger')
+    
+    return redirect(url_for('manage_categories'))
+
 
 @app.route('/about')
 def about():
