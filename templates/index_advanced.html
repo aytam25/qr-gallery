@@ -547,6 +547,110 @@
                 height: 80px;
             }
         }
+
+        /* ===== شريط معرض الصور السريع ===== */
+.quick-gallery-section {
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.quick-gallery-swiper {
+    padding: 20px 5px 40px;
+}
+
+.quick-gallery-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.quick-gallery-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.quick-gallery-image {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+}
+
+.quick-gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.quick-gallery-card:hover .quick-gallery-image img {
+    transform: scale(1.1);
+}
+
+.quick-gallery-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quick-gallery-overlay i {
+    color: gold;
+}
+
+.quick-gallery-info {
+    padding: 12px;
+    text-align: center;
+}
+
+.quick-gallery-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--dark);
+}
+
+.quick-gallery-prev,
+.quick-gallery-next {
+    color: var(--primary);
+    background: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+}
+
+.quick-gallery-prev::after,
+.quick-gallery-next::after {
+    font-size: 1.2rem;
+}
+
+.quick-gallery-prev:hover,
+.quick-gallery-next:hover {
+    background: var(--gradient);
+    color: white;
+}
+
+.quick-gallery-pagination {
+    bottom: 0 !important;
+}
+
+.quick-gallery-pagination .swiper-pagination-bullet-active {
+    background: var(--primary);
+}
     </style>
 </head>
 <body>
@@ -720,6 +824,69 @@
     </section>
     {% endif %}
 
+<!-- ===== شريط معرض الصور السريع (مستوحى من التصميم) ===== -->
+<section class="quick-gallery-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-images"></i> معرض الصور السريع</h2>
+            <a href="#gallery" class="view-all">عرض الكل <i class="fas fa-arrow-left"></i></a>
+        </div>
+
+        <div class="swiper quick-gallery-swiper">
+            <div class="swiper-wrapper">
+                {% if images and images.items %}
+                    {% for image in images.items[:12] %}  <!-- عرض أول 12 صورة -->
+                    <div class="swiper-slide">
+                        <div class="quick-gallery-card" onclick="openLightbox('{{ image.image_url }}', {{ image.id }})">
+                            <div class="quick-gallery-image">
+                                <img src="{{ image.thumbnail_url or image.image_url }}" alt="{{ image.title }}">
+                                <span class="quick-gallery-overlay">
+                                    <i class="fas fa-eye"></i> {{ image.views }}
+                                </span>
+                            </div>
+                            <div class="quick-gallery-info">
+                                <h4>{{ image.title|truncate(20) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- صور افتراضية إذا لم توجد صور -->
+                    <div class="swiper-slide">
+                        <div class="quick-gallery-card">
+                            <div class="quick-gallery-image">
+                                <img src="https://via.placeholder.com/200x150?text=صورة+1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="quick-gallery-card">
+                            <div class="quick-gallery-image">
+                                <img src="https://via.placeholder.com/200x150?text=صورة+2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="quick-gallery-card">
+                            <div class="quick-gallery-image">
+                                <img src="https://via.placeholder.com/200x150?text=صورة+3">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- أزرار التنقل -->
+            <div class="swiper-button-prev quick-gallery-prev"></div>
+            <div class="swiper-button-next quick-gallery-next"></div>
+            
+            <!-- مؤشرات الصفحات -->
+            <div class="swiper-pagination quick-gallery-pagination"></div>
+        </div>
+    </div>
+</section>
+
+
     <!-- ===== جميع الصور ===== -->
     <section id="gallery" class="gallery-section">
         <div class="container">
@@ -874,6 +1041,34 @@
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeLightbox();
         });
+
+
+        // ===== سلايدر معرض الصور السريع =====
+new Swiper('.quick-gallery-swiper', {
+    slidesPerView: 2,
+    spaceBetween: 15,
+    loop: true,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: '.quick-gallery-pagination',
+        clickable: true,
+    },
+    navigation: {
+        nextEl: '.quick-gallery-next',
+        prevEl: '.quick-gallery-prev',
+    },
+    breakpoints: {
+        480: { slidesPerView: 3, spaceBetween: 20 },
+        640: { slidesPerView: 4, spaceBetween: 20 },
+        768: { slidesPerView: 5, spaceBetween: 25 },
+        1024: { slidesPerView: 6, spaceBetween: 25 },
+    },
+});
+
+
     </script>
 </body>
 </html>
