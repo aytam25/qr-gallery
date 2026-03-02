@@ -48,21 +48,47 @@
     }
 
     /* ===== شريط التنقل ===== */
-    .navbar {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+ 
+/* ===== إصلاحات سريعة للـ Navbar ===== */
+.navbar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1030 !important;
+    background: rgba(131, 197, 156, 0.95) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         padding: 12px 0;
         position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
+}
     .navbar .container {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
+ 
+/* أزرار الـ QR */
+.btn-qr {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: rgb(112, 85, 195);
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-qr:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+}
+
+
+
+
 
     .logo {
         display: flex;
