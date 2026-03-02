@@ -69,7 +69,7 @@
  
 /* أزرار الـ QR */
 .btn-qr {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    background: linear-gradient(135deg, var(--primary) 80%, var(--secondary) 100%);
     color: rgb(112, 85, 195);
     width: 40px;
     height: 40px;
@@ -881,7 +881,8 @@
                     <button type="submit"><i class="fas fa-search"></i></button>
                 </form>
    <button class="btn-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
-        <i class="bi bi-qr-code-scan"></i>
+        <i class="bi bi-qr-code-scan "></i>
+        <i class="img-fluid mb-3" style="max-width:40px;"></i>
     </button>
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('profile') }}" class="header-icon"><i class="fas fa-user"></i></a>
