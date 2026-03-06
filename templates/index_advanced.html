@@ -1457,5 +1457,224 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 
     
+
+
+
+
+
+    <!-- ===== تذييل الصفحة المتطور ===== -->
+    <footer class="footer-advanced">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- معلومات الموقع -->
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        {% if settings and settings.site_logo %}
+                            <img src="{{ settings.site_logo }}" alt="{{ settings.site_title }}">
+                        {% else %}
+                            <h3>{{ settings.site_title }}</h3>
+                        {% endif %}
+                    </div>
+                    <p class="footer-description">{{ settings.site_description or 'معرض فني يضم مجموعة رائعة من الصور والأعمال الإبداعية' }}</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- روابط سريعة -->
+                <div class="footer-links">
+                    <h4 class="footer-title">روابط سريعة</h4>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
+                        <li><a href="#featured"><i class="fas fa-chevron-left"></i> صور مميزة</a></li>
+                        <li><a href="#gallery"><i class="fas fa-chevron-left"></i> جميع الصور</a></li>
+                        <li><a href="{{ url_for('about') }}"><i class="fas fa-chevron-left"></i> من نحن</a></li>
+                        <li><a href="{{ url_for('contact') }}"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+
+                <!-- معلومات الاتصال -->
+                <div class="footer-contact">
+                    <h4 class="footer-title">تواصل معنا</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> فلسطين</li>
+                        <li><i class="fas fa-envelope"></i> {{ settings.contact_email or 'info@gallery.ps' }}</li>
+                        <li><i class="fas fa-phone-alt"></i> +970 59 978 7656</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- حقوق النشر -->
+            <div class="footer-copyright">
+                <p>&copy; 2026 {{ settings.site_title }}. جميع الحقوق محفوظة. تصميم وتطوير <a href="#" target="_blank">النورس للبرمجيات</a></p>
+            </div>
+        </div>
+    </footer>
+
+<style>
+    /* ===== تذييل متطور ===== */
+.footer-advanced {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 60px 0 20px;
+    margin-top: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-advanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-logo img {
+    max-height: 60px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.footer-description {
+    color: #a0aec0;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.social-icon.facebook { background: #1877f2; }
+.social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.social-icon.whatsapp { background: #25d366; }
+
+.social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.footer-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.footer-links ul,
+.footer-contact ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li,
+.footer-contact li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #a0aec0;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: white;
+    transform: translateX(-5px);
+}
+
+.footer-links i,
+.footer-contact i {
+    margin-left: 8px;
+    color: var(--primary);
+    width: 20px;
+}
+
+.footer-contact li {
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+}
+
+.footer-copyright {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    text-align: center;
+    color: #a0aec0;
+}
+
+.footer-copyright a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.footer-copyright a:hover {
+    text-decoration: underline;
+}
+
+/* للموبايل */
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-title::after {
+        right: 50%;
+        transform: translateX(50%);
+    }
+    
+    .footer-links,
+    .footer-contact {
+        text-align: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+    
+    .footer-contact li {
+        justify-content: center;
+    }
+}
+</style>
+
 </body>
 </html>
